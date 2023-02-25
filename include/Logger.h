@@ -7,7 +7,7 @@
 namespace diamond_engine {
 class Logger {
 public:
-	enum LogSeverity : unsigned {
+	enum class LogSeverity : unsigned {
 		Info		= 0,
 		Warning		= 1,
 		Error		= 2,

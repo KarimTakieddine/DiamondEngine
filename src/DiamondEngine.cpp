@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
 		LOG_INFO(glBufferAllocator.ToString());
 
 		glBufferAllocator.Allocate(1);
+		LOG_INFO(glBufferAllocator.ToString());
 
 		GLuint buffer_4 = glBufferAllocator.Get();
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));

@@ -53,6 +53,8 @@ namespace diamond_engine {
 
 	void GraphicsContext::OnWindowResize(const Size& windowSize) {
 		// TODO
+
+		glViewport(0, 0, windowSize.width, windowSize.height);
 	}
 
 	void GraphicsContext::OnWindowUpdate(GLfloat deltaTime) {
