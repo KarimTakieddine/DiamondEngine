@@ -23,6 +23,7 @@ set(SOURCES
     ${SRC_DIR}/Logger.cpp
     ${SRC_DIR}/LogManager.cpp
     ${SRC_DIR}/Window.cpp
+    ${SRC_DIR}/GLAllocator.cpp
     ${SRC_DIR}/GraphicsContext.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
