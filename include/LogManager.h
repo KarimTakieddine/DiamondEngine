@@ -20,7 +20,7 @@ public:
 
 	static LogManager& getInstance();
 
-	void enqueueLogMessage(
+	void EnqueueLogMessage(
 		const std::string& message,
 		Logger::LogSeverity severity,
 		const char* file,
@@ -33,7 +33,7 @@ public:
 private:
 	LogManager();
 
-	void dequeueLogMessages();
+	void DequeueLogMessages();
 
 	std::deque<LogMessage> logMessageQueue;
 	std::thread workerThread;
@@ -44,7 +44,7 @@ private:
 };
 }
 
-#define LOG_INFO(msg)		diamond_engine::LogManager::getInstance().enqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Info,		__FILE__, __LINE__);
-#define LOG_WARNING(msg)	diamond_engine::LogManager::getInstance().enqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Warning,	__FILE__, __LINE__);
-#define LOG_ERROR(msg)		diamond_engine::LogManager::getInstance().enqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Error,	__FILE__, __LINE__);
-#define LOG_CRITICAL(msg)	diamond_engine::LogManager::getInstance().enqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Critical, __FILE__, __LINE__);
+#define LOG_INFO(msg)		diamond_engine::LogManager::getInstance().EnqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Info,		__FILE__, __LINE__);
+#define LOG_WARNING(msg)	diamond_engine::LogManager::getInstance().EnqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Warning,	__FILE__, __LINE__);
+#define LOG_ERROR(msg)		diamond_engine::LogManager::getInstance().EnqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Error,	__FILE__, __LINE__);
+#define LOG_CRITICAL(msg)	diamond_engine::LogManager::getInstance().EnqueueLogMessage(msg, diamond_engine::Logger::LogSeverity::Critical, __FILE__, __LINE__);

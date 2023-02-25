@@ -19,8 +19,10 @@ set(GLFW_BUILD_TESTS FALSE)
 add_subdirectory(${GLFW_DIR})
 
 set(SOURCES
+    ${SRC_DIR}/DeltaTimer.cpp
     ${SRC_DIR}/Logger.cpp
     ${SRC_DIR}/LogManager.cpp
+    ${SRC_DIR}/Window.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

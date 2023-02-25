@@ -1,34 +1,43 @@
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
-#include <iostream>
-
+#include "Window.h"
 #include "LogManager.h"
+
+void OnResize(const diamond_engine::Size& size) {
+	LOG_INFO(diamond_engine::SizeToString(size));
+}
+
+void OnUpdate(float deltaTime) {
+	LOG_INFO("Delta time: " + std::to_string(deltaTime));
+}
 
 int main(int argc, char** argv) {
 
-	glfwInit();
+	try {
+		glfwInit();
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		diamond_engine::Window window({ 640, 480 }, "Hello!", &OnResize, &OnUpdate);
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "Hello, World!", nullptr, nullptr);
+		if (!window) {
+			return 1;
+		}
 
-	if (!window) {
-		return 1;
+		glfwMakeContextCurrent(window.GetHandle());
+
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK) {
+			return 2;
+		}
+
+		window.StartUpdateLoop();
+
+		glfwTerminate();
+	}
+	catch (const std::exception& e) {
+		LOG_ERROR(e.what());
 	}
 
-	glfwMakeContextCurrent(window);
-
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK) {
-		return 2;
-	}
-
-	glfwTerminate();
+	std::this_thread::sleep_for(std::chrono::seconds(10));
 
 	return 0;
 }

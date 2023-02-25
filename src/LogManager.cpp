@@ -9,7 +9,7 @@ namespace diamond_engine {
 		return logManagerInstance;
 	}
 
-	void LogManager::enqueueLogMessage(const std::string& message, Logger::LogSeverity severity, const char* file, unsigned long long line) {
+	void LogManager::EnqueueLogMessage(const std::string& message, Logger::LogSeverity severity, const char* file, unsigned long long line) {
 		std::unique_lock<std::mutex> lock(logMutex);
 		logMessageQueue.push_back(LogMessage{ message, file, line, severity });
 		shouldLog.store(true);
@@ -33,10 +33,10 @@ namespace diamond_engine {
 	}
 
 	LogManager::LogManager() {
-		workerThread = std::thread(&LogManager::dequeueLogMessages, this);
+		workerThread = std::thread(&LogManager::DequeueLogMessages, this);
 	}
 
-	void LogManager::dequeueLogMessages() {
+	void LogManager::DequeueLogMessages() {
 		while (!shouldStop.load()) {
 			std::unique_lock<std::mutex> lock(logMutex);
 
