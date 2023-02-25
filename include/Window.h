@@ -11,7 +11,7 @@ namespace diamond_engine {
 class Window {
 public:
 	using ResizeHandler = std::function<void(const Size&)>;
-	using UpdateHandler = std::function<void(float)>;
+	using UpdateHandler = std::function<void(GLfloat)>;
 
 	static const int kOpenGLVersionMajor = 4;
 	static const int kOpenGLVersionMinor = 6;

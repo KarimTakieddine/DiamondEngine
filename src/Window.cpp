@@ -41,6 +41,8 @@ namespace diamond_engine {
 
 		glfwSetWindowUserPointer(m_handle, this);
 		glfwSetWindowSizeCallback(m_handle, &Window::OnResize);
+
+		glfwMakeContextCurrent(m_handle);
 	}
 
 	void Window::SetSize(const Size& size) {
@@ -53,7 +55,7 @@ namespace diamond_engine {
 
 	void Window::StartUpdateLoop() {
 		DeltaTimer deltaTimer;
-		float deltaTime = 0.0f;
+		GLfloat deltaTime = 0.0f;
 
 		while (!glfwWindowShouldClose(m_handle)) {
 			deltaTimer.Start();
