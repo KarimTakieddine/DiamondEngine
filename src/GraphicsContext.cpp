@@ -52,10 +52,10 @@ namespace diamond_engine {
 	}
 
 	void GraphicsContext::OnWindowResize(const Size& windowSize) {
-
+		// TODO
 	}
 
 	void GraphicsContext::OnWindowUpdate(GLfloat deltaTime) {
-
+		// TODO
 	}
 }
