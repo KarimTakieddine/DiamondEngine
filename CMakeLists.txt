@@ -28,6 +28,7 @@ set(SOURCES
     ${SRC_DIR}/GraphicsContext.cpp
     ${SRC_DIR}/Mesh.cpp
     ${SRC_DIR}/MeshRenderer.cpp
+    ${SRC_DIR}/SharedMeshStore.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
