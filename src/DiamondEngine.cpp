@@ -1,8 +1,7 @@
 #include "GraphicsContext.h"
 #include "GLAllocator.h"
 #include "LogManager.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
+#include "SharedShaderStore.h"
 
 int main(int argc, char** argv) {
 
@@ -39,7 +38,10 @@ int main(int argc, char** argv) {
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());
 
-		std::shared_ptr<diamond_engine::Shader> vertexShader = std::make_shared<diamond_engine::Shader>(GL_VERTEX_SHADER);
+		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
+		sharedShaderStore->Load("./shaders");
+
+		/*std::shared_ptr<diamond_engine::Shader> vertexShader = std::make_shared<diamond_engine::Shader>(GL_VERTEX_SHADER);
 		if (vertexShader->Load("./shaders/vertex_sprite.dsh")) {
 			LOG_INFO("Compiled vertex shader - Source: " + vertexShader->GetSource());
 		}
@@ -55,7 +57,7 @@ int main(int argc, char** argv) {
 		shaderProgram.Link();
 		if (shaderProgram.IsLinked()) {
 			LOG_INFO("Shader progam successfully linked!");
-		}
+		}*/
 
 		graphicsContext.Execute();
 	}
