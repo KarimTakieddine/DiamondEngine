@@ -29,6 +29,9 @@ set(SOURCES
     ${SRC_DIR}/Mesh.cpp
     ${SRC_DIR}/MeshRenderer.cpp
     ${SRC_DIR}/SharedMeshStore.cpp
+    ${SRC_DIR}/GameObject.cpp
+    ${SRC_DIR}/GameObjectBuilder.cpp
+    ${SRC_DIR}/GameObjectCreator.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

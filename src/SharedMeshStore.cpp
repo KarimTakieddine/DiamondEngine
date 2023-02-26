@@ -10,22 +10,22 @@ namespace diamond_engine {
 		return sharedMeshStore;
 	}
 
-	const std::shared_ptr<Mesh>& SharedMeshStore::FindMesh(Geometry geometry) {
-		auto mesh = m_store.find(geometry);
+	const std::shared_ptr<Mesh>& SharedMeshStore::FindMesh(Shape shape) {
+		auto mesh = m_store.find(shape);
 
 		if (mesh == m_store.end()) {
 			throw std::runtime_error(
-				"Invalid Mesh geometry supplied: "
-				+ std::to_string(static_cast<unsigned>(geometry)));
+				"Invalid Mesh Shape supplied: "
+				+ std::to_string(static_cast<unsigned>(shape)));
 		}
 
-		return m_store.at(geometry);
+		return m_store.at(shape);
 	}
 
 	SharedMeshStore::SharedMeshStore() {
 		m_store.insert({
 			{
-				Geometry::TRIANGLE,
+				Shape::TRIANGLE,
 				std::shared_ptr<Mesh>(
 					new Mesh(
 						{
@@ -38,7 +38,7 @@ namespace diamond_engine {
 				)
 			},
 			{
-				Geometry::QUAD,
+				Shape::QUAD,
 				std::shared_ptr<Mesh>(
 					new Mesh(
 						{
