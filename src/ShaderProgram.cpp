@@ -30,6 +30,10 @@ namespace diamond_engine {
 	bool ShaderProgram::IsLinked() const {
 		return m_linked;
 	}
+
+	GLuint ShaderProgram::GetObject() const {
+		return m_object;
+	}
 	
 	ShaderProgram::~ShaderProgram() {
 		for (const auto& shader : m_shaders) {

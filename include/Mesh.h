@@ -26,7 +26,7 @@ public:
 	const std::vector<GLuint>& GetTriangles() const;
 
 private:
-	std::vector<Vertex> m_vertices{ };
-	std::vector<GLuint> m_triangles{ };
+	std::vector<Vertex> m_vertices;
+	std::vector<GLuint> m_triangles;
 };
 }

@@ -3,7 +3,7 @@
 
 namespace diamond_engine {
 	/* static */ void GameObjectDesigner::Design(GameObject* gameObject, GameObjectBuilder* gameObjectBuilder) {
-		gameObjectBuilder->SetTarget(gameObject);
+		gameObjectBuilder->SetGameObject(gameObject);
 		gameObjectBuilder->AddComponents();
 	}
 }

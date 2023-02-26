@@ -45,6 +45,7 @@ class MeshRenderer : public Component {
 public:
 	static const std::string kVertexAttributeLocation;
 	static const std::string kColorAttributeLocation;
+	static const std::string kTextureCoordinateAttributeLocation;
 
 	MeshRenderer(
 		GLuint vertexArrayObject,
@@ -53,9 +54,19 @@ public:
 
 	void BindToContext() override;
 
+	void AttachToProgram(ShaderProgram* shaderProgram) override;
+
+	void DetachFromProgram(ShaderProgram* shaderProgram) override;
+
+	void BindToProgram(const ShaderProgram* shaderProgram) override;
+
 	void Render() override;
 
-	void Update() override { }
+	void Update() override { /* TODO: Update material, if any */ }
+
+	const char* GetName() const override {
+		return "MeshRenderer";
+	}
 
 	void SetMeshType(MeshType meshType);
 

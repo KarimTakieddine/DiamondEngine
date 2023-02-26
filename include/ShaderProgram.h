@@ -20,6 +20,8 @@ public:
 
 	bool IsLinked() const;
 
+	GLuint GetObject() const;
+
 	~ShaderProgram();
 
 private:
