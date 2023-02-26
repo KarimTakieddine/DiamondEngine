@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "Component.h"
 #include "GameObject.h"
 
 namespace diamond_engine {
@@ -32,5 +31,33 @@ namespace diamond_engine {
 		(*element)->DetachFromProgram(m_shaderProgram.get());
 
 		m_components.erase(element);
+	}
+
+	void GameObject::OnAddedToScene() {
+		m_shaderProgram->Link();
+
+		if (!m_shaderProgram->IsLinked()) {
+			throw std::runtime_error("Unable to link GameObject ShaderProgram");
+		}
+
+		glUseProgram(m_shaderProgram->GetObject());
+		for (auto& component : m_components) {
+			component->BindToContext();
+			component->BindToProgram(m_shaderProgram.get());
+		}
+	}
+
+	void GameObject::Update() {
+		glUseProgram(m_shaderProgram->GetObject());
+		for (auto& component : m_components) {
+			component->Update();
+		}
+	}
+
+	void GameObject::Render() {
+		glUseProgram(m_shaderProgram->GetObject());
+		for (auto& component : m_components) {
+			component->Render();
+		}
 	}
 }

@@ -1,6 +1,5 @@
 #include <algorithm>
 
-#include "Shader.h"
 #include "ShaderProgram.h"
 
 namespace diamond_engine {

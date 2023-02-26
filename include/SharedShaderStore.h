@@ -6,9 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
-namespace diamond_engine {
-class Shader;
+#include "Shader.h"
 
+namespace diamond_engine {
 class SharedShaderStore {
 public:
 	static const std::string kVertexShaderPrefix;

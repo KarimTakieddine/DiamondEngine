@@ -1,7 +1,4 @@
-#include "Mesh.h"
 #include "MeshRenderer.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
 
 namespace diamond_engine {
 	/* static */ const std::string MeshRenderer::kVertexAttributeLocation				= "position";

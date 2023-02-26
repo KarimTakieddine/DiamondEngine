@@ -1,4 +1,3 @@
-#include "GameObjectBuilder.h"
 #include "GameObjectDesigner.h"
 
 namespace diamond_engine {

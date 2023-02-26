@@ -4,6 +4,8 @@
 #include <string>
 
 #include "Component.h"
+#include "Mesh.h"
+#include "ShaderProgram.h"
 
 namespace diamond_engine {
 enum class MeshType : unsigned {
@@ -37,9 +39,6 @@ inline GLenum GetDrawMode(RenderMode renderMode) {
 		return GL_TRIANGLES;
 	}
 }
-
-class Mesh;
-class Shader;
 
 class MeshRenderer : public Component {
 public:

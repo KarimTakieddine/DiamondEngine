@@ -1,16 +1,16 @@
 #include "GraphicsContext.h"
-#include "GLAllocator.h"
+//#include "GLAllocator.h"
 #include "LogManager.h"
 #include "SharedShaderStore.h"
 
 int main(int argc, char** argv) {
 
 	try {
-		diamond_engine::GraphicsContext graphicsContext;
-		graphicsContext.InitializeWindow({ 1280, 960 }, "Hello!");
-		graphicsContext.InitializeGLEW();
+		std::unique_ptr<diamond_engine::GraphicsContext> graphicsContext = std::make_unique<diamond_engine::GraphicsContext>();
+		graphicsContext->InitializeWindow({ 1280, 960 }, "Hello!");
+		graphicsContext->InitializeGLEW();
 
-		diamond_engine::GLAllocator glBufferAllocator(glGenBuffers, glDeleteBuffers);
+		/*diamond_engine::GLAllocator glBufferAllocator(glGenBuffers, glDeleteBuffers);
 		glBufferAllocator.Reserve(12);
 		glBufferAllocator.Allocate(6);
 		LOG_INFO(glBufferAllocator.ToString());
@@ -36,10 +36,12 @@ int main(int argc, char** argv) {
 
 		GLuint buffer_4 = glBufferAllocator.Get();
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
-		LOG_INFO(glBufferAllocator.ToString());
+		LOG_INFO(glBufferAllocator.ToString());*/
 
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
 		sharedShaderStore->Load("./shaders");
+
+		std::unique_ptr<diamond_engine::Scene> scene = std::make_unique<diamond_engine::Scene>();
 
 		/*std::shared_ptr<diamond_engine::Shader> vertexShader = std::make_shared<diamond_engine::Shader>(GL_VERTEX_SHADER);
 		if (vertexShader->Load("./shaders/vertex_sprite.dsh")) {
@@ -59,7 +61,7 @@ int main(int argc, char** argv) {
 			LOG_INFO("Shader progam successfully linked!");
 		}*/
 
-		graphicsContext.Execute();
+		graphicsContext->Execute();
 	}
 	catch (const std::exception& e) {
 		LOG_ERROR(e.what());

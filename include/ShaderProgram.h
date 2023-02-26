@@ -5,9 +5,9 @@
 
 #include <GL/glew.h>
 
-namespace diamond_engine {
-class Shader;
+#include "Shader.h"
 
+namespace diamond_engine {
 class ShaderProgram {
 public:
 	ShaderProgram();

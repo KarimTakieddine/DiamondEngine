@@ -2,7 +2,6 @@
 #include <stdexcept>
 
 #include "File.h"
-#include "Shader.h"
 #include "SharedShaderStore.h"
 
 namespace diamond_engine {

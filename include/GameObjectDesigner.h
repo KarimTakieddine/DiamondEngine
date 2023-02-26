@@ -1,11 +1,8 @@
 #pragma once
 
-#include <memory>
+#include "GameObjectBuilder.h"
 
 namespace diamond_engine {
-class GameObject;
-class GameObjectBuilder;
-
 class GameObjectDesigner {
 public:
 	static void Design(
