@@ -1,6 +1,7 @@
 #include "GraphicsContext.h"
 #include "GLAllocator.h"
 #include "LogManager.h"
+#include "File.h"
 
 int main(int argc, char** argv) {
 
@@ -36,6 +37,8 @@ int main(int argc, char** argv) {
 		GLuint buffer_4 = glBufferAllocator.Get();
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());
+
+		LOG_INFO(diamond_engine::File::Read("./shaders/vertex_colored.shader"));
 
 		graphicsContext.Execute();
 	}

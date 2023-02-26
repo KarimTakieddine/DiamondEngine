@@ -4,20 +4,34 @@ project(DiamondEngine)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Common Variables:
+
+set(BIN_DIR_PREFIX bin)
+set(LIB_DIR_PREFIX lib)
+set(BIN_TARGET_ARCH x64)
+set(PREBUILT_CONFIG Release)
+
 set(GLEW_DIR glew-2.1.0-win32/glew-2.1.0)
 set(GLFW_DIR glfw)
 set(GLM_DIR glm)
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
+set(SHADERS_DIR shaders)
 
-set(GLEW_BINARY_DIR "${GLEW_DIR}/bin/Release/x64")
-set(GLEW_LIBRARY_DIR "${GLEW_DIR}/lib/Release/x64")
+# GLEW:
+
+set(GLEW_BINARY_DIR     "${GLEW_DIR}/${BIN_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
+set(GLEW_LIBRARY_DIR    "${GLEW_DIR}/${LIB_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
+
+# GLFW:
 
 set(GLFW_LIBRARY_TYPE STATIC)
 set(GLFW_BUILD_DOCS FALSE)
 set(GLFW_BUILD_TESTS FALSE)
 
 add_subdirectory(${GLFW_DIR})
+
+# DiamondEngine:
 
 set(SOURCES
     ${SRC_DIR}/DeltaTimer.cpp
@@ -32,6 +46,7 @@ set(SOURCES
     ${SRC_DIR}/GameObject.cpp
     ${SRC_DIR}/GameObjectBuilder.cpp
     ${SRC_DIR}/GameObjectCreator.cpp
+    ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -44,4 +59,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${GLEW_BINARY_DIR}/glew32.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${SHADERS_DIR}" $<TARGET_FILE_DIR:${PROJECT_NAME}>/${SHADERS_DIR}
 )
