@@ -47,6 +47,7 @@ set(SOURCES
     ${SRC_DIR}/GameObjectBuilder.cpp
     ${SRC_DIR}/GameObjectDesigner.cpp
     ${SRC_DIR}/Shader.cpp
+    ${SRC_DIR}/ShaderProgram.cpp
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 

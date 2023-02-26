@@ -3,8 +3,6 @@
 #include <memory>
 #include <string>
 
-#include <GL/glew.h>
-
 #include "Component.h"
 
 namespace diamond_engine {
@@ -41,6 +39,7 @@ inline GLenum GetDrawMode(RenderMode renderMode) {
 }
 
 class Mesh;
+class Shader;
 
 class MeshRenderer : public Component {
 public:
@@ -64,10 +63,13 @@ public:
 
 	void SetMesh(const std::shared_ptr<Mesh>& mesh);
 
+	void SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
+
 private:
-	std::shared_ptr<Mesh> m_mesh{ nullptr };
-	MeshType m_meshType			{ MeshType::BACKGROUND };
-	RenderMode m_renderMode		{ RenderMode::SOLID };
+	std::shared_ptr<Shader> m_vertexShader	{ nullptr };
+	std::shared_ptr<Mesh> m_mesh			{ nullptr };
+	MeshType m_meshType						{ MeshType::BACKGROUND };
+	RenderMode m_renderMode					{ RenderMode::SOLID };
 	GLuint m_vertexArrayObject;
 	GLuint m_vertexBufferObject;
 	GLuint m_elementBufferObject;

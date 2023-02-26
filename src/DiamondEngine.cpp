@@ -2,6 +2,7 @@
 #include "GLAllocator.h"
 #include "LogManager.h"
 #include "Shader.h"
+#include "ShaderProgram.h"
 
 int main(int argc, char** argv) {
 
@@ -38,9 +39,22 @@ int main(int argc, char** argv) {
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());
 
-		diamond_engine::Shader vertexShader(GL_VERTEX_SHADER);
-		if (vertexShader.Load("./shaders/vertex_colored.shader")) {
-			LOG_INFO("Compiled vertex shader - Source: " + vertexShader.GetSource());
+		std::shared_ptr<diamond_engine::Shader> vertexShader = std::make_shared<diamond_engine::Shader>(GL_VERTEX_SHADER);
+		if (vertexShader->Load("./shaders/vertex_sprite.dsh")) {
+			LOG_INFO("Compiled vertex shader - Source: " + vertexShader->GetSource());
+		}
+
+		std::shared_ptr<diamond_engine::Shader> fragmentShader = std::make_shared<diamond_engine::Shader>(GL_FRAGMENT_SHADER);
+		if (fragmentShader->Load("./shaders/fragment_sprite.dsh")) {
+			LOG_INFO("Compiled fragment shader - Source: " + fragmentShader->GetSource());
+		}
+		
+		diamond_engine::ShaderProgram shaderProgram;
+		shaderProgram.AttachShader(vertexShader);
+		shaderProgram.AttachShader(fragmentShader);
+		shaderProgram.Link();
+		if (shaderProgram.IsLinked()) {
+			LOG_INFO("Shader progam successfully linked!");
 		}
 
 		graphicsContext.Execute();

@@ -11,6 +11,6 @@ public:
 	void AcquireComponent(std::unique_ptr<Component> component);
 
 private:
-	std::vector<std::unique_ptr<Component>> m_components{ };
+	std::vector<std::unique_ptr<Component>> m_components;
 };
 }

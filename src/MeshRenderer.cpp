@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
+#include "Shader.h"
 
 namespace diamond_engine {
 	/* static */ const std::string MeshRenderer::kVertexAttributeLocation	= "position";
@@ -49,5 +50,9 @@ namespace diamond_engine {
 
 	void MeshRenderer::SetMesh(const std::shared_ptr<Mesh>& mesh) {
 		m_mesh = mesh;
+	}
+
+	void MeshRenderer::SetVertexShader(const std::shared_ptr<Shader>& vertexShader) {
+		m_vertexShader = vertexShader;
 	}
 }
