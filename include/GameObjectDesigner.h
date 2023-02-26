@@ -6,8 +6,10 @@ namespace diamond_engine {
 class GameObject;
 class GameObjectBuilder;
 
-class GameObjectCreator {
+class GameObjectDesigner {
 public:
-	static std::unique_ptr<GameObject> Create(GameObjectBuilder* gameObjectBuilder);
+	static void Design(
+		GameObject* gameObject,
+		GameObjectBuilder* gameObjectBuilder);
 };
 }

@@ -1,7 +1,7 @@
 #include "GraphicsContext.h"
 #include "GLAllocator.h"
 #include "LogManager.h"
-#include "File.h"
+#include "Shader.h"
 
 int main(int argc, char** argv) {
 
@@ -38,7 +38,10 @@ int main(int argc, char** argv) {
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());
 
-		LOG_INFO(diamond_engine::File::Read("./shaders/vertex_colored.shader"));
+		diamond_engine::Shader vertexShader(GL_VERTEX_SHADER);
+		if (vertexShader.Load("./shaders/vertex_colored.shader")) {
+			LOG_INFO("Compiled vertex shader - Source: " + vertexShader.GetSource());
+		}
 
 		graphicsContext.Execute();
 	}

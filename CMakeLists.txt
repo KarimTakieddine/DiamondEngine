@@ -45,7 +45,8 @@ set(SOURCES
     ${SRC_DIR}/SharedMeshStore.cpp
     ${SRC_DIR}/GameObject.cpp
     ${SRC_DIR}/GameObjectBuilder.cpp
-    ${SRC_DIR}/GameObjectCreator.cpp
+    ${SRC_DIR}/GameObjectDesigner.cpp
+    ${SRC_DIR}/Shader.cpp
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 

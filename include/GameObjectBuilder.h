@@ -1,19 +1,18 @@
 #pragma once
 
-#include <memory>
+#include <GL/glew.h>
 
 namespace diamond_engine {
 class GameObject;
 
 class GameObjectBuilder {
 public:
-	void Reset();
+	void SetTarget(GameObject* gameObject);
 
-	virtual void AddComponents() = 0;
-
-	std::unique_ptr<GameObject> Finalize();
+	virtual void SetCapacity(GLsizei capacity)	= 0;
+	virtual void AddComponents()				= 0;
 
 protected:
-	std::unique_ptr<GameObject> m_gameObject{ nullptr };
+	GameObject* m_gameObject{ nullptr };
 };
 }
