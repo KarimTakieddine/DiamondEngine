@@ -4,7 +4,7 @@
 #include "SharedMeshStore.h"
 
 namespace diamond_engine {
-	SharedMeshStore& SharedMeshStore::GetInstance() {
+	/* static */ SharedMeshStore& SharedMeshStore::GetInstance() {
 		static SharedMeshStore sharedMeshStore;
 
 		return sharedMeshStore;

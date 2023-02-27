@@ -17,9 +17,17 @@ namespace diamond_engine {
 		if (m_vertexShader) {
 			shaderProgram->AttachShader(m_vertexShader);
 		}
+
+		if (m_material) {
+			m_material->AttachToProgram(shaderProgram);
+		}
 	}
 
 	void MeshRenderer::DetachFromProgram(ShaderProgram* shaderProgram) {
+		if (m_material) {
+			m_material->DetachFromProgram(shaderProgram);
+		}
+
 		if (m_vertexShader) {
 			shaderProgram->DetachShader(m_vertexShader);
 		}
@@ -39,6 +47,10 @@ namespace diamond_engine {
 		GLint textureCoordinateAttributeLocation = glGetAttribLocation(shaderProgram->GetObject(), kTextureCoordinateAttributeLocation.c_str());
 		glEnableVertexAttribArray(textureCoordinateAttributeLocation);
 		glVertexAttribPointer(textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
+
+		if (m_material) {
+			m_material->BindToProgram(shaderProgram);
+		}
 	}
 
 	void MeshRenderer::BindToContext() {
@@ -59,11 +71,19 @@ namespace diamond_engine {
 		glBindVertexArray(m_vertexArrayObject);
 
 		if (m_mesh) {
+			const size_t size = m_mesh->GetTriangles().size();
+
 			glDrawElements(
 				GetDrawMode(m_renderMode),
 				m_mesh->GetTriangles().size(),
 				GL_UNSIGNED_INT,
-				nullptr);
+				0);
+		}
+	}
+
+	void MeshRenderer::Update() {
+		if (m_material) {
+			m_material->Update();
 		}
 	}
 
@@ -81,5 +101,9 @@ namespace diamond_engine {
 
 	void MeshRenderer::SetVertexShader(const std::shared_ptr<Shader>& vertexShader) {
 		m_vertexShader = vertexShader;
+	}
+
+	void MeshRenderer::SetMaterial(const std::shared_ptr<Material>& material) {
+		m_material = material;
 	}
 }

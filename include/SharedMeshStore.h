@@ -16,7 +16,7 @@ class SharedMeshStore {
 public:
 	using MeshTable = std::unordered_map<Shape, std::shared_ptr<Mesh>>;
 
-	SharedMeshStore& GetInstance();
+	static SharedMeshStore& GetInstance();
 
 	const std::shared_ptr<Mesh>& FindMesh(Shape shape);
 

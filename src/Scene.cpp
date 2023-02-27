@@ -4,6 +4,8 @@
 
 namespace diamond_engine {
 	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject) {
+		gameObject->OnAddedToScene();
+
 		m_gameObjects.push_back(std::move(gameObject));
 	}
 

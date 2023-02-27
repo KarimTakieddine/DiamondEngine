@@ -9,6 +9,8 @@ namespace diamond_engine {
 	/* static */ const std::string SharedShaderStore::kFragmentShaderPrefix = "fragment";
 
 	void SharedShaderStore::Load(const std::string& rootDirectory) {
+		// TODO: Normalize paths somehow?
+
 		const auto shaderPaths = GetShaderFiles(rootDirectory);
 
 		for (const auto& path : shaderPaths) {
@@ -46,6 +48,16 @@ namespace diamond_engine {
 
 			m_store.insert({ file, shader });
 		}
+	}
+
+	const std::shared_ptr<Shader> SharedShaderStore::FindShader(const std::string& file) {
+		auto shader = m_store.find(file);
+
+		if (shader == m_store.end()) {
+			throw std::runtime_error("Unable to find shader with file key: " + file);
+		}
+
+		return m_store.at(file);
 	}
 
 	std::vector<std::filesystem::path> SharedShaderStore::GetShaderFiles(const std::string& rootDirectory) {

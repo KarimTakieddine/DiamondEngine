@@ -2,6 +2,8 @@
 //#include "GLAllocator.h"
 #include "LogManager.h"
 #include "SharedShaderStore.h"
+#include "SpriteBuilder.h"
+#include "GameObjectDesigner.h"
 
 int main(int argc, char** argv) {
 
@@ -39,9 +41,18 @@ int main(int argc, char** argv) {
 		LOG_INFO(glBufferAllocator.ToString());*/
 
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
-		sharedShaderStore->Load("./shaders");
+		sharedShaderStore->Load(".\\shaders");
 
 		std::unique_ptr<diamond_engine::Scene> scene = std::make_unique<diamond_engine::Scene>();
+		
+		std::unique_ptr<diamond_engine::GameObject> gameObject			= std::make_unique<diamond_engine::GameObject>();
+		std::unique_ptr<diamond_engine::SpriteBuilder> spriteBuilder	= std::make_unique<diamond_engine::SpriteBuilder>();
+		spriteBuilder->SetCapacity(1);
+		spriteBuilder->SetSharedShaderStore(sharedShaderStore);
+		diamond_engine::GameObjectDesigner::Design(gameObject.get(), spriteBuilder.get());
+		scene->AddGameObject(std::move(gameObject));
+
+		graphicsContext->SetScene(std::move(scene));
 
 		/*std::shared_ptr<diamond_engine::Shader> vertexShader = std::make_shared<diamond_engine::Shader>(GL_VERTEX_SHADER);
 		if (vertexShader->Load("./shaders/vertex_sprite.dsh")) {

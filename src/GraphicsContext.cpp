@@ -62,8 +62,6 @@ namespace diamond_engine {
 	}
 
 	void GraphicsContext::OnWindowUpdate(GLfloat deltaTime) {
-		// TODO
-
 		if (m_scene) {
 			m_scene->Update();
 			m_scene->Render();

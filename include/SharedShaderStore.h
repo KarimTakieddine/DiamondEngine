@@ -16,6 +16,8 @@ public:
 
 	void Load(const std::string& rootDirectory);
 
+	const std::shared_ptr<Shader> FindShader(const std::string& file);
+
 private:
 	static std::vector<std::filesystem::path> GetShaderFiles(const std::string& rootDirectory);
 

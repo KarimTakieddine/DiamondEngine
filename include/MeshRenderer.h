@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "Component.h"
+#include "Material.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 
@@ -61,7 +61,7 @@ public:
 
 	void Render() override;
 
-	void Update() override { /* TODO: Update material, if any */ }
+	void Update() override;
 
 	const char* GetName() const override {
 		return "MeshRenderer";
@@ -75,9 +75,12 @@ public:
 
 	void SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
 
+	void SetMaterial(const std::shared_ptr<Material>& material);
+
 private:
 	std::shared_ptr<Shader> m_vertexShader	{ nullptr };
 	std::shared_ptr<Mesh> m_mesh			{ nullptr };
+	std::shared_ptr<Material> m_material	{ nullptr };
 	MeshType m_meshType						{ MeshType::BACKGROUND };
 	RenderMode m_renderMode					{ RenderMode::SOLID };
 	GLuint m_vertexArrayObject;
