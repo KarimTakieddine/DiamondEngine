@@ -1,3 +1,4 @@
+#include "GameObject.h"
 #include "Material.h"
 
 namespace diamond_engine {
@@ -15,19 +16,21 @@ namespace diamond_engine {
 		m_color = color;
 	}
 
-	void Material::AttachToProgram(ShaderProgram* shaderProgram) {
-		shaderProgram->AttachShader(m_fragmentShader);
+	void Material::BindToContext() {
+		m_colorUniformLocation = glGetUniformLocation(
+			m_gameObject->GetShaderProgram()->GetObject(),
+			kColorUniformLocation.c_str());
 	}
 
-	void Material::DetachFromProgram(ShaderProgram* shaderProgram) {
-		shaderProgram->DetachShader(m_fragmentShader);
+	void Material::OnSetGameObject() {
+		m_gameObject->GetShaderProgram()->AttachShader(m_fragmentShader);
 	}
 
-	void Material::BindToProgram(const ShaderProgram* shaderProgram) {
-		m_colorUniformLocation = glGetUniformLocation(shaderProgram->GetObject(), kColorUniformLocation.c_str());
+	void Material::OnGameObjectAboutToBeUnset() {
+		m_gameObject->GetShaderProgram()->DetachShader(m_fragmentShader);
 	}
 
-	void Material::Update() {
+	void Material::Update(GLfloat deltaTime) {
 		glUniform3f(m_colorUniformLocation, m_color.r, m_color.g, m_color.b);
 	}
 }

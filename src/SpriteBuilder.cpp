@@ -2,6 +2,7 @@
 #include "MeshRenderer.h"
 #include "SharedMeshStore.h"
 #include "SpriteBuilder.h"
+#include "Transform.h"
 
 namespace diamond_engine {
 	SpriteBuilder::SpriteBuilder() :
@@ -23,7 +24,7 @@ namespace diamond_engine {
 
 		std::unique_ptr<MeshRenderer> meshRenderer = std::make_unique<MeshRenderer>(vertexArrayObject, vertexBufferObject, elementBufferObject);
 
-		meshRenderer->SetVertexShader(m_sharedShaderStore->FindShader(".\\shaders\\sprite\\vertex_sprite.dmsh"));
+		meshRenderer->SetVertexShader(m_sharedShaderStore->FindShader(".\\shaders\\sprite\\vertex_transform.dmsh"));
 		meshRenderer->SetMesh(SharedMeshStore::GetInstance().FindMesh(Shape::QUAD));
 		meshRenderer->SetRenderMode(RenderMode::SOLID);
 		meshRenderer->SetMeshType(MeshType::SPRITE);
@@ -34,9 +35,9 @@ namespace diamond_engine {
 		meshRenderer->SetMaterial(material);
 
 		m_gameObject->AcquireComponent(std::move(meshRenderer));
-	}
-	
-	void SpriteBuilder::SetSharedShaderStore(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) {
-		m_sharedShaderStore = sharedShaderStore;
+
+		std::unique_ptr<Transform> transform = std::make_unique<Transform>();
+
+		m_gameObject->AcquireComponent(std::move(transform));
 	}
 }

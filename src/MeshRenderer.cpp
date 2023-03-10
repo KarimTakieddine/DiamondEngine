@@ -1,3 +1,4 @@
+#include "GameObject.h"
 #include "MeshRenderer.h"
 
 namespace diamond_engine {
@@ -13,46 +14,6 @@ namespace diamond_engine {
 		m_vertexBufferObject(vertexBufferObject),
 		m_elementBufferObject(elementBufferObject) { }
 
-	void MeshRenderer::AttachToProgram(ShaderProgram* shaderProgram) {
-		if (m_vertexShader) {
-			shaderProgram->AttachShader(m_vertexShader);
-		}
-
-		if (m_material) {
-			m_material->AttachToProgram(shaderProgram);
-		}
-	}
-
-	void MeshRenderer::DetachFromProgram(ShaderProgram* shaderProgram) {
-		if (m_material) {
-			m_material->DetachFromProgram(shaderProgram);
-		}
-
-		if (m_vertexShader) {
-			shaderProgram->DetachShader(m_vertexShader);
-		}
-	}
-
-	void MeshRenderer::BindToProgram(const ShaderProgram* shaderProgram) {
-		// TODO: Possibly validate locations here?
-
-		GLint vertexAttributeLocation = glGetAttribLocation(shaderProgram->GetObject(), kVertexAttributeLocation.c_str());
-		glEnableVertexAttribArray(vertexAttributeLocation);
-		glVertexAttribPointer(vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-
-		GLint colorAttributeLocation = glGetAttribLocation(shaderProgram->GetObject(), kColorAttributeLocation.c_str());
-		glEnableVertexAttribArray(colorAttributeLocation);
-		glVertexAttribPointer(colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
-
-		GLint textureCoordinateAttributeLocation = glGetAttribLocation(shaderProgram->GetObject(), kTextureCoordinateAttributeLocation.c_str());
-		glEnableVertexAttribArray(textureCoordinateAttributeLocation);
-		glVertexAttribPointer(textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
-
-		if (m_material) {
-			m_material->BindToProgram(shaderProgram);
-		}
-	}
-
 	void MeshRenderer::BindToContext() {
 		glBindVertexArray(m_vertexArrayObject);
 
@@ -64,6 +25,22 @@ namespace diamond_engine {
 			const std::vector<GLuint>& meshTriangles = m_mesh->GetTriangles();
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferObject);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), GetDrawType(m_meshType));
+		}
+
+		GLint vertexAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kVertexAttributeLocation.c_str());
+		glEnableVertexAttribArray(vertexAttributeLocation);
+		glVertexAttribPointer(vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+
+		GLint colorAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kColorAttributeLocation.c_str());
+		glEnableVertexAttribArray(colorAttributeLocation);
+		glVertexAttribPointer(colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+
+		GLint textureCoordinateAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kTextureCoordinateAttributeLocation.c_str());
+		glEnableVertexAttribArray(textureCoordinateAttributeLocation);
+		glVertexAttribPointer(textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
+
+		if (m_material) {
+			m_material->BindToContext();
 		}
 	}
 
@@ -81,9 +58,9 @@ namespace diamond_engine {
 		}
 	}
 
-	void MeshRenderer::Update() {
+	void MeshRenderer::Update(GLfloat deltaTime) {
 		if (m_material) {
-			m_material->Update();
+			m_material->Update(deltaTime);
 		}
 	}
 
@@ -105,5 +82,29 @@ namespace diamond_engine {
 
 	void MeshRenderer::SetMaterial(const std::shared_ptr<Material>& material) {
 		m_material = material;
+	}
+
+	const std::shared_ptr<Material>& MeshRenderer::GetMaterial() const {
+		return m_material;
+	}
+
+	void MeshRenderer::OnSetGameObject() {
+		if (m_vertexShader) {
+			m_gameObject->GetShaderProgram()->AttachShader(m_vertexShader);
+		}
+
+		if (m_material) {
+			m_material->SetGameObject(m_gameObject);
+		}
+	}
+
+	void MeshRenderer::OnGameObjectAboutToBeUnset() {
+		if (m_material) {
+			m_material->UnsetGameObject();
+		}
+
+		if (m_vertexShader) {
+			m_gameObject->GetShaderProgram()->DetachShader(m_vertexShader);
+		}
 	}
 }

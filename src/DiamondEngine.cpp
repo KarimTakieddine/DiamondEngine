@@ -1,9 +1,10 @@
 #include "GraphicsContext.h"
 //#include "GLAllocator.h"
 #include "LogManager.h"
-#include "SharedShaderStore.h"
 #include "SpriteBuilder.h"
 #include "GameObjectDesigner.h"
+#include "Material.h"
+#include "MeshRenderer.h"
 
 int main(int argc, char** argv) {
 
@@ -44,13 +45,19 @@ int main(int argc, char** argv) {
 		sharedShaderStore->Load(".\\shaders");
 
 		std::unique_ptr<diamond_engine::Scene> scene = std::make_unique<diamond_engine::Scene>();
-		
-		std::unique_ptr<diamond_engine::GameObject> gameObject			= std::make_unique<diamond_engine::GameObject>();
+
+		std::unique_ptr<diamond_engine::GameObject> sprite				= std::make_unique<diamond_engine::GameObject>();
 		std::unique_ptr<diamond_engine::SpriteBuilder> spriteBuilder	= std::make_unique<diamond_engine::SpriteBuilder>();
-		spriteBuilder->SetCapacity(1);
+		spriteBuilder->SetCapacity(2);
 		spriteBuilder->SetSharedShaderStore(sharedShaderStore);
-		diamond_engine::GameObjectDesigner::Design(gameObject.get(), spriteBuilder.get());
-		scene->AddGameObject(std::move(gameObject));
+		diamond_engine::GameObjectDesigner::Design(sprite.get(), spriteBuilder.get());
+		scene->AddGameObject(std::move(sprite));
+
+		std::unique_ptr<diamond_engine::GameObject> sprite_2 = std::make_unique<diamond_engine::GameObject>();
+		diamond_engine::GameObjectDesigner::Design(sprite_2.get(), spriteBuilder.get());
+		sprite_2->GetComponent<diamond_engine::MeshRenderer>("MeshRenderer")->GetMaterial()->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+		sprite_2->GetComponent<diamond_engine::Transform>("Transform")->Translate(glm::vec3(2.0f, 1.0f, 0.0f));
+		scene->AddGameObject(std::move(sprite_2));
 
 		graphicsContext->SetScene(std::move(scene));
 

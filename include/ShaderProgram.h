@@ -27,6 +27,6 @@ public:
 private:
 	std::vector<std::shared_ptr<Shader>> m_shaders;
 	GLuint m_object{ 0 };
-	GLint m_linked{ GL_FALSE };
+	GLint m_linked{ GL_TRUE };
 };
 }

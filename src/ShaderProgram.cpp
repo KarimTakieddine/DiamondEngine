@@ -22,6 +22,10 @@ namespace diamond_engine {
 	}
 
 	void ShaderProgram::Link() {
+		if (m_shaders.empty()) {
+			return;
+		}
+
 		glLinkProgram(m_object);
 		glGetProgramiv(m_object, GL_LINK_STATUS, &m_linked);
 	}

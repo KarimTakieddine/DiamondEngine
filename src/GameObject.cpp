@@ -1,7 +1,10 @@
-#include <algorithm>
 #include <stdexcept>
 
 #include "GameObject.h"
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace diamond_engine {
 	GameObject::GameObject() : m_components(), m_shaderProgram(std::make_unique<ShaderProgram>()) { }
@@ -15,7 +18,7 @@ namespace diamond_engine {
 			throw std::runtime_error("Cannot add two identical components of: " + std::string(component->GetName()) + " type");
 		}
 
-		component->AttachToProgram(m_shaderProgram.get());
+		component->SetGameObject(this);
 
 		m_components.push_back(std::move(component));
 	}
@@ -28,7 +31,7 @@ namespace diamond_engine {
 			return;
 		}
 
-		(*element)->DetachFromProgram(m_shaderProgram.get());
+		(*element)->UnsetGameObject();
 
 		m_components.erase(element);
 	}
@@ -43,14 +46,14 @@ namespace diamond_engine {
 		glUseProgram(m_shaderProgram->GetObject());
 		for (auto& component : m_components) {
 			component->BindToContext();
-			component->BindToProgram(m_shaderProgram.get());
 		}
 	}
 
-	void GameObject::Update() {
+	void GameObject::Update(GLfloat deltaTime) {
 		glUseProgram(m_shaderProgram->GetObject());
+
 		for (auto& component : m_components) {
-			component->Update();
+			component->Update(deltaTime);
 		}
 	}
 

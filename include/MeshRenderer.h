@@ -5,7 +5,7 @@
 
 #include "Material.h"
 #include "Mesh.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 
 namespace diamond_engine {
 enum class MeshType : unsigned {
@@ -53,15 +53,9 @@ public:
 
 	void BindToContext() override;
 
-	void AttachToProgram(ShaderProgram* shaderProgram) override;
-
-	void DetachFromProgram(ShaderProgram* shaderProgram) override;
-
-	void BindToProgram(const ShaderProgram* shaderProgram) override;
-
 	void Render() override;
 
-	void Update() override;
+	void Update(GLfloat deltaTime) override;
 
 	const char* GetName() const override {
 		return "MeshRenderer";
@@ -76,6 +70,13 @@ public:
 	void SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
 
 	void SetMaterial(const std::shared_ptr<Material>& material);
+
+	const std::shared_ptr<Material>& GetMaterial() const;
+
+protected:
+	void OnSetGameObject() override;
+
+	void OnGameObjectAboutToBeUnset() override;
 
 private:
 	std::shared_ptr<Shader> m_vertexShader	{ nullptr };

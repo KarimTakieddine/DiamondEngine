@@ -50,6 +50,8 @@ set(SOURCES
     ${SRC_DIR}/ShaderProgram.cpp
     ${SRC_DIR}/SharedShaderStore.cpp
     ${SRC_DIR}/Material.cpp
+    ${SRC_DIR}/Transform.cpp
+    ${SRC_DIR}/Camera.cpp
     ${SRC_DIR}/Scene.cpp
     ${SRC_DIR}/SpriteBuilder.cpp
     ${SRC_DIR}/File.cpp
