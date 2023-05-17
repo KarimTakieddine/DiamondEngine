@@ -14,6 +14,7 @@ public:
 
 	void Update(GLfloat deltaTime);
 	void Render();
+	void OnWindowResize(int width, int height);
 
 private:
 	std::unique_ptr<Camera> m_camera{ nullptr };

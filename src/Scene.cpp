@@ -40,4 +40,8 @@ namespace diamond_engine {
 			gameObject->Render();
 		}
 	}
+
+	void Scene::OnWindowResize(int width, int height) {
+		m_camera->SetAspectRatio(static_cast<GLfloat>(width) / height);
+	}
 }

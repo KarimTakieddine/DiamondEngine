@@ -48,6 +48,11 @@ namespace diamond_engine {
 			nearPlane,
 			farPlane
 		);
+
+		SetHeight(height);
+		SetAspectRatio(aspectRatio);
+		SetNearPlane(nearPlane);
+		SetFarPlane(farPlane);
 	}
 
 	void Camera::SetFocusTarget(const glm::vec3& eye, const glm::vec3& target, const glm::vec3& up) {
@@ -56,6 +61,54 @@ namespace diamond_engine {
 			target,
 			up
 		);
+	}
+
+	void Camera::SetHeight(GLfloat height)
+	{
+		if (height == m_height)
+		{
+			return;
+		}
+
+		m_height = height;
+
+		SetProjectionFrustum(height, m_aspectRatio, m_nearPlane, m_farPlane);
+	}
+
+	void Camera::SetAspectRatio(GLfloat aspectRatio)
+	{
+		if (aspectRatio == m_aspectRatio)
+		{
+			return;
+		}
+
+		m_aspectRatio = aspectRatio;
+
+		SetProjectionFrustum(m_height, aspectRatio, m_nearPlane, m_farPlane);
+	}
+
+	void Camera::SetNearPlane(GLfloat nearPlane)
+	{
+		if (nearPlane == m_nearPlane)
+		{
+			return;
+		}
+
+		m_nearPlane = nearPlane;
+
+		SetProjectionFrustum(m_height, m_aspectRatio, nearPlane, m_farPlane);
+	}
+
+	void Camera::SetFarPlane(GLfloat farPlane)
+	{
+		if (farPlane == m_farPlane)
+		{
+			return;
+		}
+
+		m_farPlane = farPlane;
+
+		SetProjectionFrustum(m_height, m_aspectRatio, m_nearPlane, farPlane);
 	}
 	
 	Transform* Camera::GetTransform() {

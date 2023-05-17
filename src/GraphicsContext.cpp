@@ -56,7 +56,10 @@ namespace diamond_engine {
 	}
 
 	void GraphicsContext::OnWindowResize(const Size& windowSize) {
-		// TODO
+		if (m_scene)
+		{
+			m_scene->OnWindowResize(windowSize.width, windowSize.height);
+		}
 
 		glViewport(0, 0, windowSize.width, windowSize.height);
 	}
