@@ -5,10 +5,22 @@
 #include "GameObjectDesigner.h"
 #include "Material.h"
 #include "MeshRenderer.h"
+#include "AlignedAllocator.hpp"
 
 int main(int argc, char** argv) {
 
 	try {
+		diamond_engine::AlignedAllocator<glm::mat4, 4> matrixAllocator;
+		matrixAllocator.Allocate(4);
+		matrixAllocator.Expand(2);
+		glm::mat4* first = matrixAllocator.Get();
+		glm::mat4* first_2 = matrixAllocator.Get();
+		glm::mat4* first_3 = matrixAllocator.Get();
+		matrixAllocator.Free(2);
+		matrixAllocator.Expand(2);
+		glm::mat4* first_4 = matrixAllocator.Get();
+		glm::mat4* first_5 = matrixAllocator.Get();
+
 		std::unique_ptr<diamond_engine::GraphicsContext> graphicsContext = std::make_unique<diamond_engine::GraphicsContext>();
 		graphicsContext->InitializeWindow({ 1280, 960 }, "Hello!");
 		graphicsContext->InitializeGLEW();
