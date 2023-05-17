@@ -109,6 +109,21 @@ namespace diamond_engine
 			return current;
 		}
 
+		ptrdiff_t GetAvailableObjectCount() const
+		{
+			return m_topObjectBounds - m_current;
+		}
+
+		ptrdiff_t GetAllocatedObjectCount() const
+		{
+			return m_topObjectBounds - m_alignedData;
+		}
+
+		ptrdiff_t GetAssignedObjectCount() const
+		{
+			return m_current - m_alignedData;
+		}
+
 		~AlignedAllocator()
 		{
 			Free();
