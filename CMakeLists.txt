@@ -29,7 +29,12 @@ set(GLFW_LIBRARY_TYPE STATIC)
 set(GLFW_BUILD_DOCS FALSE)
 set(GLFW_BUILD_TESTS FALSE)
 
+# pugixml
+
+set(PUGI_XML_DIR pugixml)
+
 add_subdirectory(${GLFW_DIR})
+add_subdirectory(${PUGI_XML_DIR})
 
 # DiamondEngine:
 
@@ -48,6 +53,7 @@ set(SOURCES
     ${SRC_DIR}/GameObjectDesigner.cpp
     ${SRC_DIR}/Shader.cpp
     ${SRC_DIR}/ShaderProgram.cpp
+    ${SRC_DIR}/ShaderMetadataParser.cpp
     ${SRC_DIR}/SharedShaderStore.cpp
     ${SRC_DIR}/Material.cpp
     ${SRC_DIR}/Transform.cpp
@@ -59,11 +65,11 @@ set(SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} ${INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
 
 add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
 target_link_directories(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY_DIR} "${GLFW_BINARY_DIR}/src")
-target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3)
+target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3 pugixml)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${GLEW_BINARY_DIR}/glew32.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>

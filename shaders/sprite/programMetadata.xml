@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Program name="sprite">
+	<Shader type="vertex" file="vertex_transform.dmsh"/>
+	<Shader type="fragment" file="fragment_sprite.dmsh"/>
+</Program>

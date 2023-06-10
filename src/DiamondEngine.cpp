@@ -41,8 +41,6 @@ int main(int argc, char** argv) {
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());*/
 
-		const auto size = sizeof(diamond_engine::RenderableObject);
-
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
 		sharedShaderStore->Load(".\\shaders");
 
