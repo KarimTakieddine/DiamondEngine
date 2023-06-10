@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace diamond_engine {
-	GameObject::GameObject() : m_components(), m_shaderProgram(std::make_unique<ShaderProgram>()) { }
+	// GameObject::GameObject() : m_components()/*, m_shaderProgram(std::make_unique<ShaderProgram>())*/ { }
 
 	void GameObject::AcquireComponent(std::unique_ptr<Component> component) {
 		if (std::find_if(
@@ -36,21 +36,26 @@ namespace diamond_engine {
 		m_components.erase(element);
 	}
 
+	void GameObject::SetRenderableObject(RenderableObject* renderableObject)
+	{
+		m_renderableObject = renderableObject;
+	}
+
 	void GameObject::OnAddedToScene() {
-		m_shaderProgram->Link();
+		/*m_shaderProgram->Link();
 
 		if (!m_shaderProgram->IsLinked()) {
 			throw std::runtime_error("Unable to link GameObject ShaderProgram");
 		}
 
-		glUseProgram(m_shaderProgram->GetObject());
+		glUseProgram(m_shaderProgram->GetObject());*/
 		for (auto& component : m_components) {
 			component->BindToContext();
 		}
 	}
 
 	void GameObject::Update(GLfloat deltaTime) {
-		glUseProgram(m_shaderProgram->GetObject());
+		//glUseProgram(m_shaderProgram->GetObject());
 
 		for (auto& component : m_components) {
 			component->Update(deltaTime);
@@ -58,7 +63,7 @@ namespace diamond_engine {
 	}
 
 	void GameObject::Render() {
-		glUseProgram(m_shaderProgram->GetObject());
+		//glUseProgram(m_shaderProgram->GetObject());
 		for (auto& component : m_components) {
 			component->Render();
 		}

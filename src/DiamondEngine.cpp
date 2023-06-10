@@ -4,6 +4,7 @@
 #include "GameObjectDesigner.h"
 #include "Material.h"
 #include "MeshRenderer.h"
+#include "RenderableObject.h"
 
 int main(int argc, char** argv) {
 
@@ -39,6 +40,8 @@ int main(int argc, char** argv) {
 		GLuint buffer_4 = glBufferAllocator.Get();
 		LOG_INFO("GOT BUFFER: " + std::to_string(buffer_4));
 		LOG_INFO(glBufferAllocator.ToString());*/
+
+		const auto size = sizeof(diamond_engine::RenderableObject);
 
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
 		sharedShaderStore->Load(".\\shaders");

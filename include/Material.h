@@ -35,7 +35,5 @@ protected:
 
 private:
 	glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
-	std::shared_ptr<Shader> m_fragmentShader{ nullptr };
-	GLint m_colorUniformLocation{ -1 };
 };
 }

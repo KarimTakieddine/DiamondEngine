@@ -27,17 +27,17 @@ namespace diamond_engine {
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), GetDrawType(m_meshType));
 		}
 
-		GLint vertexAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kVertexAttributeLocation.c_str());
-		glEnableVertexAttribArray(vertexAttributeLocation);
-		glVertexAttribPointer(vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+		//GLint vertexAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kVertexAttributeLocation.c_str());
+		//glEnableVertexAttribArray(vertexAttributeLocation);
+		//glVertexAttribPointer(vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
-		GLint colorAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kColorAttributeLocation.c_str());
-		glEnableVertexAttribArray(colorAttributeLocation);
-		glVertexAttribPointer(colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+		//GLint colorAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kColorAttributeLocation.c_str());
+		//glEnableVertexAttribArray(colorAttributeLocation);
+		//glVertexAttribPointer(colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
 
-		GLint textureCoordinateAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kTextureCoordinateAttributeLocation.c_str());
-		glEnableVertexAttribArray(textureCoordinateAttributeLocation);
-		glVertexAttribPointer(textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
+		//GLint textureCoordinateAttributeLocation = glGetAttribLocation(m_gameObject->GetShaderProgram()->GetObject(), kTextureCoordinateAttributeLocation.c_str());
+		//glEnableVertexAttribArray(textureCoordinateAttributeLocation);
+		//glVertexAttribPointer(textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
 
 		if (m_material) {
 			m_material->BindToContext();
@@ -89,9 +89,9 @@ namespace diamond_engine {
 	}
 
 	void MeshRenderer::OnSetGameObject() {
-		if (m_vertexShader) {
+		/*if (m_vertexShader) {
 			m_gameObject->GetShaderProgram()->AttachShader(m_vertexShader);
-		}
+		}*/
 
 		if (m_material) {
 			m_material->SetGameObject(m_gameObject);
@@ -103,8 +103,8 @@ namespace diamond_engine {
 			m_material->UnsetGameObject();
 		}
 
-		if (m_vertexShader) {
+		/*if (m_vertexShader) {
 			m_gameObject->GetShaderProgram()->DetachShader(m_vertexShader);
-		}
+		}*/
 	}
 }

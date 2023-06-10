@@ -1,15 +1,39 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 
 #include <glm/glm.hpp>
 
 #include "Component.h"
 
 namespace diamond_engine {
+	enum class DirtyFlag : GLubyte {
+		UNSET	= 0,
+		SET		= 1
+	};
+
+	inline DirtyFlag operator|(DirtyFlag l, GLubyte r) {
+		return static_cast<DirtyFlag>(
+			static_cast<std::underlying_type_t<DirtyFlag>>(l) | r);
+	}
+
+	inline DirtyFlag operator|=(DirtyFlag& l, DirtyFlag r) {
+		l = l | static_cast<std::underlying_type_t<DirtyFlag>>(r);
+		return l;
+	}
+
+	inline DirtyFlag operator&(DirtyFlag l, DirtyFlag r) {
+		return static_cast<DirtyFlag>(
+			static_cast<std::underlying_type_t<DirtyFlag>>(l) &
+			static_cast<std::underlying_type_t<DirtyFlag>>(r));
+	}
+
 // TODO: Separate updatable components from Renderable components. Possibly use multiple inheritance here?
 class Transform : public Component {
 public:
+	
+
 	static const std::string kModelUniformLocation;
 
 	void Translate(const glm::vec3& displacement);
@@ -40,9 +64,13 @@ protected:
 	void OnGameObjectAboutToBeUnset() override { }
 
 private:
+	void SetDirty();
+
+	void UnsetDirty();
+
 	glm::mat4 m_localToWorld{ 1.0f };
 	glm::mat4 m_localRotation{ 1.0f };
 	glm::mat4 m_localScale{ 1.0f };
-	GLint m_modelUniformLocation{ -1 };
+	DirtyFlag m_dirtyFlag{ DirtyFlag::UNSET };
 };
 }

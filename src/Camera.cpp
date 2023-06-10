@@ -12,8 +12,8 @@ namespace diamond_engine {
 	Camera::Camera() : m_transform(std::make_unique<Transform>()) { }
 
 	void Camera::BindToContext() {
-		m_projectionUniformLocation = glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kProjectionUniformLocation.c_str());
-		m_viewUniformLocation		= glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kViewUniformLocation.c_str());
+		//m_projectionUniformLocation = glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kProjectionUniformLocation.c_str());
+		//m_viewUniformLocation		= glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kViewUniformLocation.c_str());
 	}
 
 	void Camera::Update(GLfloat deltaTime) {

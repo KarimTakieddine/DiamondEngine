@@ -1,19 +1,18 @@
 #pragma once
 
 #include <algorithm>
-#include <memory>
 #include <vector>
 
 #include "Component.h"
-#include "ShaderProgram.h"
+#include "RenderableObject.h"
 
 namespace diamond_engine {
 class GameObject {
 public:
-	GameObject();
-
 	void AcquireComponent(std::unique_ptr<Component> component);
 	void ReleaseComponent(std::unique_ptr<Component> component);
+
+	void SetRenderableObject(RenderableObject* renderableObject);
 	
 	void OnAddedToScene();
 	void Update(GLfloat deltaTime);
@@ -33,10 +32,8 @@ public:
 		return dynamic_cast<T*>(result->get());
 	}
 
-	ShaderProgram* GetShaderProgram() { return m_shaderProgram.get(); }
-
 private:
-	std::vector<std::unique_ptr<Component>> m_components;
-	std::unique_ptr<ShaderProgram> m_shaderProgram{ nullptr };
+	std::vector<std::unique_ptr<Component>> m_components{ };
+	RenderableObject* m_renderableObject{ nullptr };
 };
 }
