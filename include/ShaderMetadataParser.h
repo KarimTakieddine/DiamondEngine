@@ -11,6 +11,9 @@ namespace diamond_engine {
 struct ShaderMetadata {
 	std::string file;
 	GLenum type;
+
+	std::vector<std::string> attributes;
+	std::vector<std::string> uniforms;
 };
 
 class ShaderProgramMetadata {
@@ -18,6 +21,10 @@ public:
 	void AddShaderData(const ShaderMetadata& shaderData);
 
 	void SetName(const std::string& name);
+
+	const std::string& GetName() const;
+
+	const std::vector<ShaderMetadata>& getShaderEntries() const;
 
 private:
 	std::vector<ShaderMetadata> m_shaderData{ };

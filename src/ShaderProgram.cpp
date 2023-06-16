@@ -1,9 +1,13 @@
 #include <algorithm>
+#include <stdexcept>
 
 #include "ShaderProgram.h"
 
 namespace diamond_engine {
-	ShaderProgram::ShaderProgram() : m_shaders(), m_object(glCreateProgram()) { }
+	ShaderProgram::ShaderProgram() : m_shaders(), m_object(glCreateProgram()) {
+		m_attributes.reserve(GL_MAX_VERTEX_ATTRIBS);
+		m_uniforms.reserve(GL_MAX_UNIFORM_LOCATIONS);
+	}
 	
 	void ShaderProgram::AttachShader(const std::shared_ptr<Shader>& shader) {
 		m_shaders.push_back(shader);
@@ -37,7 +41,33 @@ namespace diamond_engine {
 	GLuint ShaderProgram::GetObject() const {
 		return m_object;
 	}
-	
+
+	void ShaderProgram::LoadAttributes(const std::vector<std::string>& attributes) {
+		LoadVariables(attributes, glGetAttribLocation, m_attributes);
+	}
+
+	GLint ShaderProgram::GetAttribute(const std::string& name) const {
+		auto it = m_attributes.find(name);
+		if (it == m_attributes.cend()) {
+			return -1;
+		}
+
+		return it->second;
+	}
+
+	void ShaderProgram::LoadUniforms(const std::vector<std::string>& uniforms) {
+		LoadVariables(uniforms, glGetUniformLocation, m_uniforms);
+	}
+
+	GLint ShaderProgram::GetUniform(const std::string& name) const {
+		auto it = m_uniforms.find(name);
+		if (it == m_uniforms.cend()) {
+			return -1;
+		}
+
+		return it->second;
+	}
+
 	ShaderProgram::~ShaderProgram() {
 		for (const auto& shader : m_shaders) {
 			glDetachShader(m_object, shader->GetObject());
@@ -46,5 +76,21 @@ namespace diamond_engine {
 		m_shaders.clear();
 
 		glDeleteProgram(m_object);
+	}
+
+	void ShaderProgram::LoadVariables(const std::vector<std::string>& variables, VarFindFunc findFunc, std::unordered_map<std::string, GLint>& data) {
+		if (!findFunc) {
+			throw std::runtime_error("No find function supplied to initialize shader program variables");
+		}
+
+		for (const auto& variable : variables) {
+			const GLint variableLocation = findFunc(m_object, variable.c_str());
+
+			if (variableLocation == -1) {
+				throw std::runtime_error("Failed to find shader program variable named: " + variable);
+			}
+
+			data.emplace(variable, variableLocation);
+		}
 	}
 }

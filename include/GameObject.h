@@ -13,6 +13,10 @@ public:
 	void ReleaseComponent(std::unique_ptr<Component> component);
 
 	void SetRenderableObject(RenderableObject* renderableObject);
+
+	const RenderableObject* GetRenderableObject() const;
+
+	RenderableObject* GetRenderableObject();
 	
 	void OnAddedToScene();
 	void Update(GLfloat deltaTime);

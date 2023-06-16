@@ -58,6 +58,7 @@ set(SOURCES
     ${SRC_DIR}/Material.cpp
     ${SRC_DIR}/Transform.cpp
     ${SRC_DIR}/Camera.cpp
+    ${SRC_DIR}/RenderSequence.cpp
     ${SRC_DIR}/Scene.cpp
     ${SRC_DIR}/SpriteBuilder.cpp
     ${SRC_DIR}/File.cpp

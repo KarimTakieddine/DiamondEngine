@@ -1,7 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-#include "GameObject.h"
 #include "Transform.h"
 
 namespace diamond_engine {
@@ -27,11 +25,7 @@ namespace diamond_engine {
 		SetDirty();
 	}
 
-	void Transform::BindToContext() {
-		//m_modelUniformLocation = glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kModelUniformLocation.c_str());
-	}
-
-	void Transform::Update(GLfloat deltaTime) {
+	void Transform::Update() {
 		/*m_modelMatrix = m_localToWorld * m_localScale * m_localRotation;
 
 		glUniformMatrix4fv(
@@ -41,7 +35,12 @@ namespace diamond_engine {
 			glm::value_ptr(m_modelMatrix)
 		);*/
 
+		m_model = m_localToWorld * m_localScale * m_localRotation;
 		UnsetDirty();
+	}
+
+	const glm::mat4& Transform::GetModelMatrix() const {
+		return m_model;
 	}
 
 	void Transform::SetDirty() {

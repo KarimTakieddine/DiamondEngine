@@ -41,6 +41,14 @@ namespace diamond_engine {
 		m_renderableObject = renderableObject;
 	}
 
+	const RenderableObject* GameObject::GetRenderableObject() const {
+		return m_renderableObject;
+	}
+
+	RenderableObject* GameObject::GetRenderableObject() {
+		return m_renderableObject;
+	}
+
 	void GameObject::OnAddedToScene() {
 		/*m_shaderProgram->Link();
 

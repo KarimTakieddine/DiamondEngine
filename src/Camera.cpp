@@ -9,14 +9,7 @@ namespace diamond_engine {
 
 	/* static */ const std::string Camera::kViewUniformLocation = "view";
 
-	Camera::Camera() : m_transform(std::make_unique<Transform>()) { }
-
-	void Camera::BindToContext() {
-		//m_projectionUniformLocation = glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kProjectionUniformLocation.c_str());
-		//m_viewUniformLocation		= glGetUniformLocation(m_gameObject->GetShaderProgram()->GetObject(), kViewUniformLocation.c_str());
-	}
-
-	void Camera::Update(GLfloat deltaTime) {
+	void Camera::Update() {
 		/*
 			From the OpenGL FAQ at:
 
@@ -33,10 +26,10 @@ namespace diamond_engine {
 				the inverse of the camera transformation.
 		*/
 
-		const glm::mat4 viewTransform = m_view * glm::inverse(m_transform->GetLocalToWorldMatrix());
+		m_viewTransform = m_view * glm::inverse(m_transform.GetLocalToWorldMatrix());
 
-		glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
-		glUniformMatrix4fv(m_viewUniformLocation, 1, GL_FALSE, glm::value_ptr(viewTransform));
+		//glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
+		//glUniformMatrix4fv(m_viewUniformLocation, 1, GL_FALSE, glm::value_ptr(viewTransform));
 	}
 
 	void Camera::SetProjectionFrustum(GLfloat height, GLfloat aspectRatio, GLfloat nearPlane, GLfloat farPlane) {
@@ -110,8 +103,12 @@ namespace diamond_engine {
 
 		SetProjectionFrustum(m_height, m_aspectRatio, m_nearPlane, farPlane);
 	}
-	
-	Transform* Camera::GetTransform() {
-		return m_transform.get();
+
+	const glm::mat4& Camera::GetViewTransform() const {
+		return m_viewTransform;
+	}
+
+	const glm::mat4& Camera::GetProjection() const {
+		return m_projection;
 	}
 }

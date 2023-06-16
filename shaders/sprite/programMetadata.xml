@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Program name="sprite">
-	<Shader type="vertex" file="vertex_transform.dmsh"/>
-	<Shader type="fragment" file="fragment_sprite.dmsh"/>
+	<Shader type="vertex" file="vertex_transform.dmsh">
+		<Attributes>
+			<Attribute name="position"/>
+			<Attribute name="color"/>
+		</Attributes>
+		<Uniforms>
+			<Uniform name="projection"/>
+			<Uniform name="view"/>
+			<Uniform name="model"/>
+		</Uniforms>
+	</Shader>
+	<Shader type="fragment" file="fragment_sprite.dmsh">
+		<Uniforms>
+			<Uniform name="materialColor"/>
+		</Uniforms>
+	</Shader>
 </Program>

@@ -3,9 +3,9 @@
 #include <string>
 #include <type_traits>
 
-#include <glm/glm.hpp>
+#include <GL/glew.h>
 
-#include "Component.h"
+#include <glm/glm.hpp>
 
 namespace diamond_engine {
 	enum class DirtyFlag : GLubyte {
@@ -29,11 +29,8 @@ namespace diamond_engine {
 			static_cast<std::underlying_type_t<DirtyFlag>>(r));
 	}
 
-// TODO: Separate updatable components from Renderable components. Possibly use multiple inheritance here?
-class Transform : public Component {
+class Transform {
 public:
-	
-
 	static const std::string kModelUniformLocation;
 
 	void Translate(const glm::vec3& displacement);
@@ -44,24 +41,13 @@ public:
 
 	void SetLocalScale(const glm::vec3& scale);
 
-	void BindToContext() override;
-
-	void Render() override { }
-
-	void Update(GLfloat deltaTime) override;
-
-	const char* GetName() const override {
-		return "Transform";
-	}
-
 	const glm::mat4& GetLocalToWorldMatrix() const {
 		return m_localToWorld;
 	}
 
-protected:
-	void OnSetGameObject() override { }
+	void Update();
 
-	void OnGameObjectAboutToBeUnset() override { }
+	const glm::mat4& GetModelMatrix() const;
 
 private:
 	void SetDirty();
@@ -71,6 +57,7 @@ private:
 	glm::mat4 m_localToWorld{ 1.0f };
 	glm::mat4 m_localRotation{ 1.0f };
 	glm::mat4 m_localScale{ 1.0f };
+	glm::mat4 m_model{ 1.0f };
 	DirtyFlag m_dirtyFlag{ DirtyFlag::UNSET };
 };
 }

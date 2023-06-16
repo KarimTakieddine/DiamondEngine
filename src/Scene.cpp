@@ -14,15 +14,15 @@ namespace diamond_engine {
 	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject) {
 		gameObject->OnAddedToScene();
 
-		m_camera->SetGameObject(gameObject.get());
-		m_camera->BindToContext();
+		//m_camera->SetGameObject(gameObject.get());
+		//m_camera->BindToContext();
 
 		m_gameObjects.push_back(std::move(gameObject));
 	}
 
 	void Scene::Update(GLfloat deltaTime) {
 		for (auto& gameObject : m_gameObjects) {
-			m_camera->Update(deltaTime);
+			//m_camera->Update(deltaTime);
 
 			gameObject->Update(deltaTime);
 		}
