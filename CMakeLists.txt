@@ -17,6 +17,7 @@ set(GLM_DIR glm)
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
 set(SHADERS_DIR shaders)
+set(SCENES_DIR scenes)
 
 # GLEW:
 
@@ -59,6 +60,10 @@ set(SOURCES
     ${SRC_DIR}/Transform.cpp
     ${SRC_DIR}/Camera.cpp
     ${SRC_DIR}/RenderSequence.cpp
+    ${SRC_DIR}/GameObjectConfig.cpp
+    ${SRC_DIR}/MeshRendererConfig.cpp
+    ${SRC_DIR}/GameObjectConfigParser.cpp
+    ${SRC_DIR}/MeshRendererConfigParser.cpp
     ${SRC_DIR}/Scene.cpp
     ${SRC_DIR}/SpriteBuilder.cpp
     ${SRC_DIR}/File.cpp
@@ -78,4 +83,8 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${SHADERS_DIR}" $<TARGET_FILE_DIR:${PROJECT_NAME}>/${SHADERS_DIR}
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${SCENES_DIR}" $<TARGET_FILE_DIR:${PROJECT_NAME}>/${SCENES_DIR}
 )
