@@ -26,15 +26,6 @@ namespace diamond_engine {
 	}
 
 	void Transform::Update() {
-		/*m_modelMatrix = m_localToWorld * m_localScale * m_localRotation;
-
-		glUniformMatrix4fv(
-			m_modelUniformLocation,
-			1,
-			GL_FALSE,
-			glm::value_ptr(m_modelMatrix)
-		);*/
-
 		m_model = m_localToWorld * m_localScale * m_localRotation;
 		UnsetDirty();
 	}

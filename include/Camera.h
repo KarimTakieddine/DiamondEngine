@@ -5,9 +5,6 @@
 namespace diamond_engine {
 class Camera {
 public:
-	static const std::string kProjectionUniformLocation;
-	static const std::string kViewUniformLocation;
-
 	void Update();
 
 	void SetProjectionFrustum(GLfloat height, GLfloat aspectRatio, GLfloat nearPlane, GLfloat farPlane);

@@ -1,23 +1,18 @@
 #pragma once
 
-#include <GL/glew.h>
-
 #include "GameObject.h"
-#include "SharedShaderStore.h"
+#include "GLAllocator.h"
 
 namespace diamond_engine {
+class GameObjectConfig;
+
 class GameObjectBuilder {
 public:
-	void SetGameObject(GameObject* gameObject);
+	void SetBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator);
 
-	void SetSharedShaderStore(const std::shared_ptr<SharedShaderStore>& sharedShaderStore);
+	std::unique_ptr<GameObject> Build(const GameObjectConfig* gameObjectConfig);
 
-	virtual void AddComponents() = 0;
-
-	virtual ~GameObjectBuilder() = default;
-
-protected:
-	std::shared_ptr<SharedShaderStore> m_sharedShaderStore;
-	GameObject* m_gameObject{ nullptr };
+private:
+	std::shared_ptr<GLAllocator> m_bufferAllocator{ nullptr };
 };
 }

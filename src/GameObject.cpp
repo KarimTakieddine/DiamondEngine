@@ -7,8 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace diamond_engine {
-	// GameObject::GameObject() : m_components()/*, m_shaderProgram(std::make_unique<ShaderProgram>())*/ { }
-
 	void GameObject::AcquireComponent(std::unique_ptr<Component> component) {
 		if (std::find_if(
 			m_components.begin(),
@@ -23,21 +21,13 @@ namespace diamond_engine {
 		m_components.push_back(std::move(component));
 	}
 
-	void GameObject::ReleaseComponent(std::unique_ptr<Component> component) {
-		auto element = std::find_if(m_components.begin(), m_components.end(),
-			[&](auto& element) { return element->GetName() == component->GetName(); });
-
-		if (element == m_components.end()) {
-			return;
+	void GameObject::BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) {
+		for (const auto& component : m_components) {
+			component->BindToShaderProgram(shaderProgram);
 		}
-
-		(*element)->UnsetGameObject();
-
-		m_components.erase(element);
 	}
 
-	void GameObject::SetRenderableObject(RenderableObject* renderableObject)
-	{
+	void GameObject::SetRenderableObject(RenderableObject* renderableObject) {
 		m_renderableObject = renderableObject;
 	}
 
@@ -50,30 +40,10 @@ namespace diamond_engine {
 	}
 
 	void GameObject::OnAddedToScene() {
-		/*m_shaderProgram->Link();
-
-		if (!m_shaderProgram->IsLinked()) {
-			throw std::runtime_error("Unable to link GameObject ShaderProgram");
-		}
-
-		glUseProgram(m_shaderProgram->GetObject());*/
 		for (auto& component : m_components) {
-			component->BindToContext();
+			component->OnAddedToScene();
 		}
 	}
 
-	void GameObject::Update(GLfloat deltaTime) {
-		//glUseProgram(m_shaderProgram->GetObject());
-
-		for (auto& component : m_components) {
-			component->Update(deltaTime);
-		}
-	}
-
-	void GameObject::Render() {
-		//glUseProgram(m_shaderProgram->GetObject());
-		for (auto& component : m_components) {
-			component->Render();
-		}
-	}
+	void GameObject::Update(GLfloat deltaTime) { }
 }

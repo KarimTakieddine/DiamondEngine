@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-
 #include "ComponentConfigParser.h"
 
 namespace diamond_engine {

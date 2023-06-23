@@ -3,13 +3,10 @@
 #include <memory>
 #include <vector>
 
+#include "GameObjectType.h"
 #include "ComponentConfig.h"
 
 namespace diamond_engine {
-enum class GameObjectType : unsigned {
-	SPRITE = 0
-};
-
 class GameObjectConfig {
 public:
 	using ComponentConfigList = std::vector<std::unique_ptr<ComponentConfig>>;

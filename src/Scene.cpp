@@ -2,43 +2,74 @@
 
 #include <GL/glew.h>
 
-#include "GameObjectDesigner.h"
 #include "Scene.h"
 
 namespace diamond_engine {
-	Scene::Scene() : m_camera(std::make_unique<Camera>()), m_gameObjects() {
+	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) :
+		m_sharedShaderStore(sharedShaderStore),
+		m_vertexArrayAllocator(std::make_shared<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays)),
+		m_bufferAllocator(std::make_shared<GLAllocator>(glGenBuffers, glDeleteBuffers)),
+		m_camera(std::make_shared<Camera>()),
+		m_renderableObjectAllocator(std::make_shared<ObjectAllocator>()),
+		m_spriteRenderSequence(std::make_unique<RenderSequence>()) {
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		m_camera->SetProjectionFrustum(5.0f, 1.333f, 0.1f, 100.0f);
+
+
+		const std::shared_ptr<ShaderProgram>& spriteShaderProgram = m_sharedShaderStore->FindProgram("sprite");
+
+		if (!spriteShaderProgram) {
+			throw std::runtime_error("Failed to locate \"sprite\" shader in shared shader store instance");
+		}
+
+		m_spriteRenderSequence->SetRenderDescriptor(
+			{
+				"projection",
+				"view",
+				"model",
+				"materialColor"
+			}
+		);
+		m_spriteRenderSequence->SetShaderProgram(spriteShaderProgram);
+		m_spriteRenderSequence->SetCamera(m_camera);
+		m_spriteRenderSequence->SetObjectAllocator(m_renderableObjectAllocator);
+		m_spriteRenderSequence->SetVertexArrayAllocator(m_vertexArrayAllocator);
 	}
 
-	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject) {
-		gameObject->OnAddedToScene();
+	void Scene::SetMaxObjects(GLint maxObjects) {
+		m_vertexArrayAllocator->Reserve(static_cast<GLsizei>(maxObjects));
+		m_vertexArrayAllocator->Allocate(static_cast<GLsizei>(maxObjects));
 
-		//m_camera->SetGameObject(gameObject.get());
-		//m_camera->BindToContext();
+		m_bufferAllocator->Reserve(static_cast<GLsizei>(maxObjects << 1));
+		m_bufferAllocator->Allocate(static_cast<GLsizei>(maxObjects << 1));
 
-		m_gameObjects.push_back(std::move(gameObject));
+		m_renderableObjectAllocator->Allocate(static_cast<size_t>(maxObjects));
+		m_renderableObjectAllocator->Expand(static_cast<size_t>(maxObjects));
+	}
+
+	const std::shared_ptr<GLAllocator>& Scene::GetBufferAllocator() const {
+		return m_bufferAllocator;
+	}
+
+	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject, GameObjectType type) {
+		switch (type) {
+		case GameObjectType::SPRITE: {
+			m_spriteRenderSequence->AddGameObject(std::move(gameObject));
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	void Scene::Update(GLfloat deltaTime) {
-		for (auto& gameObject : m_gameObjects) {
-			//m_camera->Update(deltaTime);
-
-			gameObject->Update(deltaTime);
-		}
-	}
-
-	void Scene::Render() {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
-		// TODO: Make  this a member?
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (auto& gameObject : m_gameObjects) {
-			gameObject->Render();
-		}
+		m_spriteRenderSequence->Update(deltaTime);
 	}
 
 	void Scene::OnWindowResize(int width, int height) {

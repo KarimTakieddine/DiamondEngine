@@ -1,5 +1,6 @@
 #include <string>
 #include <stdexcept>
+#include <unordered_map>
 
 #include <pugixml.hpp>
 
@@ -51,6 +52,7 @@ namespace diamond_engine {
 				case ComponentType::MeshRenderer: {
 					MeshRendererConfigParser configParser;
 					gameObjectConfig->AddComponentConfig(configParser.Parse(componentNode));
+					break;
 				}
 				default:
 					break;

@@ -21,6 +21,12 @@ namespace diamond_engine {
 		m_objectAllocator = objectAllocator;
 	}
 
+	void RenderSequence::SetVertexArrayAllocator(const std::shared_ptr<GLAllocator>& vertexArrayAllocator) {
+		// TODO: Throw here?
+
+		m_vertexArrayAllocator = vertexArrayAllocator;
+	}
+
 	void RenderSequence::SetRenderDescriptor(const RenderDescriptor& renderDescriptor) {
 		m_renderDescriptor = renderDescriptor;
 	}
@@ -36,10 +42,15 @@ namespace diamond_engine {
 			throw std::runtime_error("Failed to allocate RenderableObject instance for game object");
 		}
 
+		renderableObject->vertexArrayObject			= m_vertexArrayAllocator->Get();
 		renderableObject->transformUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.modelUniform);
 		renderableObject->colorUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
 
 		gameObject->SetRenderableObject(renderableObject);
+		gameObject->BindToShaderProgram(m_shaderProgram);
+		
+		glUseProgram(m_shaderProgram->GetObject());
+		gameObject->OnAddedToScene();
 	}
 
 	void RenderSequence::SetCamera(const std::shared_ptr<Camera> camera) {

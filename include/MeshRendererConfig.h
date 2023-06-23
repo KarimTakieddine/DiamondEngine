@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GL/glew.h"
+
 #include "ComponentConfig.h"
 #include "MeshType.h"
 
@@ -8,7 +10,7 @@ class MeshRendererConfig : public ComponentConfig {
 public:
 	virtual ~MeshRendererConfig() override = default;
 
-	ComponentType GetType() const {
+	ComponentType GetType() const override {
 		return ComponentType::MeshRenderer;
 	}
 
@@ -16,7 +18,12 @@ public:
 
 	MeshType GetMeshType() const;
 
+	void SetDrawMode(GLenum drawMode);
+
+	GLenum GetDrawMode() const;
+
 private:
 	MeshType m_meshType;
+	GLenum m_drawMode;
 };
 }

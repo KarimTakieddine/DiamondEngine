@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Scene>
+<Scene maxObjects="256">
 	<GameObjects>
 		<GameObject type="sprite">
 			<Components>
-				<MeshRenderer meshType="quad"/>
+				<MeshRenderer meshType="quad" drawMode="dynamic"/>
 			</Components>
 		</GameObject>
 	</GameObjects>

@@ -1,23 +1,29 @@
 #pragma once
 
-#include <vector>
-
-#include "Camera.h"
-#include "GameObject.h"
+#include "GameObjectType.h"
+#include "RenderSequence.h"
+#include "SharedShaderStore.h"
 
 namespace diamond_engine {
 class Scene {
 public:
-	explicit Scene();
+	explicit Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore);
 
-	void AddGameObject(std::unique_ptr<GameObject> gameObject);
+	void SetMaxObjects(GLint maxObjects);
+
+	const std::shared_ptr<GLAllocator>& GetBufferAllocator() const;
+
+	void AddGameObject(std::unique_ptr<GameObject> gameObject, GameObjectType type);
 
 	void Update(GLfloat deltaTime);
-	void Render();
 	void OnWindowResize(int width, int height);
 
 private:
-	std::unique_ptr<Camera> m_camera{ nullptr };
-	std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+	std::shared_ptr<SharedShaderStore> m_sharedShaderStore	{ nullptr };
+	std::shared_ptr<GLAllocator> m_vertexArrayAllocator		{ nullptr };
+	std::shared_ptr<GLAllocator> m_bufferAllocator			{ nullptr };
+	std::shared_ptr<Camera> m_camera						{ nullptr };
+	SharedObjectAllocator m_renderableObjectAllocator		{ nullptr };
+	std::unique_ptr<RenderSequence> m_spriteRenderSequence	{ nullptr };
 };
 }

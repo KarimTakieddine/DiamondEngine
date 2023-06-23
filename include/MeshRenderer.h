@@ -1,91 +1,44 @@
 #pragma once 
 
 #include <memory>
-#include <string>
 
-#include "Material.h"
+#include "Component.h"
 #include "Mesh.h"
-#include "Shader.h"
 
 namespace diamond_engine {
-enum class MeshType : unsigned {
-	BACKGROUND	= 0,
-	SPRITE		= 1
-};
-
-enum class RenderMode : unsigned {
-	SOLID		= 0,
-	WIREFRAME	= 1
-};
-
-inline GLenum GetDrawType(MeshType meshType) {
-	switch (meshType) {
-	case MeshType::BACKGROUND:
-		return GL_STATIC_DRAW;
-	case MeshType::SPRITE:
-		return GL_DYNAMIC_DRAW;
-	default:
-		return GL_STATIC_DRAW;
-	}
-}
-
-inline GLenum GetDrawMode(RenderMode renderMode) {
-	switch (renderMode) {
-	case RenderMode::SOLID:
-		return GL_TRIANGLES;
-	case RenderMode::WIREFRAME:
-		return GL_LINES;
-	default:
-		return GL_TRIANGLES;
-	}
-}
-
 class MeshRenderer : public Component {
 public:
-	static const std::string kVertexAttributeLocation;
-	static const std::string kColorAttributeLocation;
-	static const std::string kTextureCoordinateAttributeLocation;
+	static const std::string kVertexAttributeName;
+	static const std::string kColorAttributeName;
+	static const std::string kTextureCoordinateName;
 
-	MeshRenderer(
-		GLuint vertexArrayObject,
-		GLuint vertexBufferObject,
-		GLuint elementBufferObject);
+	void BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) override;
 
-	void BindToContext() override;
-
-	void Render() override;
-
-	void Update(GLfloat deltaTime) override;
+	void OnAddedToScene() override;
 
 	const char* GetName() const override {
 		return "MeshRenderer";
 	}
 
-	void SetMeshType(MeshType meshType);
-
-	void SetRenderMode(RenderMode renderMode);
-
 	void SetMesh(const std::shared_ptr<Mesh>& mesh);
 
-	void SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
+	void SetVertexBufferObject(GLuint vertexBufferObject);
 
-	void SetMaterial(const std::shared_ptr<Material>& material);
+	void SetElementBufferObject(GLuint elementBufferObject);
 
-	const std::shared_ptr<Material>& GetMaterial() const;
+	void SetVertexAttributeLocation(GLuint vertexAttributeLocation);
 
-protected:
-	void OnSetGameObject() override;
+	void SetColorAttributeLocation(GLuint colorAttributeLocation);
 
-	void OnGameObjectAboutToBeUnset() override;
+	void SetDrawMode(GLenum drawMode);
 
 private:
-	std::shared_ptr<Shader> m_vertexShader	{ nullptr };
-	std::shared_ptr<Mesh> m_mesh			{ nullptr };
-	std::shared_ptr<Material> m_material	{ nullptr };
-	MeshType m_meshType						{ MeshType::BACKGROUND };
-	RenderMode m_renderMode					{ RenderMode::SOLID };
-	GLuint m_vertexArrayObject;
-	GLuint m_vertexBufferObject;
-	GLuint m_elementBufferObject;
+	std::shared_ptr<Mesh> m_mesh	{ nullptr };
+	GLuint m_vertexArrayObject		{ 0 };
+	GLuint m_vertexBufferObject		{ 0 };
+	GLuint m_elementBufferObject	{ 0 };
+	GLint m_vertexAttributeLocation	{ -1 };
+	GLint m_colorAttributeLocation	{ -1 };
+	GLenum m_drawMode				{ GL_STATIC_DRAW };
 };
 }

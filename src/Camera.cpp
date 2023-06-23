@@ -5,10 +5,6 @@
 #include "Transform.h"
 
 namespace diamond_engine {
-	/* static */ const std::string Camera::kProjectionUniformLocation = "projection";
-
-	/* static */ const std::string Camera::kViewUniformLocation = "view";
-
 	void Camera::Update() {
 		/*
 			From the OpenGL FAQ at:
@@ -27,9 +23,6 @@ namespace diamond_engine {
 		*/
 
 		m_viewTransform = m_view * glm::inverse(m_transform.GetLocalToWorldMatrix());
-
-		//glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(m_projection));
-		//glUniformMatrix4fv(m_viewUniformLocation, 1, GL_FALSE, glm::value_ptr(viewTransform));
 	}
 
 	void Camera::SetProjectionFrustum(GLfloat height, GLfloat aspectRatio, GLfloat nearPlane, GLfloat farPlane) {

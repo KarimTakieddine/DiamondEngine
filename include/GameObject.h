@@ -10,7 +10,8 @@ namespace diamond_engine {
 class GameObject {
 public:
 	void AcquireComponent(std::unique_ptr<Component> component);
-	void ReleaseComponent(std::unique_ptr<Component> component);
+
+	void BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram);
 
 	void SetRenderableObject(RenderableObject* renderableObject);
 
@@ -20,7 +21,6 @@ public:
 	
 	void OnAddedToScene();
 	void Update(GLfloat deltaTime);
-	void Render();
 
 	template<typename T>
 	T* GetComponent(const std::string& name) const {

@@ -51,7 +51,6 @@ set(SOURCES
     ${SRC_DIR}/SharedMeshStore.cpp
     ${SRC_DIR}/GameObject.cpp
     ${SRC_DIR}/GameObjectBuilder.cpp
-    ${SRC_DIR}/GameObjectDesigner.cpp
     ${SRC_DIR}/Shader.cpp
     ${SRC_DIR}/ShaderProgram.cpp
     ${SRC_DIR}/ShaderMetadataParser.cpp
@@ -61,11 +60,14 @@ set(SOURCES
     ${SRC_DIR}/Camera.cpp
     ${SRC_DIR}/RenderSequence.cpp
     ${SRC_DIR}/GameObjectConfig.cpp
+    ${SRC_DIR}/SceneConfig.cpp
     ${SRC_DIR}/MeshRendererConfig.cpp
-    ${SRC_DIR}/GameObjectConfigParser.cpp
     ${SRC_DIR}/MeshRendererConfigParser.cpp
+    ${SRC_DIR}/GameObjectConfigParser.cpp
+    ${SRC_DIR}/MeshRendererBuilder.cpp
+    ${SRC_DIR}/SceneConfigParser.cpp
     ${SRC_DIR}/Scene.cpp
-    ${SRC_DIR}/SpriteBuilder.cpp
+    ${SRC_DIR}/SceneBuilder.cpp
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
