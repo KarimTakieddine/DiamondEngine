@@ -14,7 +14,7 @@ public:
 
 	void InitializeGLEW();
 
-	void SetScene(std::unique_ptr<Scene> scene);
+	void SetScene(Scene* scene);
 
 	void Execute();
 
@@ -26,6 +26,6 @@ private:
 	void OnWindowUpdate(GLfloat deltaTime);
 
 	std::unique_ptr<Window> m_window{ nullptr };
-	std::unique_ptr<Scene> m_scene{ nullptr };
+	Scene* m_scene					{ nullptr };
 };
 }

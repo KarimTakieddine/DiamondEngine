@@ -36,8 +36,8 @@ namespace diamond_engine {
 		}
 	}
 
-	void GraphicsContext::SetScene(std::unique_ptr<Scene> scene) {
-		m_scene = std::move(scene);
+	void GraphicsContext::SetScene(Scene* scene) {
+		m_scene = scene;
 	}
 
 	void GraphicsContext::Execute() {
@@ -45,19 +45,20 @@ namespace diamond_engine {
 			throw std::runtime_error("Cannot Execute() GraphicsContext with no window");
 		}
 
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+
 		m_window->StartUpdateLoop();
 	}
 
 	GraphicsContext::~GraphicsContext() {
-		m_scene.reset(nullptr);
 		m_window.reset(nullptr);
 
 		glfwTerminate();
 	}
 
 	void GraphicsContext::OnWindowResize(const Size& windowSize) {
-		if (m_scene)
-		{
+		if (m_scene) {
 			m_scene->OnWindowResize(windowSize.width, windowSize.height);
 		}
 

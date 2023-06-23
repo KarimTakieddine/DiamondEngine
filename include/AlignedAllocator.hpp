@@ -106,6 +106,8 @@ namespace diamond_engine
 			
 			m_current = updatedCurrent;
 
+			*current = T();
+
 			return current;
 		}
 

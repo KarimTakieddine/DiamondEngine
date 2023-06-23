@@ -14,31 +14,25 @@ namespace diamond_engine {
 	}
 
 	void MeshRenderer::OnAddedToScene() {
+		if (!m_mesh) {
+			return;
+		}
+
 		glBindVertexArray(m_gameObject->GetRenderableObject()->vertexArrayObject);
 
-		if (m_mesh) {
-			const std::vector<Vertex>& meshVertices = m_mesh->GetVertices();
-			glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject);
-			glBufferData(GL_ARRAY_BUFFER, meshVertices.size() * sizeof(Vertex), meshVertices.data(), m_drawMode);
+		const std::vector<Vertex>& meshVertices = m_mesh->GetVertices();
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject);
+		glBufferData(GL_ARRAY_BUFFER, meshVertices.size() * sizeof(Vertex), meshVertices.data(), m_drawMode);
 
-			const std::vector<GLuint>& meshTriangles = m_mesh->GetTriangles();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferObject);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), m_drawMode);
+		const std::vector<GLuint>& meshTriangles = m_mesh->GetTriangles();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferObject);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), m_drawMode);
 
-			m_gameObject->GetRenderableObject()->drawCall.drawMode		= m_drawMode;
-			m_gameObject->GetRenderableObject()->drawCall.elementCount	= meshTriangles.size();
-		}
-
-		if (m_vertexAttributeLocation == -1) {
-			throw std::runtime_error("Could not locate: " + kVertexAttributeName + " vertex attribute set on MeshRenderer instance");
-		}
+		m_gameObject->GetRenderableObject()->drawCall.drawMode		= m_renderMode;
+		m_gameObject->GetRenderableObject()->drawCall.elementCount	= meshTriangles.size();
 
 		glEnableVertexAttribArray(m_vertexAttributeLocation);
 		glVertexAttribPointer(m_vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-
-		if (m_colorAttributeLocation == -1) {
-			throw std::runtime_error("Could not locate: " + kColorAttributeName + " color attribute set on MeshRenderer instance");
-		}
 
 		glEnableVertexAttribArray(m_colorAttributeLocation);
 		glVertexAttribPointer(m_colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));

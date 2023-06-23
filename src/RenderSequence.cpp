@@ -51,6 +51,8 @@ namespace diamond_engine {
 		
 		glUseProgram(m_shaderProgram->GetObject());
 		gameObject->OnAddedToScene();
+
+		m_gameObjects.push_back(std::move(gameObject));
 	}
 
 	void RenderSequence::SetCamera(const std::shared_ptr<Camera> camera) {

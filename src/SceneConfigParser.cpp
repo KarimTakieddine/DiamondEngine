@@ -9,9 +9,9 @@ namespace diamond_engine {
 	std::unique_ptr<SceneConfig> SceneConfigParser::Parse(const pugi::xml_document& sceneDocument) {
 		std::unique_ptr<SceneConfig> result = std::make_unique<SceneConfig>();
 
-		pugi::xml_node rootNode = sceneDocument.root();
+		pugi::xml_node sceneNode = sceneDocument.root().first_child();
 
-		pugi::xml_attribute maxObjectsAttribute = rootNode.attribute("maxObjects");
+		pugi::xml_attribute maxObjectsAttribute = sceneNode.attribute("maxObjects");
 
 		if (!maxObjectsAttribute) {
 			throw std::runtime_error("No \"maxObjects\" attribute set on root <Scene/> node");
@@ -25,7 +25,7 @@ namespace diamond_engine {
 
 		result->SetMaxObjects(maxObjects);
 
-		pugi::xml_node gameObjectsNode = rootNode.child("GameObjects");
+		pugi::xml_node gameObjectsNode = sceneNode.child("GameObjects");
 
 		if (!gameObjectsNode) {
 			return result;

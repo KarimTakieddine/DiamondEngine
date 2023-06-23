@@ -22,7 +22,7 @@ namespace diamond_engine {
 			throw std::runtime_error("No node given to MeshRendererConfigParser::Parse()");
 		}
 
-		pugi::xml_attribute meshTypeAttribute = componentNode.attribute("type");
+		pugi::xml_attribute meshTypeAttribute = componentNode.attribute("meshType");
 
 		if (!meshTypeAttribute) {
 			throw std::runtime_error("No \"meshType\" attribute was found on <MeshRenderer/> node");

@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+#include <glm/vec3.hpp>
+
 #include "GameObjectType.h"
 #include "ComponentConfig.h"
 
@@ -21,6 +23,8 @@ public:
 
 private:
 	ComponentConfigList m_componentConfigs{ };
+	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
+	glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
 	GameObjectType m_type{ GameObjectType::SPRITE };
 };
 }

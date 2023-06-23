@@ -86,10 +86,6 @@ namespace diamond_engine {
 		for (const auto& variable : variables) {
 			const GLint variableLocation = findFunc(m_object, variable.c_str());
 
-			if (variableLocation == -1) {
-				throw std::runtime_error("Failed to find shader program variable named: " + variable);
-			}
-
 			data.emplace(variable, variableLocation);
 		}
 	}

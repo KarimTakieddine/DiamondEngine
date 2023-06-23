@@ -1,6 +1,6 @@
 #include "GraphicsContext.h"
 #include "LogManager.h"
-#include "SharedShaderStore.h"
+#include "SceneLoader.h"
 
 int main(int argc, char** argv) {
 
@@ -12,6 +12,12 @@ int main(int argc, char** argv) {
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
 		sharedShaderStore->Load("shaders");
 
+		std::shared_ptr<diamond_engine::SceneLoader> sceneLoader = std::make_shared<diamond_engine::SceneLoader>();
+		sceneLoader->SetSharedShaderStore(sharedShaderStore);
+		sceneLoader->LoadScenes("scenes");
+
+		diamond_engine::Scene* sampleScene = sceneLoader->FindScene("sample_scene");
+		graphicsContext->SetScene(sampleScene);
 		graphicsContext->Execute();
 	}
 	catch (const std::exception& e) {
