@@ -14,8 +14,12 @@ class RenderSequence {
 public:
 	struct RenderDescriptor {
 		std::string projectionUniform;
-		std::string viewUniform;
-		std::string modelUniform;
+		std::string cameraLocalToWorldUniform;
+		std::string cameraLocalRotationUniform;
+		std::string cameraViewUniform;
+		std::string objectLocalToWorldUniform;
+		std::string objectLocalRotationUniform;
+		std::string objectLocalScaleUniform;
 		std::string colorUniform;
 	};
 
@@ -45,6 +49,8 @@ private:
 	SharedShaderProgram m_shaderProgram{ nullptr };
 	SharedObjectAllocator m_objectAllocator{ nullptr };
 	GLint m_projectionUniformLocation{ -1 };
-	GLint m_viewUniformLocation{ -1 };
+	GLint m_cameraLocalToWorldUniformLocation{ -1 };
+	GLint m_cameraLocalRotationUniformLocation{ -1 };
+	GLint m_cameraViewUniformLocation{ -1 };
 };
 }

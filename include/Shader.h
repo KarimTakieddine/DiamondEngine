@@ -7,7 +7,7 @@
 namespace diamond_engine {
 class Shader {
 public:
-	static const size_t kMaxSourceLength = 0x200;
+	static const size_t kMaxSourceLength = 0x400;
 
 	Shader(GLenum type = GL_VERTEX_SHADER);
 

@@ -23,7 +23,7 @@ public:
 	GLenum GetDrawMode() const;
 
 private:
-	MeshType m_meshType;
-	GLenum m_drawMode;
+	MeshType m_meshType{ MeshType::TRIANGLE };
+	GLenum m_drawMode{ GL_STATIC_DRAW };
 };
 }

@@ -25,8 +25,12 @@ namespace diamond_engine {
 		m_spriteRenderSequence->SetRenderDescriptor(
 			{
 				"projection",
-				"view",
-				"model",
+				"cameraLocalToWorld",
+				"cameraLocalRotation",
+				"cameraView",
+				"objectLocalToWorld",
+				"objectLocalRotation",
+				"objectLocalScale",
 				"materialColor"
 			}
 		);

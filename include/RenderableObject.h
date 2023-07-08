@@ -10,7 +10,9 @@ namespace diamond_engine {
 		Material material{ };
 		DrawCall drawCall{ };
 		GLuint vertexArrayObject{ 0 };
-		GLint transformUniformLocation{ -1 };
+		GLint objectLocalToWorldUniformLocation{ -1 };
+		GLint objectLocalRotationUniformLocation{ -1 };
+		GLint objectLocalScaleUniformLocation{ -1 };
 		GLint colorUniformLocation{ -1 };
 	};
 }

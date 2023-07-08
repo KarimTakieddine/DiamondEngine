@@ -45,11 +45,15 @@ public:
 		return m_localToWorld;
 	}
 
+	const glm::mat4& GetLocalRotationMatrix() const {
+		return m_localRotation;
+	}
+
+	const glm::mat4& GetLocalScaleMatrix() const {
+		return m_localScale;
+	}
+
 	void SetPosition(const glm::vec3& position);
-
-	void Update();
-
-	const glm::mat4& GetModelMatrix() const;
 
 private:
 	void SetDirty();
@@ -59,7 +63,6 @@ private:
 	glm::mat4 m_localToWorld{ 1.0f };
 	glm::mat4 m_localRotation{ 1.0f };
 	glm::mat4 m_localScale{ 1.0f };
-	glm::mat4 m_model{ 1.0f };
 	DirtyFlag m_dirtyFlag{ DirtyFlag::UNSET };
 };
 }
