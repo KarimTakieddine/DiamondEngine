@@ -35,7 +35,7 @@ namespace diamond_engine {
 		return m_renderDescriptor;
 	}
 
-	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject) {
+	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject, const glm::vec3& position, const glm::vec3& color) {
 		RenderableObject* renderableObject = m_objectAllocator->Get();
 
 		if (!renderableObject) {
@@ -45,6 +45,9 @@ namespace diamond_engine {
 		renderableObject->vertexArrayObject			= m_vertexArrayAllocator->Get();
 		renderableObject->transformUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.modelUniform);
 		renderableObject->colorUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
+
+		renderableObject->transform.SetPosition(position);
+		renderableObject->material.SetColor(color);
 
 		gameObject->SetRenderableObject(renderableObject);
 		gameObject->BindToShaderProgram(m_shaderProgram);

@@ -32,7 +32,7 @@ namespace diamond_engine {
 			}
 
 			gameObjectBuilder.SetBufferAllocator(m_bufferAllocator);
-			result->AddGameObject(gameObjectBuilder.Build(gameObjectConfig.get()), gameObjectConfig->GetType());
+			result->AddGameObject(gameObjectBuilder.Build(gameObjectConfig.get()), gameObjectConfig->GetPosition(), gameObjectConfig->GetColor(), gameObjectConfig->GetType());
 		}
 
 		return result;

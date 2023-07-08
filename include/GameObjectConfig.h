@@ -19,6 +19,14 @@ public:
 
 	void SetType(GameObjectType type);
 
+	void SetPosition(const glm::vec3& position);
+
+	const glm::vec3& GetPosition() const;
+
+	void SetColor(const glm::vec3& color);
+
+	const glm::vec3& GetColor() const;
+
 	GameObjectType GetType() const;
 
 private:

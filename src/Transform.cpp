@@ -25,6 +25,16 @@ namespace diamond_engine {
 		SetDirty();
 	}
 
+	void Transform::SetPosition(const glm::vec3& position) {
+		glm::vec4& currentPosition = m_localToWorld[3];
+
+		currentPosition.x = position.x;
+		currentPosition.y = position.y;
+		currentPosition.z = position.z;
+
+		SetDirty();
+	}
+
 	void Transform::Update() {
 		m_model = m_localToWorld * m_localScale * m_localRotation;
 		UnsetDirty();

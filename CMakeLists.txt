@@ -64,6 +64,7 @@ set(SOURCES
     ${SRC_DIR}/MeshRendererConfig.cpp
     ${SRC_DIR}/MeshRendererConfigParser.cpp
     ${SRC_DIR}/GameObjectConfigParser.cpp
+    ${SRC_DIR}/Vector3Parser.cpp
     ${SRC_DIR}/MeshRendererBuilder.cpp
     ${SRC_DIR}/SceneConfigParser.cpp
     ${SRC_DIR}/Scene.cpp

@@ -45,6 +45,8 @@ public:
 		return m_localToWorld;
 	}
 
+	void SetPosition(const glm::vec3& position);
+
 	void Update();
 
 	const glm::mat4& GetModelMatrix() const;

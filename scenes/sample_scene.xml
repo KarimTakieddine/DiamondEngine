@@ -15,5 +15,12 @@
 				<MeshRenderer meshType="quad" drawMode="dynamic"/>
 			</Components>
 		</GameObject>
+		<GameObject type="sprite">
+			<Position x="-1.0" y="0.0" z="0.0"/>
+			<Color r="0.0" g="0.0" b="1.0"/>
+			<Components>
+				<MeshRenderer meshType="quad" drawMode="dynamic"/>
+			</Components>
+		</GameObject>
 	</GameObjects>
 </Scene>

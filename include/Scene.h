@@ -13,7 +13,7 @@ public:
 
 	const std::shared_ptr<GLAllocator>& GetBufferAllocator() const;
 
-	void AddGameObject(std::unique_ptr<GameObject> gameObject, GameObjectType type);
+	void AddGameObject(std::unique_ptr<GameObject> gameObject, const glm::vec3& position, const glm::vec3& color, GameObjectType type);
 
 	void Update(GLfloat deltaTime);
 	void OnWindowResize(int width, int height);

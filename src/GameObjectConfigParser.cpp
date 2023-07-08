@@ -7,6 +7,7 @@
 #include "ComponentType.h"
 #include "GameObjectConfigParser.h"
 #include "MeshRendererConfigParser.h"
+#include "Vector3Parser.h"
 
 namespace diamond_engine {
 	static const std::unordered_map<std::string, GameObjectType> kStringToGameObjectType = {
@@ -58,6 +59,16 @@ namespace diamond_engine {
 					break;
 				}
 			}
+		}
+
+		pugi::xml_node positionNode = gameObjectNode.child("Position");
+		if (positionNode) {
+			gameObjectConfig->SetPosition(Vector3Parser::Parse(positionNode));
+		}
+
+		pugi::xml_node colorNode = gameObjectNode.child("Color");
+		if (colorNode) {
+			gameObjectConfig->SetColor(Vector3Parser::Parse(colorNode));
 		}
 
 		return gameObjectConfig;
