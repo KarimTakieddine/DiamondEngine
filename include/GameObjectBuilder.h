@@ -1,18 +1,22 @@
 #pragma once
 
+#include <functional>
+#include <string>
+#include <unordered_map>
+
 #include "GameObject.h"
 #include "GLAllocator.h"
 
 namespace diamond_engine {
 class GameObjectConfig;
+class ComponentConfig;
 
 class GameObjectBuilder {
 public:
-	void SetBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator);
+	using ComponentBuildFunc = std::function<std::unique_ptr<Component>(const std::shared_ptr<GLAllocator>&, const ComponentConfig*)>;
 
-	std::unique_ptr<GameObject> Build(const GameObjectConfig* gameObjectConfig);
+	static std::unordered_map<std::string, ComponentBuildFunc> StringToComponentMap;
 
-private:
-	std::shared_ptr<GLAllocator> m_bufferAllocator{ nullptr };
+	static std::unique_ptr<GameObject> Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const GameObjectConfig* gameObjectConfig);
 };
 }

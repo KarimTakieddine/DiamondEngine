@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 
+#include "Behaviour.h"
 #include "Component.h"
 #include "RenderableObject.h"
 
@@ -36,8 +37,11 @@ public:
 		return dynamic_cast<T*>(result->get());
 	}
 
+	void AddBehaviour(std::unique_ptr<Behaviour> behaviour);
+
 private:
 	std::vector<std::unique_ptr<Component>> m_components{ };
+	std::vector<std::unique_ptr<Behaviour>> m_behaviours{ };
 	RenderableObject* m_renderableObject{ nullptr };
 };
 }

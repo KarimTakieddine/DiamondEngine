@@ -1,10 +1,7 @@
-#include <string>
 #include <stdexcept>
-#include <unordered_map>
 
 #include <pugixml.hpp>
 
-#include "ComponentType.h"
 #include "GameObjectConfigParser.h"
 #include "MeshRendererConfigParser.h"
 #include "Vector3Parser.h"
@@ -14,11 +11,11 @@ namespace diamond_engine {
 		{ "sprite", GameObjectType::SPRITE }
 	};
 
-	static const std::unordered_map<std::string, ComponentType> kStringToComponentType = {
-		{ "MeshRenderer", ComponentType::MeshRenderer }
+	/* static */ std::unordered_map<std::string, GameObjectConfigParser::ComponentParseFunc> GameObjectConfigParser::StringToParseMap = {
+		{ "MeshRenderer", &MeshRendererConfigParser::Parse }
 	};
 
-	std::unique_ptr<GameObjectConfig> GameObjectConfigParser::Parse(const pugi::xml_node& gameObjectNode) {
+	/* static */ std::unique_ptr<GameObjectConfig> GameObjectConfigParser::Parse(const pugi::xml_node& gameObjectNode) {
 		if (!gameObjectNode) {
 			throw std::runtime_error("No <GameObject/> node supplied to GameObjectConfigParser::Parse()");
 		}
@@ -41,23 +38,14 @@ namespace diamond_engine {
 
 		if (componentsNode) {
 			for (pugi::xml_node componentNode : componentsNode.children()) {
-				const std::string componentTypeString(componentNode.name());
+				const std::string componentNameString(componentNode.name());
 
-				auto componentTypeIt = kStringToComponentType.find(componentTypeString);
-				if (componentTypeIt == kStringToComponentType.end()) {
-					throw std::runtime_error("Unknown component type specified: " + componentTypeString);
+				auto componentParseFuncIt = StringToParseMap.find(componentNameString);
+				if (componentParseFuncIt == StringToParseMap.end()) {
+					throw std::runtime_error("Unknown component name specified: \"" + componentNameString + "\". Did you forget to register the component type?");
 				}
 
-				switch (componentTypeIt->second)
-				{
-				case ComponentType::MeshRenderer: {
-					MeshRendererConfigParser configParser;
-					gameObjectConfig->AddComponentConfig(configParser.Parse(componentNode));
-					break;
-				}
-				default:
-					break;
-				}
+				gameObjectConfig->AddComponentConfig(componentParseFuncIt->second(componentNode));
 			}
 		}
 

@@ -10,10 +10,6 @@ class MeshRendererConfig : public ComponentConfig {
 public:
 	virtual ~MeshRendererConfig() override = default;
 
-	ComponentType GetType() const override {
-		return ComponentType::MeshRenderer;
-	}
-
 	void SetMeshType(MeshType meshType);
 
 	MeshType GetMeshType() const;
@@ -21,6 +17,10 @@ public:
 	void SetDrawMode(GLenum drawMode);
 
 	GLenum GetDrawMode() const;
+
+	const char* GetName() const override {
+		return "MeshRenderer";
+	}
 
 private:
 	MeshType m_meshType{ MeshType::TRIANGLE };

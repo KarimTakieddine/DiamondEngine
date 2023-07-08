@@ -5,30 +5,25 @@
 #include "MeshRendererBuilder.h"
 
 namespace diamond_engine {
-	void GameObjectBuilder::SetBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator) {
-		m_bufferAllocator = bufferAllocator;
-	}
+	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
+		{ "MeshRenderer", &MeshRendererBuilder::Build }
+	};
 
-	std::unique_ptr<GameObject> GameObjectBuilder::Build(const GameObjectConfig* gameObjectConfig) {
+	/* static */ std::unique_ptr<GameObject> GameObjectBuilder::Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const GameObjectConfig* gameObjectConfig) {
+		if (!bufferAllocator) {
+			throw std::runtime_error("Null or no buffer allocator set on GameObjectBuilder instance");
+		}
+
 		std::unique_ptr<GameObject> result = std::make_unique<GameObject>();
 
 		for (const auto& componentConfig : gameObjectConfig->GetComponentConfigs()) {
-			switch (componentConfig->GetType()) {
-			case ComponentType::MeshRenderer: {
-				MeshRendererBuilder meshRendererBuilder;
+			auto componentBuildIt = StringToComponentMap.find(componentConfig->GetName());
 
-				if (!m_bufferAllocator) {
-					throw std::runtime_error("Null or no buffer allocator set on GameObjectBuilder instance");
-				}
-
-				meshRendererBuilder.SetBufferAllocator(m_bufferAllocator);
-
-				result->AcquireComponent(meshRendererBuilder.Build(componentConfig.get()));
-				break;
+			if (componentBuildIt == StringToComponentMap.end()) {
+				throw std::runtime_error("Unrecognized component config: " + std::string(componentConfig->GetName()));
 			}
-			default:
-				break;
-			}
+
+			result->AcquireComponent(componentBuildIt->second(bufferAllocator, componentConfig.get()));
 		}
 
 		return result;

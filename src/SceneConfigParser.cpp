@@ -6,7 +6,7 @@
 #include "SceneConfigParser.h"
 
 namespace diamond_engine {
-	std::unique_ptr<SceneConfig> SceneConfigParser::Parse(const pugi::xml_document& sceneDocument) {
+	/* static */ std::unique_ptr<SceneConfig> SceneConfigParser::Parse(const pugi::xml_document& sceneDocument) {
 		std::unique_ptr<SceneConfig> result = std::make_unique<SceneConfig>();
 
 		pugi::xml_node sceneNode = sceneDocument.root().first_child();
@@ -32,8 +32,7 @@ namespace diamond_engine {
 		}
 
 		for (pugi::xml_node gameObjectNode : gameObjectsNode.children("GameObject")) {
-			GameObjectConfigParser gameObjectParser;
-			result->AddGameObjectConfig(gameObjectParser.Parse(gameObjectNode));
+			result->AddGameObjectConfig(GameObjectConfigParser::Parse(gameObjectNode));
 		}
 		
 		return result;

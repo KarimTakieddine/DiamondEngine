@@ -46,8 +46,14 @@ namespace diamond_engine {
 	}
 
 	void GameObject::Update(GLfloat deltaTime) {
-		for (auto& component : m_components) {
-			component->Update(deltaTime);
+		for (auto& behaviour : m_behaviours) {
+			behaviour->Update(deltaTime);
 		}
+	}
+
+	void GameObject::AddBehaviour(std::unique_ptr<Behaviour> behaviour) {
+		behaviour->SetGameObject(this);
+
+		m_behaviours.push_back(std::move(behaviour));
 	}
 }

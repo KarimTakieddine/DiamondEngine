@@ -6,7 +6,7 @@
 #include "SharedMeshStore.h"
 
 namespace diamond_engine {
-	std::unique_ptr<Component> MeshRendererBuilder::Build(const ComponentConfig* componentConfig) {
+	/* static */ std::unique_ptr<Component> MeshRendererBuilder::Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const ComponentConfig* componentConfig) {
 		const MeshRendererConfig* meshRendererConfig = dynamic_cast<const MeshRendererConfig*>(componentConfig);
 
 		if (!meshRendererConfig) {
@@ -20,8 +20,8 @@ namespace diamond_engine {
 		case MeshType::QUAD: {
 			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::QUAD);
 			meshRenderer->SetDrawMode(meshRendererConfig->GetDrawMode());
-			meshRenderer->SetVertexBufferObject(m_bufferAllocator->Get());
-			meshRenderer->SetElementBufferObject(m_bufferAllocator->Get());
+			meshRenderer->SetVertexBufferObject(bufferAllocator->Get());
+			meshRenderer->SetElementBufferObject(bufferAllocator->Get());
 			meshRenderer->SetMesh(quadMesh);
 			break;
 		}

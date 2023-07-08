@@ -5,7 +5,7 @@
 #include "Vector3Parser.h"
 
 namespace diamond_engine {
-	glm::vec3 Vector3Parser::Parse(const pugi::xml_node& node) {
+	/* static */ glm::vec3 Vector3Parser::Parse(const pugi::xml_node& node) {
 		glm::vec3 result{ 0.0f, 0.0f, 0.0f };
 
 		pugi::xml_attribute xAttribute = node.attribute("x");

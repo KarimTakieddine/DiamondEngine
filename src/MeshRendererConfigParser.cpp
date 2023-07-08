@@ -1,8 +1,6 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#include <pugixml.hpp>
-
 #include "MeshRendererConfigParser.h"
 #include "MeshRendererConfig.h"
 
@@ -17,7 +15,7 @@ namespace diamond_engine {
 		{ "dynamic", GL_DYNAMIC_DRAW }
 	};
 
-	std::unique_ptr<ComponentConfig> MeshRendererConfigParser::Parse(const pugi::xml_node& componentNode) {
+	/* static */ std::unique_ptr<ComponentConfig> MeshRendererConfigParser::Parse(const pugi::xml_node& componentNode) {
 		if (!componentNode) {
 			throw std::runtime_error("No node given to MeshRendererConfigParser::Parse()");
 		}

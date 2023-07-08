@@ -10,7 +10,7 @@
 namespace diamond_engine {
 struct ShaderMetadata {
 	std::string file;
-	GLenum type;
+	GLenum type{ GL_VERTEX_SHADER };
 
 	std::vector<std::string> attributes;
 	std::vector<std::string> uniforms;

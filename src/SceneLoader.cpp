@@ -34,8 +34,7 @@ namespace diamond_engine {
 				throw std::runtime_error("Failed to parse <Scene/> XML document: " + std::string(sceneParseResult.description()));
 			}
 
-			SceneConfigParser sceneConfigParser;
-			std::unique_ptr<SceneConfig> sceneConfig = sceneConfigParser.Parse(sceneDocument);
+			std::unique_ptr<SceneConfig> sceneConfig = SceneConfigParser::Parse(sceneDocument);
 
 			SceneBuilder sceneBuilder;
 
