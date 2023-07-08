@@ -45,5 +45,9 @@ namespace diamond_engine {
 		}
 	}
 
-	void GameObject::Update(GLfloat deltaTime) { }
+	void GameObject::Update(GLfloat deltaTime) {
+		for (auto& component : m_components) {
+			component->Update(deltaTime);
+		}
+	}
 }

@@ -19,6 +19,8 @@ public:
 	virtual void OnAddedToScene()															= 0;
 	virtual const char * GetName() const													= 0;
 
+	virtual void Update(GLfloat deltaTime) { }
+
 	virtual ~Component() = default;
 
 	GameObject* m_gameObject{ nullptr };
