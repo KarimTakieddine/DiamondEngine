@@ -56,10 +56,6 @@ public:
 	void SetPosition(const glm::vec3& position);
 
 private:
-	void SetDirty();
-
-	void UnsetDirty();
-
 	glm::mat4 m_localToWorld{ 1.0f };
 	glm::mat4 m_localRotation{ 1.0f };
 	glm::mat4 m_localScale{ 1.0f };
