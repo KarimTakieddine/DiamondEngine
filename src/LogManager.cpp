@@ -12,14 +12,15 @@ namespace diamond_engine {
 	void LogManager::EnqueueLogMessage(const std::string& message, Logger::LogSeverity severity, const char* file, unsigned long long line) {
 		std::unique_lock<std::mutex> lock(logMutex);
 		logMessageQueue.push_back(LogMessage{ message, file, line, severity });
-		shouldLog.store(true);
 		lock.unlock();
+
+		shouldLog.store(true, std::memory_order_seq_cst);
 
 		logSemaphore.notify_one();
 	}
 
 	void LogManager::Stop() {
-		shouldStop.store(true);
+		shouldStop.store(true, std::memory_order_seq_cst);
 
 		logSemaphore.notify_one();
 
@@ -40,15 +41,17 @@ namespace diamond_engine {
 		while (!shouldStop.load()) {
 			std::unique_lock<std::mutex> lock(logMutex);
 
-			logSemaphore.wait(lock, [&]() { return shouldStop || shouldLog; });
+			logSemaphore.wait(lock, [&]() { return shouldStop.load(std::memory_order_seq_cst) || shouldLog.load(std::memory_order_seq_cst); });
 
-			if (shouldLog && !logMessageQueue.empty()) {
-				const LogMessage& logMessage = logMessageQueue.front();
+			if (shouldLog.load(std::memory_order_seq_cst) && !logMessageQueue.empty()) {
+				const LogMessage logMessage = logMessageQueue.front();
+				logMessageQueue.pop_front();
+				lock.unlock();
 
 				Logger::Log(std::cout, logMessage.severity, logMessage.file, logMessage.line)
 					<< logMessage.message << std::endl;
 
-				logMessageQueue.pop_front();
+				shouldLog.store(false, std::memory_order_seq_cst);
 			}
 		}
 	}

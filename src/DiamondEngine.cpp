@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
 
 		diamond_engine::Scene* sampleScene = sceneLoader->FindScene("sample_scene");
 		graphicsContext->SetScene(sampleScene);
+
 		graphicsContext->Execute();
 	}
 	catch (const std::exception& e) {

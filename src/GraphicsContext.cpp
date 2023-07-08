@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "LogManager.h"
 
 #include "GraphicsContext.h"
 
@@ -67,6 +68,7 @@ namespace diamond_engine {
 
 	void GraphicsContext::OnWindowUpdate(GLfloat deltaTime) {
 		if (m_scene) {
+			LOG_WARNING(std::to_string(deltaTime));
 			m_scene->Update(deltaTime);
 		}
 	}
