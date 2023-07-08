@@ -7,7 +7,8 @@
 namespace diamond_engine {
 	static const std::unordered_map<std::string, MeshType> kStringToMeshType = {
 		{ "triangle", MeshType::TRIANGLE },
-		{ "quad", MeshType::QUAD }
+		{ "quad", MeshType::QUAD },
+		{ "cube", MeshType::CUBE }
 	};
 
 	static const std::unordered_map<std::string, GLenum> kStringToDrawMode = {

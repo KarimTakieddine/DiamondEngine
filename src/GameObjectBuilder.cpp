@@ -4,6 +4,8 @@
 #include "GameObjectConfig.h"
 #include "MeshRendererBuilder.h"
 
+#include "RotateBehaviour.h"
+
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
 		{ "MeshRenderer", &MeshRendererBuilder::Build }
@@ -25,6 +27,9 @@ namespace diamond_engine {
 
 			result->AcquireComponent(componentBuildIt->second(bufferAllocator, componentConfig.get()));
 		}
+
+		std::unique_ptr<RotateBehaviour> rotateBehaviour = std::make_unique<RotateBehaviour>();
+		result->AddBehaviour(std::move(rotateBehaviour));
 
 		return result;
 	}

@@ -1,4 +1,3 @@
-#include "GameObject.h"
 #include "Material.h"
 
 namespace diamond_engine {

@@ -13,7 +13,7 @@ public:
 
 	virtual void Update(GLfloat deltaTime) = 0;
 
-private:
+protected:
 	GameObject* m_gameObject{ nullptr };
 };
 }

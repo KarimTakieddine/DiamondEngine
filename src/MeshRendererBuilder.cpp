@@ -15,14 +15,20 @@ namespace diamond_engine {
 
 		std::unique_ptr<MeshRenderer> meshRenderer = std::make_unique<MeshRenderer>();
 
+		meshRenderer->SetDrawMode(meshRendererConfig->GetDrawMode());
+		meshRenderer->SetVertexBufferObject(bufferAllocator->Get());
+		meshRenderer->SetElementBufferObject(bufferAllocator->Get());
+
 		switch (meshRendererConfig->GetMeshType())
 		{
 		case MeshType::QUAD: {
 			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::QUAD);
-			meshRenderer->SetDrawMode(meshRendererConfig->GetDrawMode());
-			meshRenderer->SetVertexBufferObject(bufferAllocator->Get());
-			meshRenderer->SetElementBufferObject(bufferAllocator->Get());
 			meshRenderer->SetMesh(quadMesh);
+			break;
+		}
+		case MeshType::CUBE: {
+			const std::shared_ptr<Mesh> cubeMesh = SharedMeshStore::GetInstance().FindMesh(Shape::CUBE);
+			meshRenderer->SetMesh(cubeMesh);
 			break;
 		}
 		default:
