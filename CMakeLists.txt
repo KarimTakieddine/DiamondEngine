@@ -71,6 +71,9 @@ set(SOURCES
     ${SRC_DIR}/SceneBuilder.cpp
     ${SRC_DIR}/SceneLoader.cpp
     ${SRC_DIR}/RotateBehaviour.cpp
+    ${SRC_DIR}/RotateBehaviourConfigParser.cpp
+    ${SRC_DIR}/RotateBehaviourBuilder.cpp
+    ${SRC_DIR}/BehaviourRegistry.cpp
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 

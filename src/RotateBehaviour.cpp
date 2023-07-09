@@ -3,9 +3,22 @@
 
 namespace diamond_engine {
 	void RotateBehaviour::Update(GLfloat deltaTime) {
-		m_xAngle += deltaTime * 90.0f;
-		m_yAngle += deltaTime * 90.0f;
+		Transform& gameObjectTransform = m_gameObject->GetRenderableObject()->transform;
 
-		m_gameObject->GetRenderableObject()->transform.SetLocalRotation(m_xAngle, glm::vec3(1.0f, 1.0f, 0.0f));
+		gameObjectTransform.Rotate(m_xAnglePerSecond * deltaTime, glm::vec3(1.0f, 0.0f, 0.0f));
+		gameObjectTransform.Rotate(m_yAnglePerSecond * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+		gameObjectTransform.Rotate(m_zAnglePerSecond * deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
+	void RotateBehaviour::SetXAnglePerSecond(GLfloat xAnglePerSecond) {
+		m_xAnglePerSecond = xAnglePerSecond;
+	}
+
+	void RotateBehaviour::SetYAnglePerSecond(GLfloat yAnglePerSecond) {
+		m_yAnglePerSecond = yAnglePerSecond;
+	}
+
+	void RotateBehaviour::SetZAnglePerSecond(GLfloat zAnglePerSecond) {
+		m_zAnglePerSecond = zAnglePerSecond;
 	}
 }

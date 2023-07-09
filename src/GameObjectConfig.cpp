@@ -8,6 +8,14 @@ namespace diamond_engine {
 	const GameObjectConfig::ComponentConfigList& GameObjectConfig::GetComponentConfigs() const {
 		return m_componentConfigs;
 	}
+
+	void GameObjectConfig::AddBehaviourConfig(std::unique_ptr<BehaviourConfig> behaviourConfig) {
+		m_behaviourConfigs.push_back(std::move(behaviourConfig));
+	}
+
+	const GameObjectConfig::BehaviourConfigList& GameObjectConfig::GetBehaviourConfigs() const {
+		return m_behaviourConfigs;
+	}
 	
 	void GameObjectConfig::SetType(GameObjectType type) {
 		m_type = type;

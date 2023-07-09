@@ -11,9 +11,11 @@ namespace diamond_engine {
 		{ "sprite", GameObjectType::SPRITE }
 	};
 
-	/* static */ std::unordered_map<std::string, GameObjectConfigParser::ComponentParseFunc> GameObjectConfigParser::StringToParseMap = {
+	/* static */ std::unordered_map<std::string, GameObjectConfigParser::ComponentParseFunc> GameObjectConfigParser::StringToComponentMap = {
 		{ "MeshRenderer", &MeshRendererConfigParser::Parse }
 	};
+
+	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = { };
 
 	/* static */ std::unique_ptr<GameObjectConfig> GameObjectConfigParser::Parse(const pugi::xml_node& gameObjectNode) {
 		if (!gameObjectNode) {
@@ -35,17 +37,30 @@ namespace diamond_engine {
 		gameObjectConfig->SetType(typeIt->second);
 
 		pugi::xml_node componentsNode = gameObjectNode.child("Components");
-
 		if (componentsNode) {
 			for (pugi::xml_node componentNode : componentsNode.children()) {
 				const std::string componentNameString(componentNode.name());
 
-				auto componentParseFuncIt = StringToParseMap.find(componentNameString);
-				if (componentParseFuncIt == StringToParseMap.end()) {
+				auto componentParseFuncIt = StringToComponentMap.find(componentNameString);
+				if (componentParseFuncIt == StringToComponentMap.end()) {
 					throw std::runtime_error("Unknown component name specified: \"" + componentNameString + "\". Did you forget to register the component type?");
 				}
 
 				gameObjectConfig->AddComponentConfig(componentParseFuncIt->second(componentNode));
+			}
+		}
+
+		pugi::xml_node behavioursNode = gameObjectNode.child("Behaviours");
+		if (behavioursNode) {
+			for (pugi::xml_node behaviourNode : behavioursNode.children()) {
+				const std::string behaviourNameString(behaviourNode.name());
+
+				auto behaviourParseFuncIt = StringToBehaviourMap.find(behaviourNameString);
+				if (behaviourParseFuncIt == StringToBehaviourMap.end()) {
+					throw std::runtime_error("Unknown behaviour name specified: \"" + behaviourNameString + "\". Did you forget to register the behaviour type?");
+				}
+
+				gameObjectConfig->AddBehaviourConfig(behaviourParseFuncIt->second(behaviourNode));
 			}
 		}
 
@@ -60,5 +75,9 @@ namespace diamond_engine {
 		}
 
 		return gameObjectConfig;
+	}
+
+	/* static */ void GameObjectConfigParser::RegisterBehaviourConfig(const std::string& name, BehaviourParseFunc behaviourParseFunc) {
+		StringToBehaviourMap.emplace(name, behaviourParseFunc);
 	}
 }

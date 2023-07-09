@@ -9,12 +9,15 @@ public:
 
 	void Update(GLfloat deltaTime) override;
 
+	void SetXAnglePerSecond(GLfloat xAnglePerSecond);
+
+	void SetYAnglePerSecond(GLfloat yAnglePerSecond);
+
+	void SetZAnglePerSecond(GLfloat zAnglePerSecond);
+
 private:
-	GLfloat m_xIncrement{ 0.0f };
-	GLfloat m_xAngle{ 0.0f };
-	GLfloat m_yIncrement{ 0.0f };
-	GLfloat m_yAngle{ 0.0f };
-	GLfloat m_zIncrement{ 0.0f };
-	GLfloat m_zAngle{ 0.0f };
+	GLfloat m_xAnglePerSecond{ 0.0f };
+	GLfloat m_yAnglePerSecond{ 0.0f };
+	GLfloat m_zAnglePerSecond{ 0.0f };
 };
 }

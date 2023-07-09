@@ -2,6 +2,10 @@
 #include "LogManager.h"
 #include "SceneLoader.h"
 
+#include "BehaviourRegistry.h"
+#include "RotateBehaviourBuilder.h"
+#include "RotateBehaviourConfigParser.h"
+
 int main(int argc, char** argv) {
 
 	try {
@@ -11,6 +15,8 @@ int main(int argc, char** argv) {
 
 		std::shared_ptr<diamond_engine::SharedShaderStore> sharedShaderStore = std::make_shared<diamond_engine::SharedShaderStore>();
 		sharedShaderStore->Load("shaders");
+
+		diamond_engine::RegisterBehaviour("RotateBehaviour", &diamond_engine::RotateBehaviourConfigParser::Parse, &diamond_engine::RotateBehaviourBuilder::Build);
 
 		std::shared_ptr<diamond_engine::SceneLoader> sceneLoader = std::make_shared<diamond_engine::SceneLoader>();
 		sceneLoader->SetSharedShaderStore(sharedShaderStore);
