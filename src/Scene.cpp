@@ -12,9 +12,8 @@ namespace diamond_engine {
 		m_camera(std::make_shared<Camera>()),
 		m_renderableObjectAllocator(std::make_shared<ObjectAllocator>()),
 		m_spriteRenderSequence(std::make_unique<RenderSequence>()) {
-		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		m_camera->SetProjectionFrustum(5.0f, 1.333f, 0.1f, 100.0f);
-
+		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		m_camera->SetProjectionFrustum(8.0f, 1.333f, 1.0f, 10.0f);
 
 		const std::shared_ptr<ShaderProgram>& spriteShaderProgram = m_sharedShaderStore->FindProgram("sprite");
 

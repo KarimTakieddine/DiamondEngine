@@ -25,7 +25,7 @@ namespace diamond_engine {
 		GLfloat fieldOfView = 2 * atan(height * 0.5f);
 
 		m_projection = glm::perspective(
-			fieldOfView,
+			glm::degrees(fieldOfView), /* Expressed in radians if GLM_FORCE_RADIANS is define or degrees otherwise. */
 			aspectRatio,
 			nearPlane,
 			farPlane
