@@ -14,15 +14,23 @@ set(PREBUILT_CONFIG Release)
 set(GLEW_DIR glew-2.1.0-win32/glew-2.1.0)
 set(GLFW_DIR glfw)
 set(GLM_DIR glm)
+
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
 set(SHADERS_DIR shaders)
 set(SCENES_DIR scenes)
 
+set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
+set(SRC_DIR ${SRC_DIR} PARENT_SCOPE)
+set(SHADERS_DIR ${SHADERS_DIR} PARENT_SCOPE)
+set(SCENES_DIR ${SCENES_DIR} PARENT_SCOPE)
+
 # GLEW:
 
 set(GLEW_BINARY_DIR     "${GLEW_DIR}/${BIN_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
 set(GLEW_LIBRARY_DIR    "${GLEW_DIR}/${LIB_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
+
+set(GLEW_BINARY_DIR ${GLEW_BINARY_DIR} PARENT_SCOPE)
 
 # GLFW:
 
@@ -77,22 +85,10 @@ set(SOURCES
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_library(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
 
 add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
 target_link_directories(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY_DIR} "${GLFW_BINARY_DIR}/src")
 target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3 pugixml)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${GLEW_BINARY_DIR}/glew32.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
-)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${SHADERS_DIR}" $<TARGET_FILE_DIR:${PROJECT_NAME}>/${SHADERS_DIR}
-)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${SCENES_DIR}" $<TARGET_FILE_DIR:${PROJECT_NAME}>/${SCENES_DIR}
-)
