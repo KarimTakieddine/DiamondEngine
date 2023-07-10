@@ -82,12 +82,12 @@ set(SOURCES
     ${SRC_DIR}/RotateBehaviourConfigParser.cpp
     ${SRC_DIR}/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/BehaviourRegistry.cpp
-    ${SRC_DIR}/File.cpp
-    ${SRC_DIR}/DiamondEngine.cpp)
+    ${SRC_DIR}/File.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR}/diamond_engine)
+target_include_directories(${PROJECT_NAME} PUBLIC "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/diamond_engine)
 
 find_library(GLEW
     NAMES glew32
