@@ -32,6 +32,8 @@ set(GLEW_LIBRARY_DIR    "${GLEW_DIR}/${LIB_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_
 
 set(GLEW_BINARY_DIR ${GLEW_BINARY_DIR} PARENT_SCOPE)
 
+message(${GLEW_BINARY_DIR})
+
 # GLFW:
 
 set(GLFW_LIBRARY_TYPE STATIC)
@@ -85,12 +87,14 @@ set(SOURCES
     ${SRC_DIR}/File.cpp
     ${SRC_DIR}/DiamondEngine.cpp)
 
-add_library(${PROJECT_NAME} ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
 
-add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
-target_link_directories(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY_DIR} "${GLFW_BINARY_DIR}/src")
-target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3 pugixml)
+find_library(GLEW
+    NAMES glew32
+    HINTS ${GLEW_LIBRARY_DIR}
+)
 
-set(DIAMOND_ENGINE_LIBRARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
+add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
+target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} pugixml)
