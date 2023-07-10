@@ -4,6 +4,7 @@
 
 #include "GameObjectConfigParser.h"
 #include "MeshRendererConfigParser.h"
+#include "RotateBehaviourConfigParser.h"
 #include "Vector3Parser.h"
 
 namespace diamond_engine {
@@ -15,7 +16,9 @@ namespace diamond_engine {
 		{ "MeshRenderer", &MeshRendererConfigParser::Parse }
 	};
 
-	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = { };
+	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = {
+		{ "RotateBehaviour", &RotateBehaviourConfigParser::Parse }
+	};
 
 	/* static */ std::unique_ptr<GameObjectConfig> GameObjectConfigParser::Parse(const pugi::xml_node& gameObjectNode) {
 		if (!gameObjectNode) {

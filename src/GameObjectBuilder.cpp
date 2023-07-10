@@ -3,15 +3,16 @@
 #include "GameObjectBuilder.h"
 #include "GameObjectConfig.h"
 #include "MeshRendererBuilder.h"
-
-#include "RotateBehaviour.h"
+#include "RotateBehaviourBuilder.h"
 
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
 		{ "MeshRenderer", &MeshRendererBuilder::Build }
 	};
 
-	/* static */ std::unordered_map<std::string, GameObjectBuilder::BehaviourBuildFunc> GameObjectBuilder::StringToBehaviourMap = { };
+	/* static */ std::unordered_map<std::string, GameObjectBuilder::BehaviourBuildFunc> GameObjectBuilder::StringToBehaviourMap = {
+		{ "RotateBehaviour", &RotateBehaviourBuilder::Build }
+	};
 
 	/* static */ std::unique_ptr<GameObject> GameObjectBuilder::Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const GameObjectConfig* gameObjectConfig) {
 		if (!bufferAllocator) {
