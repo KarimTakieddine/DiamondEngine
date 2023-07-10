@@ -92,3 +92,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE "${GLEW_DIR}/include" "${GLFW
 add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
 target_link_directories(${PROJECT_NAME} PRIVATE ${GLEW_LIBRARY_DIR} "${GLFW_BINARY_DIR}/src")
 target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 glew32 glfw3 pugixml)
+
+set(DIAMOND_ENGINE_LIBRARY_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
