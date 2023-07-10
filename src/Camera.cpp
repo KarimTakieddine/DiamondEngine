@@ -21,17 +21,15 @@
 */
 
 namespace diamond_engine {
-	void Camera::SetProjectionFrustum(GLfloat height, GLfloat aspectRatio, GLfloat nearPlane, GLfloat farPlane) {
-		GLfloat fieldOfView = 2 * atan(height * 0.5f);
-
+	void Camera::SetProjectionFrustum(GLfloat fieldOfView, GLfloat aspectRatio, GLfloat nearPlane, GLfloat farPlane) {
 		m_projection = glm::perspective(
-			glm::degrees(fieldOfView), /* Expressed in radians if GLM_FORCE_RADIANS is define or degrees otherwise. */
+			glm::radians(fieldOfView),
 			aspectRatio,
 			nearPlane,
 			farPlane
 		);
 
-		SetHeight(height);
+		SetFieldOfView(fieldOfView);
 		SetAspectRatio(aspectRatio);
 		SetNearPlane(nearPlane);
 		SetFarPlane(farPlane);
@@ -45,16 +43,16 @@ namespace diamond_engine {
 		);
 	}
 
-	void Camera::SetHeight(GLfloat height)
+	void Camera::SetFieldOfView(GLfloat fieldOfView)
 	{
-		if (height == m_height)
+		if (fieldOfView == m_fieldOfView)
 		{
 			return;
 		}
 
-		m_height = height;
+		m_fieldOfView = fieldOfView;
 
-		SetProjectionFrustum(height, m_aspectRatio, m_nearPlane, m_farPlane);
+		SetProjectionFrustum(fieldOfView, m_aspectRatio, m_nearPlane, m_farPlane);
 	}
 
 	void Camera::SetAspectRatio(GLfloat aspectRatio)
@@ -66,7 +64,7 @@ namespace diamond_engine {
 
 		m_aspectRatio = aspectRatio;
 
-		SetProjectionFrustum(m_height, aspectRatio, m_nearPlane, m_farPlane);
+		SetProjectionFrustum(m_fieldOfView, aspectRatio, m_nearPlane, m_farPlane);
 	}
 
 	void Camera::SetNearPlane(GLfloat nearPlane)
@@ -78,7 +76,7 @@ namespace diamond_engine {
 
 		m_nearPlane = nearPlane;
 
-		SetProjectionFrustum(m_height, m_aspectRatio, nearPlane, m_farPlane);
+		SetProjectionFrustum(m_fieldOfView, m_aspectRatio, nearPlane, m_farPlane);
 	}
 
 	void Camera::SetFarPlane(GLfloat farPlane)
@@ -90,7 +88,7 @@ namespace diamond_engine {
 
 		m_farPlane = farPlane;
 
-		SetProjectionFrustum(m_height, m_aspectRatio, m_nearPlane, farPlane);
+		SetProjectionFrustum(m_fieldOfView, m_aspectRatio, m_nearPlane, farPlane);
 	}
 
 	const glm::mat4& Camera::GetView() const {

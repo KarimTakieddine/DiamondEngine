@@ -39,6 +39,8 @@ public:
 
 	void SetLocalRotation(GLfloat degrees, const glm::vec3& axis);
 
+	void SetLocalEulerAngles(const glm::vec3& localEulerAngles);
+
 	void SetLocalScale(const glm::vec3& scale);
 
 	const glm::mat4& GetLocalToWorldMatrix() const {

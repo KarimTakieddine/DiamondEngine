@@ -1,4 +1,5 @@
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "Transform.h"
 
@@ -15,6 +16,13 @@ namespace diamond_engine {
 
 	void Transform::SetLocalRotation(GLfloat degrees, const glm::vec3& axis) {
 		m_localRotation = glm::rotate(glm::mat4(1.0f), glm::radians(degrees), axis);
+	}
+
+	void Transform::SetLocalEulerAngles(const glm::vec3& localEulerAngles) {
+		m_localRotation = glm::eulerAngleXYZ(
+			glm::radians(localEulerAngles.x),
+			glm::radians(localEulerAngles.y),
+			glm::radians(localEulerAngles.z));
 	}
 
 	void Transform::SetLocalScale(const glm::vec3& scale) {

@@ -5,9 +5,11 @@ namespace diamond_engine {
 	void RotateBehaviour::Update(GLfloat deltaTime) {
 		Transform& gameObjectTransform = m_gameObject->GetRenderableObject()->transform;
 
-		gameObjectTransform.Rotate(m_xAnglePerSecond * deltaTime, glm::vec3(1.0f, 0.0f, 0.0f));
-		gameObjectTransform.Rotate(m_yAnglePerSecond * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
-		gameObjectTransform.Rotate(m_zAnglePerSecond * deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+		m_xAngle += m_xAnglePerSecond * deltaTime;
+		m_yAngle += m_yAnglePerSecond * deltaTime;
+		m_zAngle += m_zAnglePerSecond * deltaTime;
+
+		m_gameObject->GetRenderableObject()->transform.SetLocalEulerAngles({ m_xAngle, m_yAngle, m_zAngle });
 	}
 
 	void RotateBehaviour::SetXAnglePerSecond(GLfloat xAnglePerSecond) {
