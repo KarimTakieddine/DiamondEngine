@@ -48,46 +48,61 @@ add_subdirectory(${PUGI_XML_DIR})
 # DiamondEngine:
 
 set(SOURCES
-    ${SRC_DIR}/DeltaTimer.cpp
-    ${SRC_DIR}/Logger.cpp
-    ${SRC_DIR}/LogManager.cpp
-    ${SRC_DIR}/Window.cpp
-    ${SRC_DIR}/GLAllocator.cpp
-    ${SRC_DIR}/GraphicsContext.cpp
-    ${SRC_DIR}/Mesh.cpp
-    ${SRC_DIR}/MeshRenderer.cpp
-    ${SRC_DIR}/SharedMeshStore.cpp
-    ${SRC_DIR}/GameObject.cpp
-    ${SRC_DIR}/GameObjectBuilder.cpp
-    ${SRC_DIR}/Shader.cpp
-    ${SRC_DIR}/ShaderProgram.cpp
-    ${SRC_DIR}/ShaderMetadataParser.cpp
-    ${SRC_DIR}/SharedShaderStore.cpp
-    ${SRC_DIR}/Material.cpp
-    ${SRC_DIR}/Transform.cpp
-    ${SRC_DIR}/Camera.cpp
-    ${SRC_DIR}/RenderSequence.cpp
-    ${SRC_DIR}/GameObjectConfig.cpp
-    ${SRC_DIR}/SceneConfig.cpp
-    ${SRC_DIR}/MeshRendererConfig.cpp
-    ${SRC_DIR}/MeshRendererConfigParser.cpp
-    ${SRC_DIR}/GameObjectConfigParser.cpp
-    ${SRC_DIR}/Vector3Parser.cpp
-    ${SRC_DIR}/MeshRendererBuilder.cpp
-    ${SRC_DIR}/SceneConfigParser.cpp
-    ${SRC_DIR}/Scene.cpp
-    ${SRC_DIR}/SceneBuilder.cpp
-    ${SRC_DIR}/SceneLoader.cpp
-    ${SRC_DIR}/RotateBehaviour.cpp
-    ${SRC_DIR}/RotateBehaviourConfigParser.cpp
-    ${SRC_DIR}/RotateBehaviourBuilder.cpp
-    ${SRC_DIR}/BehaviourRegistry.cpp
-    ${SRC_DIR}/File.cpp)
+    ${SRC_DIR}/utility/DeltaTimer.cpp
+    ${SRC_DIR}/utility/Logger.cpp
+    ${SRC_DIR}/utility/LogManager.cpp
+    ${SRC_DIR}/engine/Window.cpp
+    ${SRC_DIR}/allocator/GLAllocator.cpp
+    ${SRC_DIR}/engine/GraphicsContext.cpp
+    ${SRC_DIR}/mesh/Mesh.cpp
+    ${SRC_DIR}/component/MeshRenderer.cpp
+    ${SRC_DIR}/mesh/SharedMeshStore.cpp
+    ${SRC_DIR}/gameobject/GameObject.cpp
+    ${SRC_DIR}/builder/GameObjectBuilder.cpp
+    ${SRC_DIR}/shader/Shader.cpp
+    ${SRC_DIR}/shader/ShaderProgram.cpp
+    ${SRC_DIR}/parser/ShaderMetadataParser.cpp
+    ${SRC_DIR}/shader/SharedShaderStore.cpp
+    ${SRC_DIR}/rendering/Material.cpp
+    ${SRC_DIR}/rendering/Transform.cpp
+    ${SRC_DIR}/rendering/Camera.cpp
+    ${SRC_DIR}/rendering/RenderSequence.cpp
+    ${SRC_DIR}/config/GameObjectConfig.cpp
+    ${SRC_DIR}/config/SceneConfig.cpp
+    ${SRC_DIR}/config/MeshRendererConfig.cpp
+    ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
+    ${SRC_DIR}/parser/GameObjectConfigParser.cpp
+    ${SRC_DIR}/parser/Vector3Parser.cpp
+    ${SRC_DIR}/builder/MeshRendererBuilder.cpp
+    ${SRC_DIR}/parser/SceneConfigParser.cpp
+    ${SRC_DIR}/scene/Scene.cpp
+    ${SRC_DIR}/builder/SceneBuilder.cpp
+    ${SRC_DIR}/scene/SceneLoader.cpp
+    ${SRC_DIR}/behaviour/RotateBehaviour.cpp
+    ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
+    ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
+    ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
+    ${SRC_DIR}/utility/File.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/diamond_engine)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${INCLUDE_DIR}/diamond_engine/allocator
+    ${INCLUDE_DIR}/diamond_engine/behaviour
+    ${INCLUDE_DIR}/diamond_engine/builder
+    ${INCLUDE_DIR}/diamond_engine/common
+    ${INCLUDE_DIR}/diamond_engine/component
+    ${INCLUDE_DIR}/diamond_engine/config
+    ${INCLUDE_DIR}/diamond_engine/engine
+    ${INCLUDE_DIR}/diamond_engine/gameobject
+    ${INCLUDE_DIR}/diamond_engine/mesh
+    ${INCLUDE_DIR}/diamond_engine/parser
+    ${INCLUDE_DIR}/diamond_engine/rendering
+    ${INCLUDE_DIR}/diamond_engine/scene
+    ${INCLUDE_DIR}/diamond_engine/shader
+    ${INCLUDE_DIR}/diamond_engine/utility)
 
 find_library(GLEW
     NAMES glew32
