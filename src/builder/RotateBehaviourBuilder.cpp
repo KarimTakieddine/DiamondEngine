@@ -1,8 +1,8 @@
 #include <stdexcept>
 
-#include "RotateBehaviour.h"
-#include "RotateBehaviourBuilder.h"
-#include "RotateBehaviourConfig.h"
+#include "behaviour/RotateBehaviour.h"
+#include "builder/RotateBehaviourBuilder.h"
+#include "config/RotateBehaviourConfig.h"
 
 namespace diamond_engine {
 std::unique_ptr<Behaviour> RotateBehaviourBuilder::Build(const BehaviourConfig* behaviourConfig) {

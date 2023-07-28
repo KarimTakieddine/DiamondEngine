@@ -1,4 +1,4 @@
-#include "DeltaTimer.h"
+#include "utility/DeltaTimer.h"
 
 namespace diamond_engine {
 	DeltaTimer::DeltaTimer() :

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "GLAllocator.h"
+#include "allocator/GLAllocator.h"
 
 namespace diamond_engine {
 class ComponentConfig;

@@ -3,7 +3,7 @@
 #include <memory>
 #include <pugixml.hpp>
 
-#include "ComponentConfig.h"
+#include "config/ComponentConfig.h"
 
 namespace diamond_engine {
 class MeshRendererConfigParser {

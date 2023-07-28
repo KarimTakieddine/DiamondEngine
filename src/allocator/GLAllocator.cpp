@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <sstream>
 
-#include "GLAllocator.h"
+#include "allocator/GLAllocator.h"
 
 namespace diamond_engine {
 	GLAllocator::GLAllocator(GLFunction allocateFunction, GLFunction freeFunction) :

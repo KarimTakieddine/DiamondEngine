@@ -1,7 +1,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-#include "Transform.h"
+#include "rendering/Transform.h"
 
 namespace diamond_engine {
 	/* static */ const std::string Transform::kModelUniformLocation = "model";

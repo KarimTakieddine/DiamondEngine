@@ -1,10 +1,10 @@
 #pragma once
 
-#include "AlignedAllocator.hpp"
-#include "GLAllocator.h"
-#include "Camera.h"
-#include "GameObject.h"
-#include "ShaderProgram.h"
+#include "allocator/AlignedAllocator.hpp"
+#include "allocator/GLAllocator.h"
+#include "rendering/Camera.h"
+#include "gameobject/GameObject.h"
+#include "shader/ShaderProgram.h"
 
 namespace diamond_engine {
 using ObjectAllocator		= AlignedAllocator<RenderableObject, 4>;

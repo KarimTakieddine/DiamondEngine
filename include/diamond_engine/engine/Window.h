@@ -5,7 +5,7 @@
 
 #include <glfw/glfw3.h>
 
-#include "Size.h"
+#include "common/Size.h"
 
 namespace diamond_engine {
 class Window {

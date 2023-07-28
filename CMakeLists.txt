@@ -87,22 +87,7 @@ set(SOURCES
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" ${INCLUDE_DIR})
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${INCLUDE_DIR}/diamond_engine/allocator
-    ${INCLUDE_DIR}/diamond_engine/behaviour
-    ${INCLUDE_DIR}/diamond_engine/builder
-    ${INCLUDE_DIR}/diamond_engine/common
-    ${INCLUDE_DIR}/diamond_engine/component
-    ${INCLUDE_DIR}/diamond_engine/config
-    ${INCLUDE_DIR}/diamond_engine/engine
-    ${INCLUDE_DIR}/diamond_engine/gameobject
-    ${INCLUDE_DIR}/diamond_engine/mesh
-    ${INCLUDE_DIR}/diamond_engine/parser
-    ${INCLUDE_DIR}/diamond_engine/rendering
-    ${INCLUDE_DIR}/diamond_engine/scene
-    ${INCLUDE_DIR}/diamond_engine/shader
-    ${INCLUDE_DIR}/diamond_engine/utility)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR}/diamond_engine)
 
 find_library(GLEW
     NAMES glew32

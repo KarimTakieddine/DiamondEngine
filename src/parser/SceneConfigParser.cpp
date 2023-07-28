@@ -2,8 +2,8 @@
 
 #include <pugixml.hpp>
 
-#include "GameObjectConfigParser.h"
-#include "SceneConfigParser.h"
+#include "parser/GameObjectConfigParser.h"
+#include "parser/SceneConfigParser.h"
 
 namespace diamond_engine {
 	/* static */ std::unique_ptr<SceneConfig> SceneConfigParser::Parse(const pugi::xml_document& sceneDocument) {

@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "GameObject.h"
+#include "gameobject/GameObject.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>

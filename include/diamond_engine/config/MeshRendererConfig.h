@@ -2,8 +2,8 @@
 
 #include "GL/glew.h"
 
-#include "ComponentConfig.h"
-#include "MeshType.h"
+#include "config/ComponentConfig.h"
+#include "mesh/MeshType.h"
 
 namespace diamond_engine {
 class MeshRendererConfig : public ComponentConfig {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "scene/Scene.h"
 
 namespace diamond_engine {
 class SceneConfig;

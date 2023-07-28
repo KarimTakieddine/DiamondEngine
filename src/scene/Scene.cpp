@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "Scene.h"
+#include "scene/Scene.h"
 
 namespace diamond_engine {
 	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) :

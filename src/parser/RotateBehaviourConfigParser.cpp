@@ -2,8 +2,8 @@
 
 #include <pugixml.hpp>
 
-#include "RotateBehaviourConfig.h"
-#include "RotateBehaviourConfigParser.h"
+#include "config/RotateBehaviourConfig.h"
+#include "parser/RotateBehaviourConfigParser.h"
 
 namespace diamond_engine {
 	std::unique_ptr<BehaviourConfig> RotateBehaviourConfigParser::Parse(const pugi::xml_node& behaviourNode) {

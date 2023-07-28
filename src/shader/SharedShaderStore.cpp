@@ -1,9 +1,9 @@
 #include <deque>
 #include <stdexcept>
 
-#include "File.h"
-#include "SharedShaderStore.h"
-#include "ShaderMetadataParser.h"
+#include "utility/File.h"
+#include "shader/SharedShaderStore.h"
+#include "parser/ShaderMetadataParser.h"
 
 namespace diamond_engine {
 	/* static */ const std::string SharedShaderStore::kProgramMetadataFilename	= "programMetadata.xml";

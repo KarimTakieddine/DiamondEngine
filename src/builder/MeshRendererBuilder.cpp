@@ -1,9 +1,9 @@
 #include <stdexcept>
 
-#include "MeshRenderer.h"
-#include "MeshRendererBuilder.h"
-#include "MeshRendererConfig.h"
-#include "SharedMeshStore.h"
+#include "component/MeshRenderer.h"
+#include "builder/MeshRendererBuilder.h"
+#include "config/MeshRendererConfig.h"
+#include "mesh/SharedMeshStore.h"
 
 namespace diamond_engine {
 	/* static */ std::unique_ptr<Component> MeshRendererBuilder::Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const ComponentConfig* componentConfig) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "shader/ShaderProgram.h"
 
 namespace diamond_engine {
 class GameObject;

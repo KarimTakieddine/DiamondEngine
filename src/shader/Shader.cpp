@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "File.h"
-#include "Shader.h"
+#include "utility/File.h"
+#include "shader/Shader.h"
 
 namespace diamond_engine {
 	Shader::Shader(GLenum type) : m_object(glCreateShader(type)) { }

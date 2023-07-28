@@ -4,8 +4,8 @@
 
 #include <GL/glew.h>
 
-#include "Scene.h"
-#include "Window.h"
+#include "scene/Scene.h"
+#include "engine/Window.h"
 
 namespace diamond_engine {
 class GraphicsContext {

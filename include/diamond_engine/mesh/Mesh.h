@@ -4,7 +4,7 @@
 
 #include <GL/glew.h>
 
-#include "Vertex.h"
+#include "common/Vertex.h"
 
 namespace diamond_engine {
 class Mesh {

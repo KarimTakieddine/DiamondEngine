@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "GameObjectConfig.h"
+#include "config/GameObjectConfig.h"
 
 namespace pugi { class xml_node; }
 

@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "GraphicsContext.h"
+#include "engine/GraphicsContext.h"
 
 namespace diamond_engine {
 	void GraphicsContext::InitializeWindow(const Size& windowSize, const std::string& windowTitle) {

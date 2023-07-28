@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SceneConfig.h"
+#include "config/SceneConfig.h"
 
 namespace pugi { class xml_document; }
 

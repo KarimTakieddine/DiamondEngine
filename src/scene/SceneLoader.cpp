@@ -2,9 +2,9 @@
 
 #include <pugixml.hpp>
 
-#include "SceneBuilder.h"
-#include "SceneConfigParser.h"
-#include "SceneLoader.h"
+#include "builder/SceneBuilder.h"
+#include "parser/SceneConfigParser.h"
+#include "scene/SceneLoader.h"
 
 namespace diamond_engine {
 	void SceneLoader::SetSharedShaderStore(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) {

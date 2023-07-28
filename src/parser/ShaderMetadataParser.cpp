@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "ShaderMetadataParser.h"
+#include "parser/ShaderMetadataParser.h"
 
 namespace diamond_engine {
 	/* static */ const ShaderMetadataParser::StringToShaderTypeMap ShaderMetadataParser::kStringToShaderTypeMap = {

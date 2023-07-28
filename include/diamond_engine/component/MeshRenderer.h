@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Component.h"
-#include "Mesh.h"
+#include "component/Component.h"
+#include "mesh/Mesh.h"
 
 namespace diamond_engine {
 class MeshRenderer : public Component {

@@ -1,7 +1,7 @@
 #include <stdexcept>
 
-#include "DeltaTimer.h"
-#include "Window.h"
+#include "utility/DeltaTimer.h"
+#include "engine/Window.h"
 
 namespace diamond_engine {
 	Window::Window(
