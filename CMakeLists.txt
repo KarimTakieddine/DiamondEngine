@@ -86,8 +86,12 @@ set(SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC "${GLEW_DIR}/include" "${GLFW_DIR}/include" ${GLM_DIR} "${PUGI_XML_DIR}/src" "${INCLUDE_DIR}/diamond_engine")
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PUBLIC
+    "${GLEW_DIR}/include"
+    "${GLFW_DIR}/include"
+    ${GLM_DIR}
+    "${PUGI_XML_DIR}/src"
+    "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
     "${INCLUDE_DIR}/diamond_engine/builder"
