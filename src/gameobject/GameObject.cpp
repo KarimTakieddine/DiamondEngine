@@ -1,10 +1,10 @@
 #include <stdexcept>
 
-#include "gameobject/GameObject.h"
-
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "GameObject.h"
 
 namespace diamond_engine {
 	void GameObject::AcquireComponent(std::unique_ptr<Component> component) {

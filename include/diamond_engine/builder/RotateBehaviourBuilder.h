@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "behaviour/Behaviour.h"
+#include "Behaviour.h"
 
 namespace diamond_engine {
 class BehaviourConfig;

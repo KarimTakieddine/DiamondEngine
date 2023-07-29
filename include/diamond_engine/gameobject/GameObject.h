@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "behaviour/Behaviour.h"
-#include "component/Component.h"
-#include "rendering/RenderableObject.h"
+#include "Behaviour.h"
+#include "Component.h"
+#include "RenderableObject.h"
 
 namespace diamond_engine {
 class GameObject {

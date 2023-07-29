@@ -1,4 +1,4 @@
-#include "config/GameObjectConfig.h"
+#include "GameObjectConfig.h"
 
 namespace diamond_engine {
 	void GameObjectConfig::AddComponentConfig(std::unique_ptr<ComponentConfig> conmponentConfig) {

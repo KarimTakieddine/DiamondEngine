@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "utility/File.h"
+#include "File.h"
 
 namespace diamond_engine {
 	std::string File::Read(const std::string& path) {

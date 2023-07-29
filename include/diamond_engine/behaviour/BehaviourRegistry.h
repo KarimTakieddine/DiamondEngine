@@ -1,7 +1,7 @@
 #pragma once
 
-#include "builder/GameObjectBuilder.h"
-#include "parser/GameObjectConfigParser.h"
+#include "GameObjectBuilder.h"
+#include "GameObjectConfigParser.h"
 
 namespace diamond_engine {
 void RegisterBehaviour(const std::string& name, GameObjectConfigParser::BehaviourParseFunc parseFunc, GameObjectBuilder::BehaviourBuildFunc buildFunc);

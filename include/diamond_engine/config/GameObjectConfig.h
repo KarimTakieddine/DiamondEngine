@@ -5,9 +5,9 @@
 
 #include <glm/vec3.hpp>
 
-#include "gameobject/GameObjectType.h"
-#include "config/ComponentConfig.h"
-#include "config/BehaviourConfig.h"
+#include "GameObjectType.h"
+#include "ComponentConfig.h"
+#include "BehaviourConfig.h"
 
 namespace diamond_engine {
 class GameObjectConfig {

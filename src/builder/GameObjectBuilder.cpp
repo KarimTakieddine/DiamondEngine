@@ -1,9 +1,9 @@
 #include <stdexcept>
 
-#include "builder/GameObjectBuilder.h"
-#include "config/GameObjectConfig.h"
-#include "builder/MeshRendererBuilder.h"
-#include "builder/RotateBehaviourBuilder.h"
+#include "GameObjectBuilder.h"
+#include "GameObjectConfig.h"
+#include "MeshRendererBuilder.h"
+#include "RotateBehaviourBuilder.h"
 
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {

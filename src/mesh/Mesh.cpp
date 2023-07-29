@@ -1,4 +1,4 @@
-#include "mesh/Mesh.h"
+#include "Mesh.h"
 
 namespace diamond_engine {
 	Mesh::Mesh(

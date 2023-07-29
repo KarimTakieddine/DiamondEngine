@@ -1,8 +1,8 @@
 #pragma once
 
-#include "gameobject/GameObjectType.h"
-#include "rendering/RenderSequence.h"
-#include "shader/SharedShaderStore.h"
+#include "GameObjectType.h"
+#include "RenderSequence.h"
+#include "SharedShaderStore.h"
 
 namespace diamond_engine {
 class Scene {

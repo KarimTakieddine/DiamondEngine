@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "utility/LogManager.h"
+#include "LogManager.h"
 
 namespace diamond_engine {
 	LogManager& LogManager::getInstance() {

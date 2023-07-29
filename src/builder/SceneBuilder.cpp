@@ -1,8 +1,8 @@
 #include <stdexcept>
 
-#include "builder/GameObjectBuilder.h"
-#include "builder/SceneBuilder.h"
-#include "config/SceneConfig.h"
+#include "GameObjectBuilder.h"
+#include "SceneBuilder.h"
+#include "SceneConfig.h"
 
 namespace diamond_engine {
 	void SceneBuilder::SetBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator) {

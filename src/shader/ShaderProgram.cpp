@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "shader/ShaderProgram.h"
+#include "ShaderProgram.h"
 
 namespace diamond_engine {
 	ShaderProgram::ShaderProgram() : m_shaders(), m_object(glCreateProgram()) {

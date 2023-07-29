@@ -1,5 +1,5 @@
-#include "gameobject/GameObject.h"
-#include "behaviour/RotateBehaviour.h"
+#include "GameObject.h"
+#include "RotateBehaviour.h"
 
 namespace diamond_engine {
 	void RotateBehaviour::Update(GLfloat deltaTime) {

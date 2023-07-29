@@ -1,4 +1,4 @@
-#include "config/SceneConfig.h"
+#include "SceneConfig.h"
 
 namespace diamond_engine {
 	void SceneConfig::AddGameObjectConfig(std::unique_ptr<GameObjectConfig> gameObjectConfig) {

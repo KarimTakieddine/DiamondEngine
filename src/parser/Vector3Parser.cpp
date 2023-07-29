@@ -2,7 +2,7 @@
 
 #include <pugixml.hpp>
 
-#include "parser/Vector3Parser.h"
+#include "Vector3Parser.h"
 
 namespace diamond_engine {
 	/* static */ glm::vec3 Vector3Parser::Parse(const pugi::xml_node& node) {

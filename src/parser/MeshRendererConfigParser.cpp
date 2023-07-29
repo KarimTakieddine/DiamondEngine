@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#include "parser/MeshRendererConfigParser.h"
-#include "config/MeshRendererConfig.h"
+#include "MeshRendererConfigParser.h"
+#include "MeshRendererConfig.h"
 
 namespace diamond_engine {
 	static const std::unordered_map<std::string, MeshType> kStringToMeshType = {

@@ -1,4 +1,4 @@
-#include "rendering/Material.h"
+#include "Material.h"
 
 namespace diamond_engine {
 	const glm::vec3& Material::GetColor() const {

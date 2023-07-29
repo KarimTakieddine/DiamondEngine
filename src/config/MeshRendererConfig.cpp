@@ -1,4 +1,4 @@
-#include "config/MeshRendererConfig.h"
+#include "MeshRendererConfig.h"
 
 namespace diamond_engine {
 	void MeshRendererConfig::SetMeshType(MeshType meshType) {

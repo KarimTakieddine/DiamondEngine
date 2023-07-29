@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "gameobject/GameObject.h"
-#include "allocator/GLAllocator.h"
+#include "GameObject.h"
+#include "GLAllocator.h"
 
 namespace diamond_engine {
 class GameObjectConfig;

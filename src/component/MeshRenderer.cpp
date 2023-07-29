@@ -1,7 +1,7 @@
 #include <stdexcept>
 
-#include "gameobject/GameObject.h"
-#include "component/MeshRenderer.h"
+#include "GameObject.h"
+#include "MeshRenderer.h"
 
 namespace diamond_engine {
 	/* static */ const std::string MeshRenderer::kVertexAttributeName	= "position";

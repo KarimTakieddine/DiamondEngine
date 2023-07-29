@@ -2,10 +2,10 @@
 
 #include <pugixml.hpp>
 
-#include "parser/GameObjectConfigParser.h"
-#include "parser/MeshRendererConfigParser.h"
-#include "parser/RotateBehaviourConfigParser.h"
-#include "parser/Vector3Parser.h"
+#include "GameObjectConfigParser.h"
+#include "MeshRendererConfigParser.h"
+#include "RotateBehaviourConfigParser.h"
+#include "Vector3Parser.h"
 
 namespace diamond_engine {
 	static const std::unordered_map<std::string, GameObjectType> kStringToGameObjectType = {

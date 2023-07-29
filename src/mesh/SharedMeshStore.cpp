@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "mesh/SharedMeshStore.h"
+#include "SharedMeshStore.h"
 
 namespace diamond_engine {
 	/* static */ SharedMeshStore& SharedMeshStore::GetInstance() {

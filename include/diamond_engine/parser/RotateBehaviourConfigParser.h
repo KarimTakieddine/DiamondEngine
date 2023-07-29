@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "config/BehaviourConfig.h"
+#include "BehaviourConfig.h"
 
 namespace pugi { class xml_node;  }
 

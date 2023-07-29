@@ -2,7 +2,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "rendering/RenderSequence.h"
+#include "RenderSequence.h"
 
 namespace diamond_engine {
 	void RenderSequence::SetShaderProgram(const SharedShaderProgram& shaderProgram) {
