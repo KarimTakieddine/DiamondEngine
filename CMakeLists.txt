@@ -63,6 +63,8 @@ set(SOURCES
     ${SRC_DIR}/shader/ShaderProgram.cpp
     ${SRC_DIR}/parser/ShaderMetadataParser.cpp
     ${SRC_DIR}/shader/SharedShaderStore.cpp
+    ${SRC_DIR}/texture/TextureLoader.cpp
+    ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/rendering/Material.cpp
     ${SRC_DIR}/rendering/Transform.cpp
     ${SRC_DIR}/rendering/Camera.cpp
@@ -105,6 +107,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${INCLUDE_DIR}/diamond_engine/rendering"
     "${INCLUDE_DIR}/diamond_engine/scene"
     "${INCLUDE_DIR}/diamond_engine/shader"
+    "${INCLUDE_DIR}/diamond_engine/texture"
     "${INCLUDE_DIR}/diamond_engine/utility")
 
 find_library(GLEW
