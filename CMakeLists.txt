@@ -42,6 +42,10 @@ set(GLFW_BUILD_TESTS FALSE)
 
 set(PUGI_XML_DIR pugixml)
 
+# STB
+
+set (STB_DIR stb)
+
 add_subdirectory(${GLFW_DIR})
 add_subdirectory(${PUGI_XML_DIR})
 
@@ -93,6 +97,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${GLFW_DIR}/include"
     ${GLM_DIR}
     "${PUGI_XML_DIR}/src"
+    ${STB_DIR}
     "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
