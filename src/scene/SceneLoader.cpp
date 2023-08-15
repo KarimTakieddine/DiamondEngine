@@ -12,7 +12,7 @@ namespace diamond_engine {
 	}
 
 	void SceneLoader::SetSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader) {
-		m_sharedTextureLoader = m_sharedTextureLoader;
+		m_sharedTextureLoader = sharedTextureLoader;
 	}
 
 	void SceneLoader::LoadScenes(const std::filesystem::path& rootDirectory) {
