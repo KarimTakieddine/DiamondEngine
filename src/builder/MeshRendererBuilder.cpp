@@ -21,6 +21,11 @@ namespace diamond_engine {
 
 		switch (meshRendererConfig->GetMeshType())
 		{
+		case MeshType::TRIANGLE: {
+			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::TRIANGLE);
+			meshRenderer->SetMesh(quadMesh);
+			break;
+		}
 		case MeshType::QUAD: {
 			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::QUAD);
 			meshRenderer->SetMesh(quadMesh);
