@@ -31,7 +31,8 @@ namespace diamond_engine {
 				"objectLocalToWorld",
 				"objectLocalRotation",
 				"objectLocalScale",
-				"materialColor"
+				"materialColor",
+				"materialTextureOffset"
 			}
 		);
 		m_spriteRenderSequence->SetShaderProgram(spriteShaderProgram);

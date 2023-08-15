@@ -4,13 +4,14 @@
 #include "MeshRenderer.h"
 
 namespace diamond_engine {
-	/* static */ const std::string MeshRenderer::kVertexAttributeName	= "position";
-	/* static */ const std::string MeshRenderer::kColorAttributeName	= "color";
-	/* static */ const std::string MeshRenderer::kTextureCoordinateName	= "textureCoordinate";
+	/* static */ const std::string MeshRenderer::kVertexAttributeName				= "position";
+	/* static */ const std::string MeshRenderer::kColorAttributeName				= "color";
+	/* static */ const std::string MeshRenderer::kTextureCoordinateAttributeName	= "textureCoordinate";
 
 	void MeshRenderer::BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) {
-		m_vertexAttributeLocation	= shaderProgram->GetAttribute(kVertexAttributeName);
-		m_colorAttributeLocation	= shaderProgram->GetAttribute(kColorAttributeName);
+		m_vertexAttributeLocation				= shaderProgram->GetAttribute(kVertexAttributeName);
+		m_colorAttributeLocation				= shaderProgram->GetAttribute(kColorAttributeName);
+		m_textureCoordinateAttributeLocation	= shaderProgram->GetAttribute(kTextureCoordinateAttributeName);
 	}
 
 	void MeshRenderer::OnAddedToScene() {
@@ -36,6 +37,9 @@ namespace diamond_engine {
 
 		glEnableVertexAttribArray(m_colorAttributeLocation);
 		glVertexAttribPointer(m_colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+
+		glEnableVertexAttribArray(m_textureCoordinateAttributeLocation);
+		glVertexAttribPointer(m_textureCoordinateAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
 	}
 
 	void MeshRenderer::SetMesh(const std::shared_ptr<Mesh>& mesh) {
@@ -56,6 +60,10 @@ namespace diamond_engine {
 
 	void MeshRenderer::SetColorAttributeLocation(GLuint colorAttributeLocation) {
 		m_colorAttributeLocation = colorAttributeLocation;
+	}
+
+	void MeshRenderer::SetTextureCoordinateAttributeLocation(GLuint textureCoordinateAttributeLocation) {
+		m_textureCoordinateAttributeLocation = textureCoordinateAttributeLocation;
 	}
 
 	void MeshRenderer::SetDrawMode(GLenum drawMode) {

@@ -31,6 +31,7 @@ namespace diamond_engine {
 		const size_t maxTextureCount = textureMetadataList.size();
 
 		m_textureAllocator->Reserve(maxTextureCount);
+		m_textureAllocator->Allocate(maxTextureCount);
 		m_textureMap.reserve(maxTextureCount);
 		for (const auto& textureMetadata : textureMetadataList) {
 			Texture texture;

@@ -4,6 +4,7 @@
 		<Attributes>
 			<Attribute name="position"/>
 			<Attribute name="color"/>
+			<Attribute name="textureCoordinate"/>
 		</Attributes>
 		<Uniforms>
 			<Uniform name="projection"/>
@@ -18,6 +19,7 @@
 	<Shader type="fragment" file="fragment_sprite.dmsh">
 		<Uniforms>
 			<Uniform name="materialColor"/>
+			<Uniform name="materialTextureOffset"/>
 		</Uniforms>
 	</Shader>
 </Program>

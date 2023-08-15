@@ -25,6 +25,7 @@ public:
 		std::string objectLocalRotationUniform;
 		std::string objectLocalScaleUniform;
 		std::string colorUniform;
+		std::string textureOffsetUniform;
 	};
 
 	using SharedShaderProgram = std::shared_ptr<ShaderProgram>;
