@@ -3,6 +3,7 @@
 #include <pugixml.hpp>
 
 #include "GameObjectConfigParser.h"
+#include "MaterialConfigParser.h"
 #include "MeshRendererConfigParser.h"
 #include "RotateBehaviourConfigParser.h"
 #include "Vector3Parser.h"
@@ -72,9 +73,9 @@ namespace diamond_engine {
 			gameObjectConfig->SetPosition(Vector3Parser::Parse(positionNode));
 		}
 
-		pugi::xml_node colorNode = gameObjectNode.child("Color");
-		if (colorNode) {
-			gameObjectConfig->SetColor(Vector3Parser::Parse(colorNode));
+		pugi::xml_node materialNode = gameObjectNode.child("Material");
+		if (materialNode) {
+			gameObjectConfig->SetMaterialConfig(MaterialConfigParser::Parse(materialNode));
 		}
 
 		return gameObjectConfig;

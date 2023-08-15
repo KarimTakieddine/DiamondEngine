@@ -1,4 +1,3 @@
-#include <filesystem>
 #include <stdexcept>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -64,14 +63,10 @@ namespace diamond_engine {
 		m_textureMap.erase(textureIt);
 	}
 
-	const Texture& TextureLoader::GetTexture(const std::string& name) const {
+	Texture TextureLoader::GetTexture(const std::string& name) const {
 		auto textureIt = m_textureMap.find(name);
 
-		if (textureIt == m_textureMap.end()) {
-			throw std::runtime_error("Could not find texture named: " + name);
-		}
-
-		return textureIt->second;
+		return textureIt == m_textureMap.end() ? Texture() : textureIt->second;
 	}
 	
 	GLint TextureLoader::GetTextureIndex(const std::string& name) const {

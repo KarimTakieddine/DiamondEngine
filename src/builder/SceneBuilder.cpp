@@ -31,8 +31,8 @@ namespace diamond_engine {
 
 			result->AddGameObject(
 				GameObjectBuilder::Build(m_bufferAllocator, gameObjectConfig.get()),
+				gameObjectConfig->GetMaterialConfig(),
 				gameObjectConfig->GetPosition(),
-				gameObjectConfig->GetColor(),
 				gameObjectConfig->GetType());
 		}
 

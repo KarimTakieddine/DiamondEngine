@@ -1,10 +1,14 @@
 #pragma once
 
+#include <optional>
+
 #include "AlignedAllocator.hpp"
 #include "GLAllocator.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "MaterialConfig.h"
 #include "ShaderProgram.h"
+#include "TextureLoader.h"
 
 namespace diamond_engine {
 using ObjectAllocator		= AlignedAllocator<RenderableObject, 4>;
@@ -31,11 +35,13 @@ public:
 
 	void SetVertexArrayAllocator(const std::shared_ptr<GLAllocator>& vertexArrayAllocator);
 
+	void SetTextureLoader(const std::shared_ptr<TextureLoader>& textureLoader);
+
 	void SetRenderDescriptor(const RenderDescriptor& renderDescriptor);
 
 	const RenderDescriptor& GetRenderDescriptor() const;
 
-	void AddGameObject(std::unique_ptr<GameObject> gameObject, const glm::vec3& position, const glm::vec3& color);
+	void AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position);
 
 	void SetCamera(const std::shared_ptr<Camera> camera);
 
@@ -46,6 +52,8 @@ private:
 	std::vector<std::unique_ptr<GameObject>> m_gameObjects{ };
 	std::shared_ptr<Camera> m_camera{ nullptr };
 	std::shared_ptr<GLAllocator> m_vertexArrayAllocator{ nullptr };
+	std::shared_ptr<TextureLoader> m_textureLoader{ nullptr };
+	std::optional<GLint> m_boundTexture{ };
 	SharedShaderProgram m_shaderProgram{ nullptr };
 	SharedObjectAllocator m_objectAllocator{ nullptr };
 	GLint m_projectionUniformLocation{ -1 };

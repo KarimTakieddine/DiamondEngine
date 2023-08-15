@@ -14,5 +14,6 @@ namespace diamond_engine {
 		GLint objectLocalRotationUniformLocation{ -1 };
 		GLint objectLocalScaleUniformLocation{ -1 };
 		GLint colorUniformLocation{ -1 };
+		GLint textureOffsetUniformLocation{ -1 };
 	};
 }

@@ -54,10 +54,10 @@ namespace diamond_engine {
 		return m_bufferAllocator;
 	}
 
-	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject, const glm::vec3& position, const glm::vec3& color, GameObjectType type) {
+	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position, GameObjectType type) {
 		switch (type) {
 		case GameObjectType::SPRITE: {
-			m_spriteRenderSequence->AddGameObject(std::move(gameObject), position, color);
+			m_spriteRenderSequence->AddGameObject(std::move(gameObject), materialConfig, position);
 			break;
 		}
 		default:

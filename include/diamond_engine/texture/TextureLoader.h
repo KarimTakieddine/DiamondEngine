@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -22,7 +23,7 @@ public:
 
 	void DeleteTexture(const std::string& name);
 
-	const Texture& GetTexture(const std::string& name) const;
+	Texture GetTexture(const std::string& name) const;
 
 	GLint GetTextureIndex(const std::string& name) const;
 

@@ -3,11 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include <glm/vec3.hpp>
-
-#include "GameObjectType.h"
-#include "ComponentConfig.h"
 #include "BehaviourConfig.h"
+#include "ComponentConfig.h"
+#include "MaterialConfig.h"
+#include "GameObjectType.h"
 
 namespace diamond_engine {
 class GameObjectConfig {
@@ -23,23 +22,23 @@ public:
 
 	const BehaviourConfigList& GetBehaviourConfigs() const;
 
+	const MaterialConfig& GetMaterialConfig() const;
+
+	void SetMaterialConfig(const MaterialConfig& materialConfig);
+
 	void SetType(GameObjectType type);
 
 	void SetPosition(const glm::vec3& position);
 
 	const glm::vec3& GetPosition() const;
 
-	void SetColor(const glm::vec3& color);
-
-	const glm::vec3& GetColor() const;
-
 	GameObjectType GetType() const;
 
 private:
 	ComponentConfigList m_componentConfigs{ };
 	BehaviourConfigList m_behaviourConfigs{ };
+	MaterialConfig m_materialConfig{ };
 	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
-	glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
 	GameObjectType m_type{ GameObjectType::SPRITE };
 };
 }

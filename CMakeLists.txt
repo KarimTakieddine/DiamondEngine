@@ -74,12 +74,15 @@ set(SOURCES
     ${SRC_DIR}/rendering/Camera.cpp
     ${SRC_DIR}/rendering/RenderSequence.cpp
     ${SRC_DIR}/config/GameObjectConfig.cpp
+    ${SRC_DIR}/config/MaterialConfig.cpp
     ${SRC_DIR}/config/SceneConfig.cpp
     ${SRC_DIR}/config/MeshRendererConfig.cpp
     ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
+    ${SRC_DIR}/parser/Vector2Parser.cpp
     ${SRC_DIR}/parser/Vector3Parser.cpp
     ${SRC_DIR}/builder/MeshRendererBuilder.cpp
+    ${SRC_DIR}/parser/MaterialConfigParser.cpp
     ${SRC_DIR}/parser/SceneConfigParser.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp

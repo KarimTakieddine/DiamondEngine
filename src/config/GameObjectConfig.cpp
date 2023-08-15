@@ -16,6 +16,14 @@ namespace diamond_engine {
 	const GameObjectConfig::BehaviourConfigList& GameObjectConfig::GetBehaviourConfigs() const {
 		return m_behaviourConfigs;
 	}
+
+	const MaterialConfig& GameObjectConfig::GetMaterialConfig() const {
+		return m_materialConfig;
+	}
+
+	void GameObjectConfig::SetMaterialConfig(const MaterialConfig& materialConfig) {
+		m_materialConfig = materialConfig;
+	}
 	
 	void GameObjectConfig::SetType(GameObjectType type) {
 		m_type = type;
@@ -27,14 +35,6 @@ namespace diamond_engine {
 
 	const glm::vec3& GameObjectConfig::GetPosition() const {
 		return m_position;
-	}
-
-	void GameObjectConfig::SetColor(const glm::vec3& color) {
-		m_color = color;
-	}
-
-	const glm::vec3& GameObjectConfig::GetColor() const {
-		return m_color;
 	}
 	
 	GameObjectType GameObjectConfig::GetType() const {

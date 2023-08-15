@@ -27,6 +27,13 @@ namespace diamond_engine {
 		m_vertexArrayAllocator = vertexArrayAllocator;
 	}
 
+	void RenderSequence::SetTextureLoader(const std::shared_ptr<TextureLoader>& textureLoader) {
+		if (!textureLoader) {
+			throw std::runtime_error("Attempt to set null TextureLoader instance on renderable sequence");
+		}
+		m_textureLoader = textureLoader;
+	}
+
 	void RenderSequence::SetRenderDescriptor(const RenderDescriptor& renderDescriptor) {
 		m_renderDescriptor = renderDescriptor;
 	}
@@ -35,7 +42,7 @@ namespace diamond_engine {
 		return m_renderDescriptor;
 	}
 
-	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject, const glm::vec3& position, const glm::vec3& color) {
+	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position) {
 		RenderableObject* renderableObject = m_objectAllocator->Get();
 
 		if (!renderableObject) {
@@ -49,7 +56,9 @@ namespace diamond_engine {
 		renderableObject->colorUniformLocation					= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
 
 		renderableObject->transform.SetPosition(position);
-		renderableObject->material.SetColor(color);
+		renderableObject->material.SetColor(materialConfig.GetColor());
+		renderableObject->material.SetTextureOffset(materialConfig.GetTextureOffset());
+		renderableObject->material.SetTexture(m_textureLoader->GetTextureIndex(materialConfig.GetTextureName()));
 
 		gameObject->SetRenderableObject(renderableObject);
 		gameObject->BindToShaderProgram(m_shaderProgram);
@@ -102,6 +111,16 @@ namespace diamond_engine {
 
 			const glm::vec3& materialColor = renderableObject->material.GetColor();
 			glUniform3f(renderableObject->colorUniformLocation, materialColor.r, materialColor.g, materialColor.b);
+
+			const glm::vec2& materialTextureOffset = renderableObject->material.GetTextureOffset();
+			glUniform2f(renderableObject->textureOffsetUniformLocation, materialTextureOffset.x, materialTextureOffset.y);
+
+			const GLint texture = renderableObject->material.GetTexture();
+			if (!m_boundTexture.has_value() || (m_boundTexture.value() != texture))
+			{
+				glBindTexture(GL_TEXTURE_2D, texture);
+				m_boundTexture = texture;
+			}
 
 			glBindVertexArray(renderableObject->vertexArrayObject);
 			glDrawElements(renderableObject->drawCall.drawMode, renderableObject->drawCall.elementCount, GL_UNSIGNED_INT, nullptr);
