@@ -15,6 +15,8 @@ public:
 
 	static const std::string kTextureCollectionMetadataFilename;
 
+	static const std::unordered_map<GLint, GLenum> kChannelCountToFormatMap;
+
 	TextureLoader();
 
 	void Load(const std::string& rootDirectory);

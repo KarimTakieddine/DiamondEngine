@@ -9,6 +9,11 @@
 namespace diamond_engine {
 	/* static */ const std::string TextureLoader::kTextureCollectionMetadataFilename = "textureMetadata.xml";
 
+	/* static */ const std::unordered_map<GLint, GLenum> TextureLoader::kChannelCountToFormatMap = {
+		{ 3, GL_RGB },
+		{ 4, GL_RGBA }
+	};
+
 	TextureLoader::TextureLoader() : m_textureAllocator(std::make_unique<GLAllocator>(glGenTextures, glDeleteTextures)) { }
 
 	void TextureLoader::Load(const std::string& rootDirectory) {
@@ -82,12 +87,15 @@ namespace diamond_engine {
 		GLint height		= 0;
 		GLint channelCount	= 0;
 
-		// TODO: Account for alpha textures...
-
 		GLubyte* imageData = stbi_load(texturePath.string().c_str(), &width, &height, &channelCount, 0);
 
 		if (!imageData) {
 			throw std::runtime_error("Failed to load image from path: " + texturePath.string());
+		}
+
+		auto formatIt = kChannelCountToFormatMap.find(channelCount);
+		if (formatIt == kChannelCountToFormatMap.end()) {
+			throw std::runtime_error("Could not find format matching channel count: " + std::to_string(channelCount));
 		}
 
 		glBindTexture(GL_TEXTURE_2D, texture.index);
@@ -95,7 +103,7 @@ namespace diamond_engine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapModeT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, formatIt->second, GL_UNSIGNED_BYTE, imageData);
 
 		stbi_image_free(imageData);
 	}
