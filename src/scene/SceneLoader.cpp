@@ -11,6 +11,10 @@ namespace diamond_engine {
 		m_sharedShaderStore = sharedShaderStore;
 	}
 
+	void SceneLoader::SetSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader) {
+		m_sharedTextureLoader = m_sharedTextureLoader;
+	}
+
 	void SceneLoader::LoadScenes(const std::filesystem::path& rootDirectory) {
 		m_sceneMap.clear();
 
@@ -42,6 +46,12 @@ namespace diamond_engine {
 				throw std::runtime_error("No shared shader store set for SceneLoader instance");
 			}
 			sceneBuilder.SetSharedShaderStore(m_sharedShaderStore);
+
+			if (!m_sharedTextureLoader) {
+				throw std::runtime_error("No shared texture loader set for SceneLoader instance");
+			}
+			sceneBuilder.SetSharedTextureLoader(m_sharedTextureLoader);
+
 			std::unique_ptr<Scene> scene = sceneBuilder.Build(sceneConfig.get());
 
 			m_sceneMap[sceneName] = std::move(scene);

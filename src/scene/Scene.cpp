@@ -5,8 +5,9 @@
 #include "Scene.h"
 
 namespace diamond_engine {
-	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) :
+	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore, const std::shared_ptr<TextureLoader>& sharedTextureLoader) :
 		m_sharedShaderStore(sharedShaderStore),
+		m_sharedTextureLoader(sharedTextureLoader),
 		m_vertexArrayAllocator(std::make_shared<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays)),
 		m_bufferAllocator(std::make_shared<GLAllocator>(glGenBuffers, glDeleteBuffers)),
 		m_camera(std::make_shared<Camera>()),
@@ -37,6 +38,7 @@ namespace diamond_engine {
 		m_spriteRenderSequence->SetCamera(m_camera);
 		m_spriteRenderSequence->SetObjectAllocator(m_renderableObjectAllocator);
 		m_spriteRenderSequence->SetVertexArrayAllocator(m_vertexArrayAllocator);
+		m_spriteRenderSequence->SetTextureLoader(m_sharedTextureLoader);
 	}
 
 	void Scene::SetMaxObjects(GLint maxObjects) {

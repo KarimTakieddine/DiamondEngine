@@ -13,12 +13,20 @@ namespace diamond_engine {
 		m_sharedShaderStore = sharedShaderStore;
 	}
 
+	void SceneBuilder::SetSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader) {
+		m_sharedTextureLoader = sharedTextureLoader;
+	}
+
 	std::unique_ptr<Scene> SceneBuilder::Build(const SceneConfig* sceneConfig) {
 		if (!m_sharedShaderStore) {
 			throw std::runtime_error("Cannot build Scene instance without shared shader store");
 		}
 
-		std::unique_ptr<Scene> result = std::make_unique<Scene>(m_sharedShaderStore);
+		if (!m_sharedTextureLoader) {
+			throw std::runtime_error("Cannot build Scene instance without shared texture loader");
+		}
+
+		std::unique_ptr<Scene> result = std::make_unique<Scene>(m_sharedShaderStore, m_sharedTextureLoader);
 
 		result->SetMaxObjects(sceneConfig->GetMaxObjects());
 
