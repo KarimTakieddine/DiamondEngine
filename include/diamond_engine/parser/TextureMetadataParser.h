@@ -23,6 +23,14 @@ public:
 
 	GLenum GetWrapModeT() const;
 
+	void SetMinFilter(GLenum minFilter);
+
+	GLenum GetMinFilter() const;
+
+	void SetMagFilter(GLenum magFilter);
+
+	GLenum GetMagFilter() const;
+
 	void SetPath(const std::string& path);
 
 	const std::string& GetPath() const;
@@ -30,8 +38,10 @@ public:
 private:
 	std::string m_name;
 	std::string m_path;
-	GLenum m_wrapModeS;
-	GLenum m_wrapModeT;
+	GLenum m_wrapModeS{ GL_REPEAT };
+	GLenum m_wrapModeT{ GL_REPEAT };
+	GLenum m_minFilter{ GL_NEAREST };
+	GLenum m_magFilter{ GL_NEAREST };
 };
 
 class TextureCollectionMetadata {
@@ -48,6 +58,8 @@ class TextureMetadataParser {
 public:
 	static const std::unordered_map<std::string, GLenum> kStringToWrapModeMap;
 
+	static const std::unordered_map<std::string, GLenum> kStringToFilterMap;
+
 	static TextureMetadata Parse(const pugi::xml_node& textureNode);
 
 	static TextureCollectionMetadata ParseCollection(const pugi::xml_document& textureCollectionDocument);
@@ -56,5 +68,7 @@ public:
 
 private:
 	static GLenum parseWrapMode(const pugi::xml_node& textureNode, const std::string& attributeName);
+
+	static GLenum parseFilter(const pugi::xml_node& textureNode, const std::string& attributeName);
 };
 }

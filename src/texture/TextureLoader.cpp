@@ -40,11 +40,12 @@ namespace diamond_engine {
 			if (texturePath.is_relative()) {
 				texturePath = rootDirectoryPath / texturePath;
 			}
-			loadTexture(texturePath, texture);
 
 			texture.index		= m_textureAllocator->Get();
 			texture.wrapModeS	= textureMetadata.GetWrapModeS();
 			texture.wrapModeT	= textureMetadata.GetWrapModeT();
+
+			loadTexture(texturePath, texture);
 
 			AddTexture(textureMetadata.GetName(), texture);
 		}

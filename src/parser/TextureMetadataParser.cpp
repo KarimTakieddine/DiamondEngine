@@ -27,6 +27,22 @@ namespace diamond_engine {
 		return m_wrapModeT;
 	}
 
+	void TextureMetadata::SetMinFilter(GLenum minFilter) {
+		m_minFilter = minFilter;
+	}
+
+	GLenum TextureMetadata::GetMinFilter() const {
+		return m_minFilter;
+	}
+
+	void TextureMetadata::SetMagFilter(GLenum magFilter) {
+		m_magFilter = magFilter;
+	}
+
+	GLenum TextureMetadata::GetMagFilter() const {
+		return m_magFilter;
+	}
+
 	void TextureMetadata::SetPath(const std::string& path) {
 		m_path = path;
 	}
@@ -49,6 +65,11 @@ namespace diamond_engine {
 		{ "clampToBorder",			GL_CLAMP_TO_BORDER },
 		{ "clampToEdge",			GL_CLAMP_TO_EDGE },
 		{ "mirroredClampToEdge",	GL_MIRROR_CLAMP_TO_EDGE }
+	};
+
+	/* static */ const std::unordered_map<std::string, GLenum> TextureMetadataParser::kStringToFilterMap = {
+		{ "nearest", GL_NEAREST },
+		{ "linear", GL_LINEAR }
 	};
 
 	/* static */ TextureMetadata TextureMetadataParser::Parse(const pugi::xml_node& textureNode) {
@@ -119,5 +140,23 @@ namespace diamond_engine {
 		}
 
 		return wrapModeIt->second;
+	}
+
+	/* static */ GLenum TextureMetadataParser::parseFilter(const pugi::xml_node& textureNode, const std::string& attributeName) {
+		pugi::xml_attribute filterAttribute = textureNode.attribute(attributeName.c_str());
+
+		if (!filterAttribute) {
+			return GL_NEAREST; // Default
+		}
+
+		const std::string filterString(filterAttribute.as_string());
+
+		auto filterIt = kStringToFilterMap.find(filterString);
+
+		if (filterIt == kStringToFilterMap.end()) {
+			throw std::runtime_error("Invalid filter type specified: " + filterString);
+		}
+
+		return filterIt->second;
 	}
 }
