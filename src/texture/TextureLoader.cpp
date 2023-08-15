@@ -44,6 +44,8 @@ namespace diamond_engine {
 			texture.index		= m_textureAllocator->Get();
 			texture.wrapModeS	= textureMetadata.GetWrapModeS();
 			texture.wrapModeT	= textureMetadata.GetWrapModeT();
+			texture.minFilter	= textureMetadata.GetMinFilter();
+			texture.magFilter	= textureMetadata.GetMagFilter();
 
 			loadTexture(texturePath, texture);
 
