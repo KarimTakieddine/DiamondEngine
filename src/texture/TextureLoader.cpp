@@ -78,6 +78,25 @@ namespace diamond_engine {
 	}
 
 	void TextureLoader::loadTexture(const std::filesystem::path& texturePath, Texture& texture) {
-		// TODO!
+		GLint width			= 0;
+		GLint height		= 0;
+		GLint channelCount	= 0;
+
+		// TODO: Account for alpha textures...
+
+		GLubyte* imageData = stbi_load(texturePath.string().c_str(), &width, &height, &channelCount, 0);
+
+		if (!imageData) {
+			throw std::runtime_error("Failed to load image from path: " + texturePath.string());
+		}
+
+		glBindTexture(GL_TEXTURE_2D, texture.index);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.wrapModeS);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapModeT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+		stbi_image_free(imageData);
 	}
 }
