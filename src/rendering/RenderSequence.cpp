@@ -49,11 +49,11 @@ namespace diamond_engine {
 			throw std::runtime_error("Failed to allocate RenderableObject instance for game object");
 		}
 
-		renderableObject->vertexArrayObject						= m_vertexArrayAllocator->Get();
-		renderableObject->objectLocalToWorldUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectLocalToWorldUniform);
-		renderableObject->objectLocalRotationUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.objectLocalRotationUniform);
-		renderableObject->objectLocalScaleUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectLocalScaleUniform);
-		renderableObject->colorUniformLocation					= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
+		renderableObject->vertexArrayObject					= m_vertexArrayAllocator->Get();
+		renderableObject->objectTranslationUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.objectTranslationUniform);
+		renderableObject->objectRotationUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectRotationUniform);
+		renderableObject->objectScaleUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectScaleUniform);
+		renderableObject->colorUniformLocation				= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
 
 		renderableObject->transform.SetPosition(position);
 		renderableObject->material.SetColor(materialConfig.GetColor());
@@ -74,10 +74,11 @@ namespace diamond_engine {
 			throw std::runtime_error("Attempt to set null Camera on RenderSequence instance");
 		}
 
-		m_projectionUniformLocation				= m_shaderProgram->GetUniform(m_renderDescriptor.projectionUniform);
-		m_cameraLocalToWorldUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.cameraLocalToWorldUniform);
-		m_cameraLocalRotationUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.cameraLocalRotationUniform);
-		m_cameraViewUniformLocation				= m_shaderProgram->GetUniform(m_renderDescriptor.cameraViewUniform);
+		m_projectionUniformLocation			= m_shaderProgram->GetUniform(m_renderDescriptor.projectionUniform);
+		m_cameraTranslationUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.cameraTranslationUniform);
+		m_cameraRotationUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.cameraRotationUniform);
+		m_cameraScaleUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.cameraScaleUniform);
+		m_cameraViewUniformLocation			= m_shaderProgram->GetUniform(m_renderDescriptor.cameraViewUniform);
 
 		m_camera = camera;
 	}
@@ -86,13 +87,15 @@ namespace diamond_engine {
 		glUseProgram(m_shaderProgram->GetObject());
 
 		const glm::mat4& projectionMatrix			= m_camera->GetProjection();
-		const glm::mat4& cameraLocalToWorldMatrix	= m_camera->GetTransform().GetLocalToWorldMatrix();
-		const glm::mat4& cameraLocalRotationMatrix	= m_camera->GetTransform().GetLocalRotationMatrix();
+		const glm::mat4& cameraTranslationMatrix	= m_camera->GetTransform().GetTranslation();
+		const glm::mat4& cameraRotationMatrix		= m_camera->GetTransform().GetRotation();
+		const glm::mat4& cameraScaleMatrix			= m_camera->GetTransform().GetScale();
 		const glm::mat4& cameraViewMatrix			= m_camera->GetView();
 
 		glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(m_cameraLocalToWorldUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraLocalToWorldMatrix));
-		glUniformMatrix4fv(m_cameraLocalRotationUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraLocalRotationMatrix));
+		glUniformMatrix4fv(m_cameraTranslationUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraTranslationMatrix));
+		glUniformMatrix4fv(m_cameraRotationUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraRotationMatrix));
+		glUniformMatrix4fv(m_cameraScaleUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraScaleMatrix));
 		glUniformMatrix4fv(m_cameraViewUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraViewMatrix));
 
 		for (const auto& gameObject : m_gameObjects) {
@@ -100,14 +103,14 @@ namespace diamond_engine {
 
 			RenderableObject* renderableObject = gameObject->GetRenderableObject();
 
-			const glm::mat4& objectLocalToWorldMatrix = renderableObject->transform.GetLocalToWorldMatrix();
-			glUniformMatrix4fv(renderableObject->objectLocalToWorldUniformLocation, 1, GL_FALSE, glm::value_ptr(objectLocalToWorldMatrix));
+			const glm::mat4& objectTranslationMatrix = renderableObject->transform.GetTranslation();
+			glUniformMatrix4fv(renderableObject->objectTranslationUniformLocation, 1, GL_FALSE, glm::value_ptr(objectTranslationMatrix));
 
-			const glm::mat4& objectLocalRotationMatrix = renderableObject->transform.GetLocalRotationMatrix();
-			glUniformMatrix4fv(renderableObject->objectLocalRotationUniformLocation, 1, GL_FALSE, glm::value_ptr(objectLocalRotationMatrix));
+			const glm::mat4& objectRotationMatrix = renderableObject->transform.GetRotation();
+			glUniformMatrix4fv(renderableObject->objectRotationUniformLocation, 1, GL_FALSE, glm::value_ptr(objectRotationMatrix));
 
-			const glm::mat4& objectLocalScaleMatrix = renderableObject->transform.GetLocalScaleMatrix();
-			glUniformMatrix4fv(renderableObject->objectLocalScaleUniformLocation, 1, GL_FALSE, glm::value_ptr(objectLocalScaleMatrix));
+			const glm::mat4& objectScaleMatrix = renderableObject->transform.GetScale();
+			glUniformMatrix4fv(renderableObject->objectScaleUniformLocation, 1, GL_FALSE, glm::value_ptr(objectScaleMatrix));
 
 			const glm::vec3& materialColor = renderableObject->material.GetColor();
 			glUniform3f(renderableObject->colorUniformLocation, materialColor.r, materialColor.g, materialColor.b);

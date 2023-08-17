@@ -8,27 +8,6 @@
 #include <glm/glm.hpp>
 
 namespace diamond_engine {
-	enum class DirtyFlag : GLubyte {
-		UNSET	= 0,
-		SET		= 1
-	};
-
-	inline DirtyFlag operator|(DirtyFlag l, GLubyte r) {
-		return static_cast<DirtyFlag>(
-			static_cast<std::underlying_type_t<DirtyFlag>>(l) | r);
-	}
-
-	inline DirtyFlag operator|=(DirtyFlag& l, DirtyFlag r) {
-		l = l | static_cast<std::underlying_type_t<DirtyFlag>>(r);
-		return l;
-	}
-
-	inline DirtyFlag operator&(DirtyFlag l, DirtyFlag r) {
-		return static_cast<DirtyFlag>(
-			static_cast<std::underlying_type_t<DirtyFlag>>(l) &
-			static_cast<std::underlying_type_t<DirtyFlag>>(r));
-	}
-
 class Transform {
 public:
 	static const std::string kModelUniformLocation;
@@ -37,30 +16,27 @@ public:
 
 	void Rotate(GLfloat degrees, const glm::vec3& axis);
 
-	void SetLocalRotation(GLfloat degrees, const glm::vec3& axis);
+	void SetEulerAngles(const glm::vec3& localEulerAngles);
 
-	void SetLocalEulerAngles(const glm::vec3& localEulerAngles);
+	void SetScale(const glm::vec3& scale);
 
-	void SetLocalScale(const glm::vec3& scale);
-
-	const glm::mat4& GetLocalToWorldMatrix() const {
-		return m_localToWorld;
+	const glm::mat4& GetTranslation() const {
+		return m_translation;
 	}
 
-	const glm::mat4& GetLocalRotationMatrix() const {
-		return m_localRotation;
+	const glm::mat4& GetRotation() const {
+		return m_rotation;
 	}
 
-	const glm::mat4& GetLocalScaleMatrix() const {
-		return m_localScale;
+	const glm::mat4& GetScale() const {
+		return m_scale;
 	}
 
 	void SetPosition(const glm::vec3& position);
 
 private:
-	glm::mat4 m_localToWorld{ 1.0f };
-	glm::mat4 m_localRotation{ 1.0f };
-	glm::mat4 m_localScale{ 1.0f };
-	DirtyFlag m_dirtyFlag{ DirtyFlag::UNSET };
+	glm::mat4 m_translation{ 1.0f };
+	glm::mat4 m_rotation{ 1.0f };
+	glm::mat4 m_scale{ 1.0f };
 };
 }

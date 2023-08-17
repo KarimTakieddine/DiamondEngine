@@ -27,7 +27,6 @@ private:
 	Transform m_transform{ };
 	glm::mat4 m_projection{ 1.0f };
 	glm::mat4 m_view{ 1.0f };
-	glm::mat4 m_viewTransform{ 1.0f };
 	GLfloat m_fieldOfView{ 1.0f };
 	GLfloat m_aspectRatio{ 1.0f };
 	GLfloat m_nearPlane{ 1.0f };

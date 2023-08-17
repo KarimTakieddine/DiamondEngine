@@ -8,12 +8,13 @@
 		</Attributes>
 		<Uniforms>
 			<Uniform name="projection"/>
-			<Uniform name="cameraLocalToWorld"/>
-			<Uniform name="cameraLocalRotation"/>
+			<Uniform name="cameraTranslation"/>
+			<Uniform name="cameraRotation"/>
+			<Uniform name="cameraScale"/>
 			<Uniform name="cameraView"/>
-			<Uniform name="objectLocalToWorld"/>
-			<Uniform name="objectLocalRotation"/>
-			<Uniform name="objectLocalScale"/>
+			<Uniform name="objectTranslation"/>
+			<Uniform name="objectRotation"/>
+			<Uniform name="objectScale"/>
 		</Uniforms>
 	</Shader>
 	<Shader type="fragment" file="fragment_sprite.dmsh">
