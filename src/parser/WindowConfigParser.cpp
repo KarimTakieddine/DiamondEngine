@@ -1,6 +1,5 @@
 #include <pugixml.hpp>
 
-#include "SizeParser.h"
 #include "WindowConfigParser.h"
 
 namespace diamond_engine {
@@ -9,6 +8,9 @@ namespace diamond_engine {
 
 		return {
 			windowConfigNode.attribute("title").as_string(def.GetTitle().c_str()),
-			SizeParser::Parse(windowConfigNode) };
+			{
+				windowConfigNode.attribute("width").as_int(def.GetSize().width),
+				windowConfigNode.attribute("height").as_int(def.GetSize().height)
+			} };
 	}
 }

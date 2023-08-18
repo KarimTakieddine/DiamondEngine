@@ -89,7 +89,6 @@ set(SOURCES
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
     ${SRC_DIR}/parser/Vector2Parser.cpp
     ${SRC_DIR}/parser/Vector3Parser.cpp
-    ${SRC_DIR}/parser/SizeParser.cpp
     ${SRC_DIR}/parser/EngineConfigParser.cpp
     ${SRC_DIR}/parser/WindowConfigParser.cpp
     ${SRC_DIR}/builder/MeshRendererBuilder.cpp
