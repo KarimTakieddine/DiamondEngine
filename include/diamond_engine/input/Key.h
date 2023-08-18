@@ -5,10 +5,12 @@
 namespace diamond_engine {
 namespace input {
 enum class KeyState : unsigned char {
-	NONE			= 0,
-	PRESSED_DOWN	= 1,
-	PRESSED			= 1 << 1,
-	RELEASED		= 1 << 2
+	NONE					= 0,
+	PRESSED_DOWN			= 1,
+	PRESSED					= 1 << 1,
+	WAS_PRESSED_LAST_FRAME	= 1 << 2,
+	RELEASED				= 1 << 3,
+	WAS_RELEASED_LAST_FRAME	= 1 << 4
 };
 
 inline KeyState operator|(KeyState lhs, KeyState rhs) {
@@ -69,9 +71,18 @@ public:
 		return (m_state & KeyState::PRESSED_DOWN) == KeyState::PRESSED_DOWN;
 	}
 
+	bool WasPressedLastFrame() const {
+		return (m_state & KeyState::WAS_PRESSED_LAST_FRAME) == KeyState::WAS_PRESSED_LAST_FRAME;
+	}
+
 	bool IsReleased() const {
 		return (m_state & KeyState::RELEASED) == KeyState::RELEASED;
 	}
+
+	bool WasReleasedLastFrame() const {
+		return (m_state & KeyState::WAS_RELEASED_LAST_FRAME) == KeyState::WAS_RELEASED_LAST_FRAME;
+	}
+
 
 private:
 	int m_code{ 0 };

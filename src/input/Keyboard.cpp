@@ -57,26 +57,29 @@ namespace input {
 
 			switch (glfwGetKey(window, key.GetCode())) {
 			case GLFW_PRESS: {
-				key.UnsetState(KeyState::RELEASED);
-				key.SetState(KeyState::PRESSED);
+				key.UnsetState(KeyState::RELEASED | KeyState::WAS_RELEASED_LAST_FRAME);
 
-				if (key.IsPressedDown()) {
+				if (key.WasPressedLastFrame()) {
 					key.UnsetState(KeyState::PRESSED_DOWN);
 				}
 				else {
 					key.SetState(KeyState::PRESSED_DOWN);
+					key.SetState(KeyState::WAS_PRESSED_LAST_FRAME);
 				}
+
+				key.SetState(KeyState::PRESSED);
 
 				break;
 			}
 			case GLFW_RELEASE: {
-				key.UnsetState(KeyState::PRESSED | KeyState::PRESSED_DOWN);
+				key.UnsetState(KeyState::PRESSED | KeyState::PRESSED_DOWN | KeyState::WAS_PRESSED_LAST_FRAME);
 
-				if (key.IsReleased()) {
+				if (key.WasReleasedLastFrame()) {
 					key.UnsetState(KeyState::RELEASED);
 				}
 				else {
 					key.SetState(KeyState::RELEASED);
+					key.SetState(KeyState::WAS_RELEASED_LAST_FRAME);
 				}
 				
 				break;
