@@ -2,7 +2,7 @@
 
 #include "Keyboard.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace diamond_engine {
 namespace input {
