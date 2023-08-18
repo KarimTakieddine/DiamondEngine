@@ -20,6 +20,7 @@ set(SRC_DIR src)
 set(SHADERS_DIR shaders)
 set(SCENES_DIR scenes)
 set(TEXTURES_DIR textures)
+set(CONFIG_DIR config)
 
 set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
 set(SRC_DIR ${SRC_DIR} PARENT_SCOPE)
