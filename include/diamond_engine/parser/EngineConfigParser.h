@@ -2,7 +2,7 @@
 
 #include "EngineConfig.h"
 
-namespace pugi { class xml_node; }
+namespace pugi { class xml_node; class xml_document; }
 
 namespace diamond_engine {
 class EngineConfigParser {
