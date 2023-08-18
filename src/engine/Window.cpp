@@ -2,6 +2,7 @@
 
 #include "DeltaTimer.h"
 #include "Window.h"
+#include "Input.h"
 
 namespace diamond_engine {
 	Window::Window(
@@ -61,6 +62,8 @@ namespace diamond_engine {
 			deltaTimer.Start();
 
 			glfwPollEvents();
+
+			input::StateMonitor::GetInstance().MonitorStates(m_handle);
 
 			m_updateHandler(deltaTime);
 

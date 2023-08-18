@@ -78,6 +78,8 @@ set(SOURCES
     ${SRC_DIR}/config/MaterialConfig.cpp
     ${SRC_DIR}/config/SceneConfig.cpp
     ${SRC_DIR}/config/MeshRendererConfig.cpp
+    ${SRC_DIR}/input/Keyboard.cpp
+    ${SRC_DIR}/input/Input.cpp
     ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
     ${SRC_DIR}/parser/Vector2Parser.cpp
@@ -111,6 +113,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${INCLUDE_DIR}/diamond_engine/config"
     "${INCLUDE_DIR}/diamond_engine/engine"
     "${INCLUDE_DIR}/diamond_engine/gameobject"
+    "${INCLUDE_DIR}/diamond_engine/input"
     "${INCLUDE_DIR}/diamond_engine/mesh"
     "${INCLUDE_DIR}/diamond_engine/parser"
     "${INCLUDE_DIR}/diamond_engine/rendering"
