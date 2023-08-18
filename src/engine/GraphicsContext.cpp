@@ -1,9 +1,10 @@
 #include <stdexcept>
 
 #include "GraphicsContext.h"
+#include "Input.h"
 
 namespace diamond_engine {
-	void GraphicsContext::InitializeWindow(const Size& windowSize, const std::string& windowTitle) {
+	void GraphicsContext::InitializeWindow(const WindowConfig& windowConfig) {
 		/*
 			Additional calls to this function after successful initialization
 			but before termination will return GLFW_TRUE immediately.
@@ -18,10 +19,16 @@ namespace diamond_engine {
 		}
 
 		m_window.reset(new Window(
-			windowSize,
-			windowTitle,
+			windowConfig.GetSize(),
+			windowConfig.GetTitle(),
 			std::bind(&GraphicsContext::OnWindowResize, this, std::placeholders::_1),
 			std::bind(&GraphicsContext::OnWindowUpdate, this, std::placeholders::_1)));
+	}
+
+	void GraphicsContext::InitializeInput(const KeyboardConfig& keyboardConfig) {
+		for (const auto& keyConfig : keyboardConfig.GetKeyConfigs()) {
+			input::StateMonitor::GetInstance().RegisterKeyboardKey(keyConfig.name, keyConfig.code);
+		}
 	}
 
 	void GraphicsContext::InitializeGLEW() {
@@ -34,6 +41,12 @@ namespace diamond_engine {
 			errorBuffer << glewGetErrorString(status);
 			throw std::runtime_error("GraphicsContext::InitializeGLEW() failed - Message: " + errorBuffer.str());
 		}
+	}
+
+	void GraphicsContext::Initialize(const EngineConfig& engineConfig) {
+		InitializeWindow(engineConfig.GetWindowConfig());
+		InitializeInput(engineConfig.GetKeyboardConfig());
+		InitializeGLEW();
 	}
 
 	void GraphicsContext::SetScene(Scene* scene) {

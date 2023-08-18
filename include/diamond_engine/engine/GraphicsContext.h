@@ -4,15 +4,20 @@
 
 #include <GL/glew.h>
 
+#include "EngineConfig.h"
 #include "Scene.h"
 #include "Window.h"
 
 namespace diamond_engine {
 class GraphicsContext {
 public:
-	void InitializeWindow(const Size& windowSize, const std::string& windowTitle);
+	void InitializeWindow(const WindowConfig& windowConfig);
+
+	void InitializeInput(const KeyboardConfig& keyboardConfig);
 
 	void InitializeGLEW();
+
+	void Initialize(const EngineConfig& engineConfig);
 
 	void SetScene(Scene* scene);
 

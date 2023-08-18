@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Engine maxObjects="256">
+	<Window title="Hello World!" width="1280" height="960"/>
+	<Keyboard>
+		<Key name="Space" code="SPACE"/>
+		<Key name="Escape" code="ESCAPE"/>
+		<Key name="Up" code="UP"/>
+		<Key name="Down" code="DOWN"/>
+		<Key name="Left" code="LEFT"/>
+		<Key name="Right" code="RIGHT"/>
+	</Keyboard>
+</Engine>
