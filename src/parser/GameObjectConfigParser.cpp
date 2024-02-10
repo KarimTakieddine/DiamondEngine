@@ -2,6 +2,7 @@
 
 #include <pugixml.hpp>
 
+#include "Collider2DConfigParser.h"
 #include "GameObjectConfigParser.h"
 #include "MaterialConfigParser.h"
 #include "MeshRendererConfigParser.h"
@@ -14,7 +15,8 @@ namespace diamond_engine {
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectConfigParser::ComponentParseFunc> GameObjectConfigParser::StringToComponentMap = {
-		{ "MeshRenderer", &MeshRendererConfigParser::Parse }
+		{ "MeshRenderer",	&MeshRendererConfigParser::Parse },
+		{ "Collider2D",		&Collider2DConfigParser::Parse }
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = {

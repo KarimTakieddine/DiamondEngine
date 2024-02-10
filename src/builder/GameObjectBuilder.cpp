@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "Collider2DBuilder.h"
 #include "GameObjectBuilder.h"
 #include "GameObjectConfig.h"
 #include "MeshRendererBuilder.h"
@@ -7,7 +8,8 @@
 
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
-		{ "MeshRenderer", &MeshRendererBuilder::Build }
+		{ "Collider2D",		&Colllider2DBuilder::Build },
+		{ "MeshRenderer",	&MeshRendererBuilder::Build }
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::BehaviourBuildFunc> GameObjectBuilder::StringToBehaviourMap = {

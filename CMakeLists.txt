@@ -65,7 +65,6 @@ set(SOURCES
     ${SRC_DIR}/component/Collider2D.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
     ${SRC_DIR}/gameobject/GameObject.cpp
-    ${SRC_DIR}/builder/GameObjectBuilder.cpp
     ${SRC_DIR}/shader/Shader.cpp
     ${SRC_DIR}/shader/ShaderProgram.cpp
     ${SRC_DIR}/parser/ShaderMetadataParser.cpp
@@ -76,6 +75,12 @@ set(SOURCES
     ${SRC_DIR}/rendering/Transform.cpp
     ${SRC_DIR}/rendering/Camera.cpp
     ${SRC_DIR}/rendering/RenderSequence.cpp
+    ${SRC_DIR}/builder/Collider2DBuilder.cpp
+    ${SRC_DIR}/builder/GameObjectBuilder.cpp
+    ${SRC_DIR}/builder/MeshRendererBuilder.cpp
+    ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
+    ${SRC_DIR}/builder/SceneBuilder.cpp
+    ${SRC_DIR}/config/Collider2DConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
     ${SRC_DIR}/config/GameObjectConfig.cpp
     ${SRC_DIR}/config/MaterialConfig.cpp
@@ -85,6 +90,7 @@ set(SOURCES
     ${SRC_DIR}/config/EngineConfig.cpp
     ${SRC_DIR}/input/Keyboard.cpp
     ${SRC_DIR}/input/Input.cpp
+    ${SRC_DIR}/parser/Collider2DConfigParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
     ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
@@ -92,16 +98,13 @@ set(SOURCES
     ${SRC_DIR}/parser/Vector3Parser.cpp
     ${SRC_DIR}/parser/EngineConfigParser.cpp
     ${SRC_DIR}/parser/WindowConfigParser.cpp
-    ${SRC_DIR}/builder/MeshRendererBuilder.cpp
     ${SRC_DIR}/parser/MaterialConfigParser.cpp
     ${SRC_DIR}/parser/SceneConfigParser.cpp
     ${SRC_DIR}/scene/Scene.cpp
-    ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
     ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
     ${SRC_DIR}/behaviour/RotateBehaviour.cpp
     ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
-    ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
     ${SRC_DIR}/utility/File.cpp)
 
