@@ -1,4 +1,4 @@
-#include "ColliderBehaviour.h"
+#include "Collider2DBehaviour.h"
 #include "GameObject.h"
 #include "Collider2DBehaviour.h"
 

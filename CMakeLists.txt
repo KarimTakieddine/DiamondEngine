@@ -98,6 +98,7 @@ set(SOURCES
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
+    ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
     ${SRC_DIR}/behaviour/RotateBehaviour.cpp
     ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
