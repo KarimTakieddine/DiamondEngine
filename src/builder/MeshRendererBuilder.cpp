@@ -36,6 +36,11 @@ namespace diamond_engine {
 			meshRenderer->SetMesh(cubeMesh);
 			break;
 		}
+		case MeshType::COLLIDER: {
+			const std::shared_ptr<Mesh> colliderMesh = SharedMeshStore::GetInstance().FindMesh(Shape::COLLIDER);
+			meshRenderer->SetMesh(colliderMesh);
+			break;
+		}
 		default:
 			break;
 		}

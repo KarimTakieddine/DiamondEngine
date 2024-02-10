@@ -5,6 +5,7 @@ namespace diamond_engine {
 	{
 		TRIANGLE	= 0,
 		QUAD		= 1,
-		CUBE		= 2
+		CUBE		= 2,
+		COLLIDER	= 3
 	};
 }

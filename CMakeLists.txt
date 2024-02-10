@@ -62,6 +62,7 @@ set(SOURCES
     ${SRC_DIR}/engine/GraphicsContext.cpp
     ${SRC_DIR}/mesh/Mesh.cpp
     ${SRC_DIR}/component/MeshRenderer.cpp
+    ${SRC_DIR}/component/Collider2D.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
     ${SRC_DIR}/gameobject/GameObject.cpp
     ${SRC_DIR}/builder/GameObjectBuilder.cpp

@@ -20,12 +20,13 @@ public:
 	void OnWindowResize(int width, int height);
 
 private:
-	std::shared_ptr<SharedShaderStore> m_sharedShaderStore	{ nullptr };
-	std::shared_ptr<TextureLoader> m_sharedTextureLoader	{ nullptr };
-	std::shared_ptr<GLAllocator> m_vertexArrayAllocator		{ nullptr };
-	std::shared_ptr<GLAllocator> m_bufferAllocator			{ nullptr };
-	std::shared_ptr<Camera> m_camera						{ nullptr };
-	SharedObjectAllocator m_renderableObjectAllocator		{ nullptr };
-	std::unique_ptr<RenderSequence> m_spriteRenderSequence	{ nullptr };
+	std::shared_ptr<SharedShaderStore> m_sharedShaderStore		{ nullptr };
+	std::shared_ptr<TextureLoader> m_sharedTextureLoader		{ nullptr };
+	std::shared_ptr<GLAllocator> m_vertexArrayAllocator			{ nullptr };
+	std::shared_ptr<GLAllocator> m_bufferAllocator				{ nullptr };
+	std::shared_ptr<Camera> m_camera							{ nullptr };
+	SharedObjectAllocator m_renderableObjectAllocator			{ nullptr };
+	std::unique_ptr<RenderSequence> m_spriteRenderSequence		{ nullptr };
+	std::unique_ptr<RenderSequence> m_collider2DRenderSequence	{ nullptr };
 };
 }

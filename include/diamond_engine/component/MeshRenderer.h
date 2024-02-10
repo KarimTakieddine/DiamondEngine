@@ -34,6 +34,8 @@ public:
 
 	void SetDrawMode(GLenum drawMode);
 
+	void SetRenderMode(GLenum renderMode);
+
 private:
 	std::shared_ptr<Mesh> m_mesh				{ nullptr };
 	GLuint m_vertexBufferObject					{ 0 };

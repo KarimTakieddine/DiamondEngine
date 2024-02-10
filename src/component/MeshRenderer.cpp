@@ -69,4 +69,9 @@ namespace diamond_engine {
 	void MeshRenderer::SetDrawMode(GLenum drawMode) {
 		m_drawMode = drawMode;
 	}
+
+	void MeshRenderer::SetRenderMode(GLenum renderMode)
+	{
+		m_renderMode = renderMode;
+	}
 }

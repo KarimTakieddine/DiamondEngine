@@ -39,6 +39,11 @@ namespace diamond_engine {
 		return m_renderableObject;
 	}
 
+	void GameObject::SetParent(GameObject* parent)
+	{
+		m_parent = parent;
+	}
+
 	void GameObject::OnAddedToScene() {
 		for (auto& component : m_components) {
 			component->OnAddedToScene();
@@ -46,6 +51,16 @@ namespace diamond_engine {
 	}
 
 	void GameObject::Update(GLfloat deltaTime) {
+		if (m_parent && m_renderableObject)
+		{
+			RenderableObject* const parentRederableObject = m_parent->GetRenderableObject();;
+
+			if (parentRederableObject)
+			{
+				m_renderableObject->transform = parentRederableObject->transform;
+			}
+		}
+
 		for (auto& behaviour : m_behaviours) {
 			behaviour->Update(deltaTime);
 		}

@@ -20,6 +20,7 @@ public:
 
 	RenderableObject* GetRenderableObject();
 	
+	void SetParent(GameObject* parent);
 	void OnAddedToScene();
 	void Update(GLfloat deltaTime);
 
@@ -43,5 +44,6 @@ private:
 	std::vector<std::unique_ptr<Component>> m_components{ };
 	std::vector<std::unique_ptr<Behaviour>> m_behaviours{ };
 	RenderableObject* m_renderableObject{ nullptr };
+	GameObject* m_parent{ nullptr };
 };
 }

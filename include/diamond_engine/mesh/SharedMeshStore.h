@@ -9,7 +9,8 @@ namespace diamond_engine {
 enum class Shape : unsigned {
 	TRIANGLE	= 0,
 	QUAD		= 1,
-	CUBE		= 2
+	CUBE		= 2,
+	COLLIDER	= 3
 };
 
 class SharedMeshStore {

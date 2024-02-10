@@ -96,6 +96,20 @@ namespace diamond_engine {
 						}
 					)
 				)
+			},
+			{
+				Shape::COLLIDER,
+				std::shared_ptr<Mesh>(
+					new Mesh(
+						{
+							Vertex({ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
+							Vertex({ { -0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }),
+							Vertex({ { 0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }),
+							Vertex({ { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } })
+						},
+						{ 0, 1, 1, 2, 2, 3, 3, 0 }
+					)
+				)
 			}
 		});
 	}
