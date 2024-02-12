@@ -14,7 +14,7 @@ namespace diamond_engine
 
 		pugi::xml_attribute heightAttribute = componentNode.attribute("height");
 		if (heightAttribute) {
-			result->setWidth(heightAttribute.as_uint());
+			result->setHeight(heightAttribute.as_uint());
 		}
 
 		return result;

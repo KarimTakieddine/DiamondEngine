@@ -54,6 +54,7 @@ namespace diamond_engine {
 		renderableObject->objectRotationUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectRotationUniform);
 		renderableObject->objectScaleUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectScaleUniform);
 		renderableObject->colorUniformLocation				= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
+		renderableObject->textureOffsetUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.textureOffsetUniform);
 
 		renderableObject->transform.SetPosition(position);
 		renderableObject->material.SetColor(materialConfig.GetColor());
@@ -119,7 +120,7 @@ namespace diamond_engine {
 			glUniform2f(renderableObject->textureOffsetUniformLocation, materialTextureOffset.x, materialTextureOffset.y);
 
 			const GLint texture = renderableObject->material.GetTexture();
-			if (!m_boundTexture.has_value() || (m_boundTexture.value() != texture))
+			if ((!m_boundTexture.has_value() || (m_boundTexture.value() != texture)) && texture != 0)
 			{
 				glBindTexture(GL_TEXTURE_2D, texture);
 				m_boundTexture = texture;

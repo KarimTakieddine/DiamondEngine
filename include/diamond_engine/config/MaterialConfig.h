@@ -22,7 +22,7 @@ public:
 
 private:
 	std::string m_textureName;
-	glm::vec3 m_color;
-	glm::vec2 m_textureOffset;
+	glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
+	glm::vec2 m_textureOffset{ 0.0f, 0.0f };
 };
 }

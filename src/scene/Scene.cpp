@@ -96,6 +96,7 @@ namespace diamond_engine {
 
 				std::unique_ptr<MeshRenderer> collider2DMeshRenderer = std::make_unique<MeshRenderer>();
 				collider2DMeshRenderer->SetVertexBufferObject(m_bufferAllocator->Get());
+				collider2DMeshRenderer->SetElementBufferObject(m_bufferAllocator->Get());
 				collider2DMeshRenderer->SetDrawMode(GL_DYNAMIC_DRAW);
 				collider2DMeshRenderer->SetRenderMode(GL_LINES);
 				collider2DMeshRenderer->SetMesh(SharedMeshStore::GetInstance().FindMesh(Shape::COLLIDER));
@@ -126,8 +127,8 @@ namespace diamond_engine {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_spriteRenderSequence->Update(deltaTime);
 		m_collider2DRenderSequence->Update(deltaTime);
+		m_spriteRenderSequence->Update(deltaTime);
 	}
 
 	void Scene::OnWindowResize(int width, int height) {
