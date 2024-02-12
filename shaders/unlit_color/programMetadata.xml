@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Program name="sprite">
+<?xml version="1.0" encoding="utf-8"?>
+<Program name="unlit_color">
 	<Shader type="vertex" file="../vertex/vertex_transform.dmsh">
 		<Attributes>
 			<Attribute name="position"/>
 			<Attribute name="color"/>
-			<Attribute name="textureCoordinate"/>
 		</Attributes>
 		<Uniforms>
 			<Uniform name="projection"/>
@@ -17,10 +16,9 @@
 			<Uniform name="objectScale"/>
 		</Uniforms>
 	</Shader>
-	<Shader type="fragment" file="fragment_sprite.dmsh">
+	<Shader type="fragment" file="unlit_color.dmsh">
 		<Uniforms>
 			<Uniform name="materialColor"/>
-			<Uniform name="materialTextureOffset"/>
 		</Uniforms>
 	</Shader>
 </Program>

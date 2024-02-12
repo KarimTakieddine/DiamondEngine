@@ -43,7 +43,27 @@ namespace diamond_engine {
 		m_spriteRenderSequence->SetVertexArrayAllocator(m_vertexArrayAllocator);
 		m_spriteRenderSequence->SetTextureLoader(m_sharedTextureLoader);
 
-		// TODO: Set collider shader program
+		m_collider2DRenderSequence->SetRenderDescriptor(
+			{
+				"projection",
+				"cameraTranslation",
+				"cameraRotation",
+				"cameraScale",
+				"cameraView",
+				"objectTranslation",
+				"objectRotation",
+				"objectScale",
+				"materialColor"
+			}
+		);
+
+		const std::shared_ptr<ShaderProgram>& collider2DShaderProgram = m_sharedShaderStore->FindProgram("unlit_color");
+
+		if (!spriteShaderProgram) {
+			throw std::runtime_error("Failed to locate \"unlit_color\" shader in shared shader store instance");
+		}
+
+		m_collider2DRenderSequence->SetShaderProgram(collider2DShaderProgram);
 		m_collider2DRenderSequence->SetCamera(m_camera);
 		m_collider2DRenderSequence->SetObjectAllocator(m_renderableObjectAllocator);
 		m_collider2DRenderSequence->SetVertexArrayAllocator(m_vertexArrayAllocator);
@@ -86,7 +106,7 @@ namespace diamond_engine {
 				collider2DGameObject->AddBehaviour(std::move(collider2DBehaviour));
 
 				MaterialConfig collider2DMaterialConfig;
-				collider2DMaterialConfig.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				collider2DMaterialConfig.SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
 
 				m_collider2DRenderSequence->AddGameObject(
 					std::move(collider2DGameObject),
