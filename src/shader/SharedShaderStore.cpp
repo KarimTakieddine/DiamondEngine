@@ -18,7 +18,7 @@ namespace diamond_engine {
 			const std::filesystem::path programMetadataPath = programDirectory / kProgramMetadataFilename;
 
 			if (!std::filesystem::exists(programMetadataPath) || !std::filesystem::is_regular_file(programMetadataPath)) {
-				throw std::runtime_error("Could not find programMetadata.xml file in program folder: " + programDirectory.string());
+				continue;
 			}
 
 			const ShaderProgramMetadata programMetadata = ShaderMetadataParser::LoadShaderProgramMetadata(programMetadataPath.string());
