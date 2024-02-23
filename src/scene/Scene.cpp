@@ -127,8 +127,11 @@ namespace diamond_engine {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_collider2DRenderSequence->Update(deltaTime);
 		m_spriteRenderSequence->Update(deltaTime);
+		m_collider2DRenderSequence->Update(deltaTime);
+
+		m_spriteRenderSequence->Render();
+		m_collider2DRenderSequence->Render();
 	}
 
 	void Scene::OnWindowResize(int width, int height) {

@@ -84,14 +84,22 @@ namespace diamond_engine {
 		m_camera = camera;
 	}
 
-	void RenderSequence::Update(GLfloat deltaTime) {
+	void RenderSequence::Update(GLfloat deltaTime)
+	{
+		for (const auto& gameObject : m_gameObjects) {
+			gameObject->Update(deltaTime);
+		}
+	}
+
+	void diamond_engine::RenderSequence::Render()
+	{
 		glUseProgram(m_shaderProgram->GetObject());
 
-		const glm::mat4& projectionMatrix			= m_camera->GetProjection();
-		const glm::mat4& cameraTranslationMatrix	= m_camera->GetTransform().GetTranslation();
-		const glm::mat4& cameraRotationMatrix		= m_camera->GetTransform().GetRotation();
-		const glm::mat4& cameraScaleMatrix			= m_camera->GetTransform().GetScale();
-		const glm::mat4& cameraViewMatrix			= m_camera->GetView();
+		const glm::mat4& projectionMatrix = m_camera->GetProjection();
+		const glm::mat4& cameraTranslationMatrix = m_camera->GetTransform().GetTranslation();
+		const glm::mat4& cameraRotationMatrix = m_camera->GetTransform().GetRotation();
+		const glm::mat4& cameraScaleMatrix = m_camera->GetTransform().GetScale();
+		const glm::mat4& cameraViewMatrix = m_camera->GetView();
 
 		glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		glUniformMatrix4fv(m_cameraTranslationUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraTranslationMatrix));
@@ -100,8 +108,6 @@ namespace diamond_engine {
 		glUniformMatrix4fv(m_cameraViewUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraViewMatrix));
 
 		for (const auto& gameObject : m_gameObjects) {
-			gameObject->Update(deltaTime);
-
 			RenderableObject* renderableObject = gameObject->GetRenderableObject();
 
 			const glm::mat4& objectTranslationMatrix = renderableObject->transform.GetTranslation();

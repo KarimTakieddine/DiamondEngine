@@ -49,6 +49,8 @@ public:
 
 	void Update(GLfloat deltaTime);
 
+	void Render();
+
 private:
 	RenderDescriptor m_renderDescriptor;
 	std::vector<std::unique_ptr<GameObject>> m_gameObjects{ };

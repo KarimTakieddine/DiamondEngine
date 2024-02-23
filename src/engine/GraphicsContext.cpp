@@ -1,4 +1,4 @@
-#include <stdexcept>
+﻿#include <stdexcept>
 
 #include "GraphicsContext.h"
 #include "Input.h"
@@ -58,6 +58,7 @@ namespace diamond_engine {
 			throw std::runtime_error("Cannot Execute() GraphicsContext with no window");
 		}
 
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 
