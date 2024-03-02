@@ -10,6 +10,7 @@ namespace diamond_engine
 
 		std::unique_ptr<Collider2D> result = std::make_unique<Collider2D>();
 
+		result->setColliderType(collider2DConfig->getColliderType());
 		result->setWidth(collider2DConfig->getWidth());
 		result->setHeight(collider2DConfig->getHeight());
 

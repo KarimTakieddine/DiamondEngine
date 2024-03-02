@@ -100,6 +100,7 @@ set(SOURCES
     ${SRC_DIR}/parser/WindowConfigParser.cpp
     ${SRC_DIR}/parser/MaterialConfigParser.cpp
     ${SRC_DIR}/parser/SceneConfigParser.cpp
+    ${SRC_DIR}/physics/CollisionResolver2D.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
     ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
@@ -128,6 +129,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${INCLUDE_DIR}/diamond_engine/input"
     "${INCLUDE_DIR}/diamond_engine/mesh"
     "${INCLUDE_DIR}/diamond_engine/parser"
+    "${INCLUDE_DIR}/diamond_engine/physics"
     "${INCLUDE_DIR}/diamond_engine/rendering"
     "${INCLUDE_DIR}/diamond_engine/scene"
     "${INCLUDE_DIR}/diamond_engine/shader"

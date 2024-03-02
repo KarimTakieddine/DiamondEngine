@@ -3,6 +3,12 @@
 #include "Component.h"
 
 namespace diamond_engine {
+	enum class ColliderType : GLuint
+	{
+		OBSTACLE	= 0,
+		CHARACTER	= 1
+	};
+
 	class Collider2D : public Component
 	{
 	public:
@@ -14,6 +20,10 @@ namespace diamond_engine {
 
 		void setHeight(GLuint height);
 
+		ColliderType getColliderType() const;
+
+		void setColliderType(ColliderType colliderType);
+
 		void BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) override;
 
 		void OnAddedToScene() override;
@@ -21,6 +31,7 @@ namespace diamond_engine {
 		const char* GetName() const override;
 
 	private:
+		ColliderType m_colliderType{ ColliderType::OBSTACLE };
 		GLuint m_width{ 0 };
 		GLuint m_height{ 0 };
 	};

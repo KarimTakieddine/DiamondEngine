@@ -26,15 +26,19 @@ namespace diamond_engine
 		m_height = height;
 	}
 
-	void Collider2D::BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
+	ColliderType Collider2D::getColliderType() const
 	{
-		
+		return m_colliderType;
 	}
 
-	void Collider2D::OnAddedToScene()
+	void Collider2D::setColliderType(ColliderType colliderType)
 	{
-		
+		m_colliderType = colliderType;
 	}
+
+	void Collider2D::BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) { }
+
+	void Collider2D::OnAddedToScene() { }
 
 	const char* Collider2D::GetName() const
 	{

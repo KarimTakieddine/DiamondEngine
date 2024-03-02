@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 
+#include "Collider2D.h"
 #include "ComponentConfig.h"
 
 namespace diamond_engine {
@@ -17,11 +18,16 @@ namespace diamond_engine {
 
 		void setHeight(GLuint height);
 
+		ColliderType getColliderType() const;
+
+		void setColliderType(ColliderType colliderType);
+
 		const char* GetName() const override {
 			return "Collider2D";
 		}
 
 	private:
+		ColliderType m_colliderType{ ColliderType::OBSTACLE };
 		GLuint m_width{ 0 };
 		GLuint m_height{ 0 };
 	};

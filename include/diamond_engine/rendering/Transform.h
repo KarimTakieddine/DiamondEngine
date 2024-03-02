@@ -15,6 +15,8 @@ public:
 
 	void Translate(const glm::vec3& displacement);
 
+	void Translate(const glm::vec2& displacement);
+
 	void Rotate(GLfloat degrees, const glm::vec3& axis);
 
 	void SetLocalEulerAngles(const glm::vec3& localEulerAngles);

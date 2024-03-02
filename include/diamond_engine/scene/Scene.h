@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CollisionResolver2D.h"
 #include "GameObjectType.h"
 #include "RenderSequence.h"
 #include "SharedShaderStore.h"
@@ -28,5 +29,6 @@ private:
 	SharedObjectAllocator m_renderableObjectAllocator			{ nullptr };
 	std::unique_ptr<RenderSequence> m_spriteRenderSequence		{ nullptr };
 	std::unique_ptr<RenderSequence> m_collider2DRenderSequence	{ nullptr };
+	std::unique_ptr<CollisionResolver2D> m_collisionResolver2D	{ nullptr };
 };
 }

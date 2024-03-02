@@ -13,7 +13,8 @@ namespace diamond_engine {
 		m_camera(std::make_shared<Camera>()),
 		m_renderableObjectAllocator(std::make_shared<ObjectAllocator>()),
 		m_spriteRenderSequence(std::make_unique<RenderSequence>()),
-		m_collider2DRenderSequence(std::make_unique<RenderSequence>()) {
+		m_collider2DRenderSequence(std::make_unique<RenderSequence>()),
+		m_collisionResolver2D(std::make_unique<CollisionResolver2D>()) {
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
 
@@ -109,6 +110,17 @@ namespace diamond_engine {
 					std::move(collider2DGameObject),
 					collider2DMaterialConfig,
 					position);
+
+				switch (collider2D->getColliderType()) {
+				case ColliderType::CHARACTER:
+					m_collisionResolver2D->addCharacterSprite(gameObject.get());
+					break;
+				case ColliderType::OBSTACLE:
+					m_collisionResolver2D->addObstacleSprite(gameObject.get());
+					break;
+				default:
+					break;
+				}
 			}
 
 			m_spriteRenderSequence->AddGameObject(std::move(gameObject), materialConfig, position);
@@ -124,6 +136,9 @@ namespace diamond_engine {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_spriteRenderSequence->Update(deltaTime);
+
+		m_collisionResolver2D->ResolveCollisions();
+
 		m_collider2DRenderSequence->Update(deltaTime);
 
 		m_spriteRenderSequence->Render();

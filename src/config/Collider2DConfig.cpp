@@ -21,4 +21,14 @@ namespace diamond_engine
 	{
 		m_height = height;
 	}
+
+	ColliderType Collider2DConfig::getColliderType() const
+	{
+		return m_colliderType;
+	}
+
+	void Collider2DConfig::setColliderType(ColliderType colliderType)
+	{
+		m_colliderType = colliderType;
+	}
 }

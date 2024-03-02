@@ -11,6 +11,11 @@ namespace diamond_engine {
 		m_localToWorld = glm::translate(m_localToWorld, displacement);
 	}
 
+	void Transform::Translate(const glm::vec2& displacement)
+	{
+		Translate(glm::vec3{ displacement.x, displacement.y, 0.0f });
+	}
+
 	void Transform::Rotate(GLfloat degrees, const glm::vec3& axis) {
 		m_localToWorld = glm::rotate(m_localToWorld, glm::radians(degrees), axis);
 	}
