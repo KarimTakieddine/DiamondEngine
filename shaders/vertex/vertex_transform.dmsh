@@ -9,9 +9,7 @@ layout (location=1) uniform mat4 cameraTranslation;
 layout (location=2) uniform mat4 cameraRotation;
 layout (location=3) uniform mat4 cameraScale;
 layout (location=4) uniform mat4 cameraView;
-layout (location=5) uniform mat4 objectTranslation;
-layout (location=6) uniform mat4 objectRotation;
-layout (location=7) uniform mat4 objectScale;
+layout (location=5) uniform mat4 model;
 
 out vec3 vertexColor;
 out vec2 vertexTextureCoordinate;
@@ -19,8 +17,6 @@ out vec2 vertexTextureCoordinate;
 void main() {
 	mat4 cameraTransform		= cameraTranslation * cameraRotation * cameraScale;
 	mat4 cameraViewTransform	= inverse(cameraTransform) * cameraView;
-
-	mat4 model = objectTranslation * objectRotation * objectScale;
 
     gl_Position = projection * cameraViewTransform * model * vec4(position, 1.0);
 

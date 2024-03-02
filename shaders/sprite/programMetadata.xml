@@ -12,9 +12,7 @@
 			<Uniform name="cameraRotation"/>
 			<Uniform name="cameraScale"/>
 			<Uniform name="cameraView"/>
-			<Uniform name="objectTranslation"/>
-			<Uniform name="objectRotation"/>
-			<Uniform name="objectScale"/>
+			<Uniform name="model"/>
 		</Uniforms>
 	</Shader>
 	<Shader type="fragment" file="fragment_sprite.dmsh">

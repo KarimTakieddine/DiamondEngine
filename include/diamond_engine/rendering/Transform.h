@@ -5,6 +5,7 @@
 
 #include <GL/glew.h>
 
+#define GL_FORCE_SWIZZLE
 #include <glm/glm.hpp>
 
 namespace diamond_engine {
@@ -16,27 +17,31 @@ public:
 
 	void Rotate(GLfloat degrees, const glm::vec3& axis);
 
-	void SetEulerAngles(const glm::vec3& localEulerAngles);
+	void SetLocalEulerAngles(const glm::vec3& localEulerAngles);
 
-	void SetScale(const glm::vec3& scale);
+	void SetLocalScale(const glm::vec3& scale);
 
-	const glm::mat4& GetTranslation() const {
-		return m_translation;
-	}
-
-	const glm::mat4& GetRotation() const {
-		return m_rotation;
-	}
-
-	const glm::mat4& GetScale() const {
-		return m_scale;
-	}
+	void Scale(const glm::vec3& scale);
 
 	void SetPosition(const glm::vec3& position);
 
+	glm::vec3 getPosition() const;
+
+	void computeModelMatrix();
+
+	const glm::mat4& getLocalToWorld() const;
+
+	const glm::mat4& getLocalRotation() const;
+
+	const glm::mat4& getLocalScale() const;
+
+	const glm::mat4& getModel() const;
+
 private:
-	glm::mat4 m_translation{ 1.0f };
-	glm::mat4 m_rotation{ 1.0f };
-	glm::mat4 m_scale{ 1.0f };
+	glm::mat4 m_localToWorld{ 1.0f };
+	glm::mat4 m_localRotation{ 1.0f };
+	glm::mat4 m_localScale{ 1.0f };
+	glm::mat4 m_model{ 1.0f };
+	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
 };
 }

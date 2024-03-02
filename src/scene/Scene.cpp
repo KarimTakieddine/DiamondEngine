@@ -30,9 +30,7 @@ namespace diamond_engine {
 				"cameraRotation",
 				"cameraScale",
 				"cameraView",
-				"objectTranslation",
-				"objectRotation",
-				"objectScale",
+				"model",
 				"materialColor",
 				"materialTextureOffset"
 			}
@@ -50,9 +48,7 @@ namespace diamond_engine {
 				"cameraRotation",
 				"cameraScale",
 				"cameraView",
-				"objectTranslation",
-				"objectRotation",
-				"objectScale",
+				"model",
 				"materialColor"
 			}
 		);

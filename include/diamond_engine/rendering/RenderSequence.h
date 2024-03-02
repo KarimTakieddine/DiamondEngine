@@ -22,9 +22,7 @@ public:
 		std::string cameraRotationUniform;
 		std::string cameraScaleUniform;
 		std::string cameraViewUniform;
-		std::string objectTranslationUniform;
-		std::string objectRotationUniform;
-		std::string objectScaleUniform;
+		std::string objectModelUniform;
 		std::string colorUniform;
 		std::string textureOffsetUniform;
 	};

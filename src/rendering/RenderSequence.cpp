@@ -50,9 +50,7 @@ namespace diamond_engine {
 		}
 
 		renderableObject->vertexArrayObject					= m_vertexArrayAllocator->Get();
-		renderableObject->objectTranslationUniformLocation	= m_shaderProgram->GetUniform(m_renderDescriptor.objectTranslationUniform);
-		renderableObject->objectRotationUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectRotationUniform);
-		renderableObject->objectScaleUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectScaleUniform);
+		renderableObject->objectModelUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.objectModelUniform);
 		renderableObject->colorUniformLocation				= m_shaderProgram->GetUniform(m_renderDescriptor.colorUniform);
 		renderableObject->textureOffsetUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.textureOffsetUniform);
 
@@ -96,9 +94,9 @@ namespace diamond_engine {
 		glUseProgram(m_shaderProgram->GetObject());
 
 		const glm::mat4& projectionMatrix = m_camera->GetProjection();
-		const glm::mat4& cameraTranslationMatrix = m_camera->GetTransform().GetTranslation();
-		const glm::mat4& cameraRotationMatrix = m_camera->GetTransform().GetRotation();
-		const glm::mat4& cameraScaleMatrix = m_camera->GetTransform().GetScale();
+		const glm::mat4& cameraTranslationMatrix = glm::mat4{ 1.0f };
+		const glm::mat4& cameraRotationMatrix = glm::mat4{ 1.0f };
+		const glm::mat4& cameraScaleMatrix = glm::mat4{ 1.0f };
 		const glm::mat4& cameraViewMatrix = m_camera->GetView();
 
 		glUniformMatrix4fv(m_projectionUniformLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
@@ -110,14 +108,9 @@ namespace diamond_engine {
 		for (const auto& gameObject : m_gameObjects) {
 			RenderableObject* renderableObject = gameObject->GetRenderableObject();
 
-			const glm::mat4& objectTranslationMatrix = renderableObject->transform.GetTranslation();
-			glUniformMatrix4fv(renderableObject->objectTranslationUniformLocation, 1, GL_FALSE, glm::value_ptr(objectTranslationMatrix));
-
-			const glm::mat4& objectRotationMatrix = renderableObject->transform.GetRotation();
-			glUniformMatrix4fv(renderableObject->objectRotationUniformLocation, 1, GL_FALSE, glm::value_ptr(objectRotationMatrix));
-
-			const glm::mat4& objectScaleMatrix = renderableObject->transform.GetScale();
-			glUniformMatrix4fv(renderableObject->objectScaleUniformLocation, 1, GL_FALSE, glm::value_ptr(objectScaleMatrix));
+			renderableObject->transform.computeModelMatrix();
+			const glm::mat4& objectModelMatrix = renderableObject->transform.getModel();
+			glUniformMatrix4fv(renderableObject->objectModelUniformLocation, 1, GL_FALSE, glm::value_ptr(objectModelMatrix));
 
 			const glm::vec3& materialColor = renderableObject->material.GetColor();
 			glUniform3f(renderableObject->colorUniformLocation, materialColor.r, materialColor.g, materialColor.b);
