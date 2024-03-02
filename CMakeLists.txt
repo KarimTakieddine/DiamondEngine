@@ -141,3 +141,5 @@ find_library(GLEW
 
 add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} pugixml)
+
+# TODO: Changes to shaders / scenes etc... basically anything directly editable that the engine depends on
