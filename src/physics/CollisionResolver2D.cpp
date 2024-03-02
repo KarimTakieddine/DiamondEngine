@@ -91,19 +91,19 @@ namespace diamond_engine
 						break;
 					}
 
-					penetrations.push_back(characterMaximum - obstacleMinimum);
+					penetrations.push_back(-(characterMaximum - obstacleMinimum));
 					penetrations.push_back(obstacleMaximum - characterMinimum);
-				}
-
-				std::vector<GLfloat> absolutePenetrations;
-
-				for (GLfloat penetration : penetrations)
-				{
-					absolutePenetrations.push_back(std::abs(penetration));
 				}
 
 				if (colliding)
 				{
+					std::vector<GLfloat> absolutePenetrations;
+
+					for (GLfloat penetration : penetrations)
+					{
+						absolutePenetrations.push_back(std::abs(penetration));
+					}
+
 					const GLfloat minimumPenetration = *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
 
 					if (minimumPenetration == absolutePenetrations[0])
@@ -118,7 +118,7 @@ namespace diamond_engine
 					{
 						characterSprite->GetRenderableObject()->transform.Translate(axes[1] * penetrations[2]);
 					}
-					else
+					else if (minimumPenetration == absolutePenetrations[3])
 					{
 						characterSprite->GetRenderableObject()->transform.Translate(axes[1] * penetrations[3]);
 					}

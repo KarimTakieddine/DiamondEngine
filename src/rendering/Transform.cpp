@@ -41,13 +41,11 @@ namespace diamond_engine {
 		currentPosition.x = position.x;
 		currentPosition.y = position.y;
 		currentPosition.z = position.z;
-
-		m_position = position;
 	}
 
 	glm::vec3 Transform::getPosition() const
 	{
-		return glm::xyz(m_model * glm::vec4(m_position, 1.0f));
+		return glm::xyz(m_localToWorld * glm::vec4(m_position, 1.0f));
 	}
 
 	void diamond_engine::Transform::computeModelMatrix()
