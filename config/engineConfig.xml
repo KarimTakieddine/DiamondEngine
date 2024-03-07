@@ -19,6 +19,10 @@
 			<Button name="RB" button="BUTTON_5"/>
 			<Button name="Start" button="BUTTON_6"/>
 			<Button name="Select" button="BUTTON_7"/>
+			<Button name="DPad_up" button="BUTTON_8"/>
+			<Button name="DPad_down" button="BUTTON_9"/>
+			<Button name="DPad_left" button="BUTTON_10"/>
+			<Button name="DPad_right" button="BUTTON_11"/>
 		</Buttons>
 		<Joysticks>
 			<Joystick name="LeftStick" joystick="LEFT"/>

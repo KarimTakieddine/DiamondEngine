@@ -8,14 +8,18 @@ namespace diamond_engine
 {
 	enum class Button : int
 	{
-		BUTTON_0 = 0, // A/X button
-		BUTTON_1 = 1, // X/[] button
-		BUTTON_2 = 2, // Y/^ button
-		BUTTON_3 = 3, // B/O button
-		BUTTON_4 = 4, // LB/L1 button
-		BUTTON_5 = 5, // RB/R1 button
-		BUTTON_6 = 6, // START/OPTIONS button
-		BUTTON_7 = 7  // SELECT/SHARE button
+		BUTTON_0	= 0,	// A/X button
+		BUTTON_1	= 1,	// X/[] button
+		BUTTON_2	= 2,	// Y/^ button
+		BUTTON_3	= 3,	// B/O button
+		BUTTON_4	= 4,	// LB/L1 button
+		BUTTON_5	= 5,	// RB/R1 button
+		BUTTON_6	= 6,	// START/OPTIONS button
+		BUTTON_7	= 7,	// SELECT/SHARE button
+		BUTTON_8	= 8,	// DPad-Up,
+		BUTTON_9	= 9,	// DPad-Down
+		BUTTON_10	= 10,	// DPad-Left
+		BUTTON_11	= 11	// DPad-Right
 	};
 
 	enum class Joystick : short

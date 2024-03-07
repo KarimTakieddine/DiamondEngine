@@ -15,7 +15,11 @@ namespace diamond_engine
 		{ "BUTTON_4", Button::BUTTON_4 },
 		{ "BUTTON_5", Button::BUTTON_5 },
 		{ "BUTTON_6", Button::BUTTON_6 },
-		{ "BUTTON_7", Button::BUTTON_7 }
+		{ "BUTTON_7", Button::BUTTON_7 },
+		{ "BUTTON_8", Button::BUTTON_8 },
+		{ "BUTTON_9", Button::BUTTON_9 },
+		{ "BUTTON_10", Button::BUTTON_10 },
+		{ "BUTTON_11", Button::BUTTON_11 }
 	};
 
 	/* static */ const std::unordered_map<std::string, Joystick> ControllerConfigParser::kStringToJoystickMap =

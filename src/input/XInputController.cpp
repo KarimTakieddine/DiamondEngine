@@ -34,14 +34,18 @@ namespace diamond_engine
 {
 	/* static */ const std::unordered_map<Button, unsigned short> XInputController::kButtonToMaskMap =
 	{
-		{ Button::BUTTON_0, XINPUT_GAMEPAD_A },
-		{ Button::BUTTON_1, XINPUT_GAMEPAD_X },
-		{ Button::BUTTON_2, XINPUT_GAMEPAD_Y },
-		{ Button::BUTTON_3, XINPUT_GAMEPAD_B },
-		{ Button::BUTTON_4, XINPUT_GAMEPAD_LEFT_SHOULDER },
-		{ Button::BUTTON_5, XINPUT_GAMEPAD_RIGHT_SHOULDER },
-		{ Button::BUTTON_6, XINPUT_GAMEPAD_START },
-		{ Button::BUTTON_7, XINPUT_GAMEPAD_BACK }
+		{ Button::BUTTON_0,		XINPUT_GAMEPAD_A },
+		{ Button::BUTTON_1,		XINPUT_GAMEPAD_X },
+		{ Button::BUTTON_2,		XINPUT_GAMEPAD_Y },
+		{ Button::BUTTON_3,		XINPUT_GAMEPAD_B },
+		{ Button::BUTTON_4,		XINPUT_GAMEPAD_LEFT_SHOULDER },
+		{ Button::BUTTON_5,		XINPUT_GAMEPAD_RIGHT_SHOULDER },
+		{ Button::BUTTON_6,		XINPUT_GAMEPAD_START },
+		{ Button::BUTTON_7,		XINPUT_GAMEPAD_BACK },
+		{ Button::BUTTON_8,		XINPUT_GAMEPAD_DPAD_UP },
+		{ Button::BUTTON_9,		XINPUT_GAMEPAD_DPAD_DOWN },
+		{ Button::BUTTON_10,	XINPUT_GAMEPAD_DPAD_LEFT },
+		{ Button::BUTTON_11,	XINPUT_GAMEPAD_DPAD_RIGHT }
 	};
 
 	bool XInputController::isConnected() const
