@@ -13,7 +13,7 @@ class GraphicsContext {
 public:
 	void InitializeWindow(const WindowConfig& windowConfig);
 
-	void InitializeInput(const KeyboardConfig& keyboardConfig);
+	void InitializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig);
 
 	void InitializeGLEW();
 

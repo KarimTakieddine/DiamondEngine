@@ -1,4 +1,10 @@
+#include <algorithm>
+
 #include "Input.h"
+
+#ifdef WIN32
+#include "XInputController.h"
+#endif
 
 namespace diamond_engine {
 namespace input {
@@ -8,12 +14,36 @@ namespace input {
 		return stateMonitorInstance;
 	}
 
+	StateMonitor::StateMonitor() : m_keyboard(), m_controllers()
+	{
+		for (unsigned long i = 0; i < kMaxControllerCount; ++i)
+		{
+#ifdef WIN32
+			std::unique_ptr<XInputController> controller = std::make_unique<XInputController>();
+			m_controllers.push_back(std::move(controller));
+#endif
+		}
+	}
+
 	void StateMonitor::MonitorStates(GLFWwindow* window) {
 		m_keyboard.UpdateKeyStates(window);
+
+		for (unsigned long i = 0; i < kMaxControllerCount; ++i)
+		{
+			m_controllers[i]->refreshState(i);
+		}
 	}
 
 	void StateMonitor::RegisterKeyboardKey(const std::string& name, GLFWKeyCode code) {
 		m_keyboard.RegisterKey(name, code);
+	}
+
+	void StateMonitor::RegisterControllerButton(const std::string& name, Button button)
+	{
+		for (unsigned long i = 0; i < kMaxControllerCount; ++i)
+		{
+			m_controllers[i]->registerButton(name, button);
+		}
 	}
 
 	bool StateMonitor::IsKeyPressed(const std::string& name) const {
@@ -28,16 +58,40 @@ namespace input {
 		return m_keyboard.IsKeyReleased(name);
 	}
 
-	bool IsKeyPressed(const std::string& keyName) {
-		return StateMonitor::GetInstance().IsKeyPressed(keyName);
+	bool StateMonitor::IsButtonPressed(const std::string& name) const
+	{
+		auto controllerIt = std::find_if(m_controllers.cbegin(), m_controllers.cend(), [](const auto& controller) { return controller->isConnected(); });
+
+		if (controllerIt == m_controllers.cend())
+		{
+			return false;
+		}
+
+		return (*controllerIt)->isButtonPressed(name);
 	}
 
-	bool IsKeyDown(const std::string& keyName) {
-		return StateMonitor::GetInstance().IsKeyDown(keyName);
+	bool StateMonitor::IsButtonDown(const std::string& name) const
+	{
+		auto controllerIt = std::find_if(m_controllers.cbegin(), m_controllers.cend(), [](const auto& controller) { return controller->isConnected(); });
+
+		if (controllerIt == m_controllers.cend())
+		{
+			return false;
+		}
+
+		return (*controllerIt)->isButtonDown(name);
 	}
 
-	bool IsKeyReleased(const std::string& keyName) {
-		return StateMonitor::GetInstance().IsKeyReleased(keyName);
+	bool StateMonitor::IsButtonReleased(const std::string& name) const
+	{
+		auto controllerIt = std::find_if(m_controllers.cbegin(), m_controllers.cend(), [](const auto& controller) { return controller->isConnected(); });
+
+		if (controllerIt == m_controllers.cend())
+		{
+			return false;
+		}
+
+		return (*controllerIt)->isButtonReleased(name);
 	}
 }
 }

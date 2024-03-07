@@ -3,6 +3,7 @@
 
 #include <pugixml.hpp>
 
+#include "ControllerConfigParser.h"
 #include "EngineConfigParser.h"
 #include "KeyboardConfigParser.h"
 #include "WindowConfigParser.h"
@@ -11,6 +12,7 @@ namespace diamond_engine {
 	/* static */ EngineConfig EngineConfigParser::Parse(const pugi::xml_node& engineConfigNode) {
 		return {
 			KeyboardConfigParser::Parse(engineConfigNode.child("Keyboard")),
+			ControllerConfigParser::Parse(engineConfigNode.child("Controller")),
 			WindowConfigParser::Parse(engineConfigNode.child("Window"))
 		};
 	}

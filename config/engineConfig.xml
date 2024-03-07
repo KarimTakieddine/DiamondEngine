@@ -9,4 +9,16 @@
 		<Key name="Left" code="LEFT"/>
 		<Key name="Right" code="RIGHT"/>
 	</Keyboard>
+	<Controller>
+		<Buttons>
+			<Button name="A" button="BUTTON_0"/>
+			<Button name="X" button="BUTTON_1"/>
+			<Button name="Y" button="BUTTON_2"/>
+			<Button name="B" button="BUTTON_3"/>
+			<Button name="LB" button="BUTTON_4"/>
+			<Button name="RB" button="BUTTON_5"/>
+			<Button name="Start" button="BUTTON_6"/>
+			<Button name="Select" button="BUTTON_7"/>
+		</Buttons>
+	</Controller>
 </Engine>

@@ -25,9 +25,16 @@ namespace diamond_engine {
 			std::bind(&GraphicsContext::OnWindowUpdate, this, std::placeholders::_1)));
 	}
 
-	void GraphicsContext::InitializeInput(const KeyboardConfig& keyboardConfig) {
+	void GraphicsContext::InitializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig) {
+		auto& stateMonitor = input::StateMonitor::GetInstance();
+
 		for (const auto& keyConfig : keyboardConfig.GetKeyConfigs()) {
-			input::StateMonitor::GetInstance().RegisterKeyboardKey(keyConfig.name, keyConfig.code);
+			stateMonitor.RegisterKeyboardKey(keyConfig.name, keyConfig.code);
+		}
+
+		for (const auto& buttonConfig : controllerConfig.getButtonConfigs())
+		{
+			stateMonitor.RegisterControllerButton(buttonConfig.name, buttonConfig.button);
 		}
 	}
 
@@ -45,7 +52,7 @@ namespace diamond_engine {
 
 	void GraphicsContext::Initialize(const EngineConfig& engineConfig) {
 		InitializeWindow(engineConfig.GetWindowConfig());
-		InitializeInput(engineConfig.GetKeyboardConfig());
+		InitializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 		InitializeGLEW();
 	}
 

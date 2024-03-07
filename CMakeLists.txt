@@ -81,6 +81,7 @@ set(SOURCES
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/config/Collider2DConfig.cpp
+    ${SRC_DIR}/config/ControllerConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
     ${SRC_DIR}/config/GameObjectConfig.cpp
     ${SRC_DIR}/config/MaterialConfig.cpp
@@ -91,6 +92,7 @@ set(SOURCES
     ${SRC_DIR}/input/Keyboard.cpp
     ${SRC_DIR}/input/Input.cpp
     ${SRC_DIR}/parser/Collider2DConfigParser.cpp
+    ${SRC_DIR}/parser/ControllerConfigParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
     ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
@@ -108,6 +110,10 @@ set(SOURCES
     ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
     ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
     ${SRC_DIR}/utility/File.cpp)
+
+if (WIN32)
+    list(APPEND SOURCES ${SRC_DIR}/input/XInputController.cpp)
+endif()
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -142,6 +148,6 @@ find_library(GLEW
 )
 
 add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} pugixml)
+target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} Xinput pugixml)
 
 # TODO: Changes to shaders / scenes etc... basically anything directly editable that the engine depends on

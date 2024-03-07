@@ -1,7 +1,14 @@
 #include "EngineConfig.h"
+#include "EngineConfig.h"
+#include "EngineConfig.h"
+#include "EngineConfig.h"
 
 namespace diamond_engine {
-	EngineConfig::EngineConfig(const KeyboardConfig& keyboardConfig, const WindowConfig& windowConfig) : m_keyboardConfig(keyboardConfig), m_windowConfig(windowConfig) { }
+	EngineConfig::EngineConfig(
+		const KeyboardConfig& keyboardConfig,
+		const ControllerConfig& controllerConfig,
+		const WindowConfig& windowConfig) :
+		m_keyboardConfig(keyboardConfig), m_controllerConfig(controllerConfig), m_windowConfig(windowConfig) { }
 
 	void EngineConfig::SetWindowConfig(const WindowConfig& windowConfig) {
 		m_windowConfig = windowConfig;
@@ -17,5 +24,15 @@ namespace diamond_engine {
 
 	const KeyboardConfig& EngineConfig::GetKeyboardConfig() const {
 		return m_keyboardConfig;
+	}
+
+	void EngineConfig::setControllerConfig(const ControllerConfig& controllerConfig)
+	{
+		m_controllerConfig = controllerConfig;
+	}
+
+	const ControllerConfig& EngineConfig::getControllerConfig() const
+	{
+		return m_controllerConfig;
 	}
 }
