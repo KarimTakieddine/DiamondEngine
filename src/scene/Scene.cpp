@@ -82,7 +82,7 @@ namespace diamond_engine {
 		return m_bufferAllocator;
 	}
 
-	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position, GameObjectType type) {
+	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position, const glm::vec3& scale, GameObjectType type) {
 		switch (type) {
 		case GameObjectType::SPRITE: {
 			Collider2D* collider2D = gameObject->GetComponent<Collider2D>("Collider2D");
@@ -109,7 +109,8 @@ namespace diamond_engine {
 				m_collider2DRenderSequence->AddGameObject(
 					std::move(collider2DGameObject),
 					collider2DMaterialConfig,
-					position);
+					position,
+					scale);
 
 				switch (collider2D->getColliderType()) {
 				case ColliderType::CHARACTER:
@@ -123,7 +124,7 @@ namespace diamond_engine {
 				}
 			}
 
-			m_spriteRenderSequence->AddGameObject(std::move(gameObject), materialConfig, position);
+			m_spriteRenderSequence->AddGameObject(std::move(gameObject), materialConfig, position, scale);
 			break;
 		}
 		default:

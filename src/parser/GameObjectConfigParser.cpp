@@ -7,6 +7,7 @@
 #include "MaterialConfigParser.h"
 #include "MeshRendererConfigParser.h"
 #include "RotateBehaviourConfigParser.h"
+#include "ScrollingBackgroundBehaviourConfigParser.h"
 #include "Vector3Parser.h"
 
 namespace diamond_engine {
@@ -20,7 +21,8 @@ namespace diamond_engine {
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = {
-		{ "RotateBehaviour", &RotateBehaviourConfigParser::Parse }
+		{ "RotateBehaviour",				&RotateBehaviourConfigParser::Parse },
+		{ "ScrollingBackgroundBehaviour",	&ScrollingBackgroundBehaviourConfigParser::Parse }
 	};
 
 	/* static */ std::unique_ptr<GameObjectConfig> GameObjectConfigParser::Parse(const pugi::xml_node& gameObjectNode) {
@@ -73,6 +75,16 @@ namespace diamond_engine {
 		pugi::xml_node positionNode = gameObjectNode.child("Position");
 		if (positionNode) {
 			gameObjectConfig->SetPosition(Vector3Parser::Parse(positionNode));
+		}
+
+		pugi::xml_node scaleNode = gameObjectNode.child("Scale");
+		if (scaleNode)
+		{
+			gameObjectConfig->SetScale(Vector3Parser::Parse(scaleNode));
+		}
+		else
+		{
+			gameObjectConfig->SetScale({ 1.0f, 1.0f, 1.0f });
 		}
 
 		pugi::xml_node materialNode = gameObjectNode.child("Material");

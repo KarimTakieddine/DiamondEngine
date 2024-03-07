@@ -1,0 +1,14 @@
+#pragma once
+
+#include <memory>
+
+#include "BehaviourConfig.h"
+
+namespace pugi { class xml_node; }
+
+namespace diamond_engine {
+	class ScrollingBackgroundBehaviourConfigParser {
+	public:
+		static std::unique_ptr<BehaviourConfig> Parse(const pugi::xml_node& behaviourNode);
+	};
+}

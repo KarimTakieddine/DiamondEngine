@@ -41,6 +41,7 @@ namespace diamond_engine {
 				GameObjectBuilder::Build(m_bufferAllocator, gameObjectConfig.get()),
 				gameObjectConfig->GetMaterialConfig(),
 				gameObjectConfig->GetPosition(),
+				gameObjectConfig->GetScale(),
 				gameObjectConfig->GetType());
 		}
 

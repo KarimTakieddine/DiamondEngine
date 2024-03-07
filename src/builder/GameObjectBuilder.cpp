@@ -5,6 +5,7 @@
 #include "GameObjectConfig.h"
 #include "MeshRendererBuilder.h"
 #include "RotateBehaviourBuilder.h"
+#include "ScrollingBackgroundBehaviourBuilder.h"
 
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
@@ -13,7 +14,8 @@ namespace diamond_engine {
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::BehaviourBuildFunc> GameObjectBuilder::StringToBehaviourMap = {
-		{ "RotateBehaviour", &RotateBehaviourBuilder::Build }
+		{ "RotateBehaviour",				&RotateBehaviourBuilder::Build },
+		{ "ScrollingBackgroundBehaviour",	&ScrollingBackgroundBehaviourBuilder::Build }
 	};
 
 	/* static */ std::unique_ptr<GameObject> GameObjectBuilder::Build(const std::shared_ptr<GLAllocator>& bufferAllocator, const GameObjectConfig* gameObjectConfig) {

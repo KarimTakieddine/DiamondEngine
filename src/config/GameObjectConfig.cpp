@@ -40,4 +40,14 @@ namespace diamond_engine {
 	GameObjectType GameObjectConfig::GetType() const {
 		return m_type;
 	}
+
+	void GameObjectConfig::SetScale(const glm::vec3& scale)
+	{
+		m_scale = scale;
+	}
+
+	const glm::vec3& GameObjectConfig::GetScale() const
+	{
+		return m_scale;
+	}
 }

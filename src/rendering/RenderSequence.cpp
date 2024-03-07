@@ -42,7 +42,7 @@ namespace diamond_engine {
 		return m_renderDescriptor;
 	}
 
-	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position) {
+	void RenderSequence::AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position, const glm::vec3& scale) {
 		RenderableObject* renderableObject = m_objectAllocator->Get();
 
 		if (!renderableObject) {
@@ -55,6 +55,7 @@ namespace diamond_engine {
 		renderableObject->textureOffsetUniformLocation		= m_shaderProgram->GetUniform(m_renderDescriptor.textureOffsetUniform);
 
 		renderableObject->transform.SetPosition(position);
+		renderableObject->transform.SetLocalScale(scale);
 		renderableObject->material.SetColor(materialConfig.GetColor());
 		renderableObject->material.SetTextureOffset(materialConfig.GetTextureOffset());
 		renderableObject->material.SetTexture(m_textureLoader->GetTextureIndex(materialConfig.GetTextureName()));

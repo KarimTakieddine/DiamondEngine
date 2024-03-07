@@ -41,7 +41,7 @@ public:
 
 	const RenderDescriptor& GetRenderDescriptor() const;
 
-	void AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position);
+	void AddGameObject(std::unique_ptr<GameObject> gameObject, const MaterialConfig& materialConfig, const glm::vec3& position, const glm::vec3& scale);
 
 	void SetCamera(const std::shared_ptr<Camera> camera);
 

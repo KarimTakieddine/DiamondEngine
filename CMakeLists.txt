@@ -54,32 +54,19 @@ add_subdirectory(${PUGI_XML_DIR})
 # DiamondEngine:
 
 set(SOURCES
-    ${SRC_DIR}/utility/DeltaTimer.cpp
-    ${SRC_DIR}/utility/Logger.cpp
-    ${SRC_DIR}/utility/LogManager.cpp
-    ${SRC_DIR}/engine/Window.cpp
     ${SRC_DIR}/allocator/GLAllocator.cpp
-    ${SRC_DIR}/engine/GraphicsContext.cpp
-    ${SRC_DIR}/mesh/Mesh.cpp
-    ${SRC_DIR}/component/MeshRenderer.cpp
-    ${SRC_DIR}/component/Collider2D.cpp
-    ${SRC_DIR}/mesh/SharedMeshStore.cpp
-    ${SRC_DIR}/gameobject/GameObject.cpp
-    ${SRC_DIR}/shader/Shader.cpp
-    ${SRC_DIR}/shader/ShaderProgram.cpp
-    ${SRC_DIR}/parser/ShaderMetadataParser.cpp
-    ${SRC_DIR}/shader/SharedShaderStore.cpp
-    ${SRC_DIR}/texture/TextureLoader.cpp
-    ${SRC_DIR}/parser/TextureMetadataParser.cpp
-    ${SRC_DIR}/rendering/Material.cpp
-    ${SRC_DIR}/rendering/Transform.cpp
-    ${SRC_DIR}/rendering/Camera.cpp
-    ${SRC_DIR}/rendering/RenderSequence.cpp
+    ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
+    ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
+    ${SRC_DIR}/behaviour/RotateBehaviour.cpp
+    ${SRC_DIR}/behaviour/ScrollingBackgroundBehaviour.cpp
     ${SRC_DIR}/builder/Collider2DBuilder.cpp
     ${SRC_DIR}/builder/GameObjectBuilder.cpp
     ${SRC_DIR}/builder/MeshRendererBuilder.cpp
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
+    ${SRC_DIR}/builder/ScrollingBackgroundBehaviourBuilder.cpp
+    ${SRC_DIR}/component/MeshRenderer.cpp
+    ${SRC_DIR}/component/Collider2D.cpp
     ${SRC_DIR}/config/Collider2DConfig.cpp
     ${SRC_DIR}/config/ControllerConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
@@ -89,8 +76,13 @@ set(SOURCES
     ${SRC_DIR}/config/MeshRendererConfig.cpp
     ${SRC_DIR}/config/WindowConfig.cpp
     ${SRC_DIR}/config/EngineConfig.cpp
+    ${SRC_DIR}/engine/GraphicsContext.cpp
+    ${SRC_DIR}/engine/Window.cpp
+    ${SRC_DIR}/gameobject/GameObject.cpp
     ${SRC_DIR}/input/Keyboard.cpp
     ${SRC_DIR}/input/Input.cpp
+    ${SRC_DIR}/mesh/Mesh.cpp
+    ${SRC_DIR}/mesh/SharedMeshStore.cpp
     ${SRC_DIR}/parser/Collider2DConfigParser.cpp
     ${SRC_DIR}/parser/ControllerConfigParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
@@ -101,15 +93,26 @@ set(SOURCES
     ${SRC_DIR}/parser/EngineConfigParser.cpp
     ${SRC_DIR}/parser/WindowConfigParser.cpp
     ${SRC_DIR}/parser/MaterialConfigParser.cpp
+    ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
     ${SRC_DIR}/parser/SceneConfigParser.cpp
+    ${SRC_DIR}/parser/ScrollingBackgroundBehaviourConfigParser.cpp
+    ${SRC_DIR}/parser/ShaderMetadataParser.cpp
+    ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/physics/CollisionResolver2D.cpp
+    ${SRC_DIR}/rendering/Material.cpp
+    ${SRC_DIR}/rendering/Transform.cpp
+    ${SRC_DIR}/rendering/Camera.cpp
+    ${SRC_DIR}/rendering/RenderSequence.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
-    ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
-    ${SRC_DIR}/behaviour/RotateBehaviour.cpp
-    ${SRC_DIR}/parser/RotateBehaviourConfigParser.cpp
-    ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
-    ${SRC_DIR}/utility/File.cpp)
+    ${SRC_DIR}/shader/Shader.cpp
+    ${SRC_DIR}/shader/ShaderProgram.cpp
+    ${SRC_DIR}/shader/SharedShaderStore.cpp
+    ${SRC_DIR}/texture/TextureLoader.cpp
+    ${SRC_DIR}/utility/DeltaTimer.cpp
+    ${SRC_DIR}/utility/File.cpp
+    ${SRC_DIR}/utility/Logger.cpp
+    ${SRC_DIR}/utility/LogManager.cpp)
 
 if (WIN32)
     list(APPEND SOURCES ${SRC_DIR}/input/XInputController.cpp)

@@ -32,6 +32,10 @@ public:
 
 	const glm::vec3& GetPosition() const;
 
+	void SetScale(const glm::vec3& scale);
+
+	const glm::vec3& GetScale() const;
+
 	GameObjectType GetType() const;
 
 private:
@@ -39,6 +43,7 @@ private:
 	BehaviourConfigList m_behaviourConfigs{ };
 	MaterialConfig m_materialConfig{ };
 	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
+	glm::vec3 m_scale{ 1.0f, 1.0f, 1.0f };
 	GameObjectType m_type{ GameObjectType::SPRITE };
 };
 }

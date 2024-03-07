@@ -103,7 +103,7 @@ namespace diamond_engine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapModeT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, formatIt->second, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, channelCount > 3 ? GL_RGBA : GL_RGB, width, height, 0, formatIt->second, GL_UNSIGNED_BYTE, imageData);
 
 		stbi_image_free(imageData);
 	}
