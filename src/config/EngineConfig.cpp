@@ -1,7 +1,4 @@
 #include "EngineConfig.h"
-#include "EngineConfig.h"
-#include "EngineConfig.h"
-#include "EngineConfig.h"
 
 namespace diamond_engine {
 	EngineConfig::EngineConfig(

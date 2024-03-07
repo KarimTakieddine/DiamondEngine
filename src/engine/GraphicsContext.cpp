@@ -36,6 +36,13 @@ namespace diamond_engine {
 		{
 			stateMonitor.RegisterControllerButton(buttonConfig.name, buttonConfig.button);
 		}
+
+		for (const auto& joystickConfig : controllerConfig.getJoystickConfigs())
+		{
+			stateMonitor.RegisterControllerJoystick(joystickConfig.name, joystickConfig.joystick);
+		}
+
+		stateMonitor.setJoystickDeadzone(controllerConfig.getJoystickDeadzone());
 	}
 
 	void GraphicsContext::InitializeGLEW() {

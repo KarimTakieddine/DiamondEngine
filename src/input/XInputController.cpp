@@ -3,7 +3,32 @@
 #include <Windows.h>
 #include <xinput.h>
 
+#include <glm/gtx/vector_query.hpp>
+
 #include "XInputController.h"
+
+namespace
+{
+	struct XInputAxisState
+	{
+		SHORT x;
+		SHORT y;
+	};
+
+	using diamond_engine::Joystick;
+
+	XInputAxisState getAxisInputState(const XINPUT_GAMEPAD& gamepad, Joystick joystick)
+	{
+		if (joystick == Joystick::LEFT)
+		{
+			return { gamepad.sThumbLX, gamepad.sThumbLY };
+		}
+		else
+		{
+			return { gamepad.sThumbRX, gamepad.sThumbRY };
+		}
+	}
+}
 
 namespace diamond_engine
 {
@@ -60,14 +85,16 @@ namespace diamond_engine
 		return buttonIt->second.IsReleased();
 	}
 
-	float XInputController::getAxis(const std::string& axis) const
+	glm::vec2 XInputController::getJoystickInput(const std::string& joystick) const
 	{
-		return 0.0f;
-	}
+		auto inputIt = m_stringToJoystickInputMap.find(joystick);
 
-	float XInputController::getTrigger(const std::string& trigger) const
-	{
-		return 0.0f;
+		if (inputIt == m_stringToJoystickInputMap.cend())
+		{
+			return { };
+		}
+
+		return inputIt->second.input;
 	}
 
 	void XInputController::registerButton(const std::string& name, Button button)
@@ -84,9 +111,28 @@ namespace diamond_engine
 		m_registeredButtons.push_back(name);
 	}
 
-	void XInputController::registerAxis(const std::string& name, Axis axis)
+	float XInputController::getTriggerInput(const std::string& trigger) const
 	{
+		return 0.0f;
+	}
 
+	void XInputController::setJoystickDeadzone(float joystickDeadzone)
+	{
+		m_joystickDeadzone = joystickDeadzone;
+	}
+
+	void XInputController::registerJoystick(const std::string& name, Joystick joystick)
+	{
+		auto joystickIt = std::find_if(m_registeredJoysticks.cbegin(), m_registeredJoysticks.cend(), [name](const std::string& joystickName) { return name == joystickName; });
+
+		if (joystickIt != m_registeredJoysticks.cend())
+		{
+			return;
+		}
+
+		m_stringToJoystickInputMap.insert({ name, { joystick } });
+
+		m_registeredJoysticks.push_back(name);
 	}
 
 	void XInputController::registerTrigger(const std::string& name, Trigger trigger)
@@ -116,6 +162,18 @@ namespace diamond_engine
 
 				input::Key& buttonKey = buttonIt->second;
 				buttonKey.ClearState();
+			}
+
+			for (const auto& registeredJoystickName : m_registeredJoysticks)
+			{
+				auto inputIt = m_stringToJoystickInputMap.find(registeredJoystickName);
+
+				if (inputIt == m_stringToJoystickInputMap.cend())
+				{
+					continue;
+				}
+
+				inputIt->second.input = { };
 			}
 
 			m_isConnected = false;
@@ -154,7 +212,45 @@ namespace diamond_engine
 		}
 
 		const XINPUT_GAMEPAD& gamepad = state.Gamepad;
-		
+
+		for (const auto& registeredJoystick : m_registeredJoysticks)
+		{
+			auto inputIt = m_stringToJoystickInputMap.find(registeredJoystick);
+
+			if (inputIt == m_stringToJoystickInputMap.cend())
+			{
+				continue;
+			}
+
+			const XInputAxisState axisInputState = getAxisInputState(gamepad, inputIt->second.joystick);
+
+			glm::vec2 joystickInput = {
+				std::clamp(static_cast<float>(axisInputState.x) / SHRT_MAX, -1.0f, 1.0f),
+				std::clamp(static_cast<float>(axisInputState.y) / SHRT_MAX, -1.0f, 1.0f) };
+
+			if (m_joystickDeadzone <= 0.0f || std::abs(m_joystickDeadzone) >= 1.0f)
+			{
+				inputIt->second.input = joystickInput;
+				continue;
+			}
+
+			const float inputMagnitude = glm::length(joystickInput);
+
+			if (inputMagnitude < m_joystickDeadzone)
+			{
+				joystickInput = { };
+			}
+			else
+			{
+				joystickInput = glm::normalize(joystickInput) * ((inputMagnitude - m_joystickDeadzone) / (1 - m_joystickDeadzone));
+			}
+
+			inputIt->second.input = {
+				std::clamp(joystickInput.x, -1.0f, 1.0f),
+				std::clamp(joystickInput.y, -1.0f, 1.0f)
+			};
+		}
+
 		const WORD buttons = gamepad.wButtons;
 		for (const auto& registeredButtonName : m_registeredButtons)
 		{

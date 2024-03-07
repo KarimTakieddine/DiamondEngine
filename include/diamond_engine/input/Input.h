@@ -21,6 +21,8 @@ public:
 
 	void RegisterControllerButton(const std::string& name, Button button);
 
+	void RegisterControllerJoystick(const std::string& name, Joystick joystick);
+
 	bool IsKeyPressed(const std::string& name) const;
 
 	bool IsKeyDown(const std::string& name) const;
@@ -32,6 +34,10 @@ public:
 	bool IsButtonDown(const std::string& name) const;
 
 	bool IsButtonReleased(const std::string& name) const;
+
+	glm::vec2 getJoystickInput(const std::string& name) const;
+
+	void setJoystickDeadzone(float joystickDeadzone);
 
 private:
 	StateMonitor();

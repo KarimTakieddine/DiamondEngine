@@ -46,6 +46,14 @@ namespace input {
 		}
 	}
 
+	void StateMonitor::RegisterControllerJoystick(const std::string& name, Joystick joystick)
+	{
+		for (unsigned long i = 0; i < kMaxControllerCount; ++i)
+		{
+			m_controllers[i]->registerJoystick(name, joystick);
+		}
+	}
+
 	bool StateMonitor::IsKeyPressed(const std::string& name) const {
 		return m_keyboard.IsKeyPressed(name);
 	}
@@ -92,6 +100,26 @@ namespace input {
 		}
 
 		return (*controllerIt)->isButtonReleased(name);
+	}
+
+	glm::vec2 StateMonitor::getJoystickInput(const std::string& name) const
+	{
+		auto controllerIt = std::find_if(m_controllers.cbegin(), m_controllers.cend(), [](const auto& controller) { return controller->isConnected(); });
+
+		if (controllerIt == m_controllers.cend())
+		{
+			return { };
+		}
+
+		return (*controllerIt)->getJoystickInput(name);
+	}
+
+	void StateMonitor::setJoystickDeadzone(float joystickDeadzone)
+	{
+		for (unsigned long i = 0; i < kMaxControllerCount; ++i)
+		{
+			m_controllers[i]->setJoystickDeadzone(joystickDeadzone);
+		}
 	}
 }
 }

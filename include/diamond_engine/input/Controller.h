@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <glm/vec2.hpp>
+
 namespace diamond_engine
 {
 	enum class Button : int
@@ -16,13 +18,13 @@ namespace diamond_engine
 		BUTTON_7 = 7  // SELECT/SHARE button
 	};
 
-	enum class Axis : unsigned
+	enum class Joystick : short
 	{
 		LEFT	= 0,
 		RIGHT	= 1
 	};
 
-	using Trigger = Axis;
+	using Trigger = Joystick;
 
 	class Controller
 	{
@@ -33,11 +35,12 @@ namespace diamond_engine
 		virtual bool isButtonDown(const std::string& button) const = 0;
 		virtual bool isButtonPressed(const std::string& button) const = 0;
 		virtual bool isButtonReleased(const std::string& button) const = 0;
-		virtual float getAxis(const std::string& axis) const = 0;
-		virtual float getTrigger(const std::string& trigger) const = 0;
-
+		virtual glm::vec2 getJoystickInput(const std::string& joystick) const = 0;
+		virtual float getTriggerInput(const std::string& trigger) const = 0;
+		
+		virtual void setJoystickDeadzone(float joystickDeadzone) = 0;
 		virtual void registerButton(const std::string& name, Button button) = 0;
-		virtual void registerAxis(const std::string& name, Axis axis) = 0;
+		virtual void registerJoystick(const std::string& name, Joystick joystick) = 0;
 		virtual void registerTrigger(const std::string& name, Trigger trigger) = 0;
 		virtual void refreshState(unsigned long index) = 0;
 	};

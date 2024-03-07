@@ -11,6 +11,12 @@ namespace diamond_engine
 	class XInputController : public Controller
 	{
 	public:
+		struct JoystickInput
+		{
+			Joystick joystick;
+			glm::vec2 input;
+		};
+
 		static const std::unordered_map<Button, unsigned short> kButtonToMaskMap;
 
 		~XInputController() override = default;
@@ -23,13 +29,15 @@ namespace diamond_engine
 
 		bool isButtonReleased(const std::string& button) const override;
 
-		float getAxis(const std::string& axis) const override;
+		glm::vec2 getJoystickInput(const std::string& joystick) const override;
 
-		float getTrigger(const std::string& trigger) const override;
+		float getTriggerInput(const std::string& trigger) const override;
+
+		void setJoystickDeadzone(float joystickDeadzone) override;
 
 		void registerButton(const std::string& name, Button button) override;
 
-		void registerAxis(const std::string& name, Axis axis) override;
+		void registerJoystick(const std::string& name, Joystick joystick) override;
 
 		void registerTrigger(const std::string& name, Trigger trigger) override;
 
@@ -37,8 +45,11 @@ namespace diamond_engine
 
 	private:
 		std::unordered_map<std::string, input::Key> m_stringToButtonMap;
+		std::unordered_map<std::string, JoystickInput> m_stringToJoystickInputMap;
 		std::vector<std::string> m_registeredButtons;
+		std::vector<std::string> m_registeredJoysticks;
 		unsigned long m_packetNumber{ 0 };
+		float m_joystickDeadzone{ 0.0f };
 		bool m_isConnected{ false };
 	};
 }

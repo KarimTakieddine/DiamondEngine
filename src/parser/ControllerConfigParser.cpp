@@ -18,9 +18,22 @@ namespace diamond_engine
 		{ "BUTTON_7", Button::BUTTON_7 }
 	};
 
+	/* static */ const std::unordered_map<std::string, Joystick> ControllerConfigParser::kStringToJoystickMap =
+	{
+		{ "LEFT", Joystick::LEFT },
+		{ "RIGHT", Joystick::RIGHT }
+	};
+
 	ControllerConfig ControllerConfigParser::Parse(const pugi::xml_node& controllerConfigNode)
 	{
 		ControllerConfig result;
+
+		pugi::xml_attribute joystickDeadzoneAttribute = controllerConfigNode.attribute("joystickDeadzone");
+
+		if (joystickDeadzoneAttribute)
+		{
+			result.setJoystickDeadzone(joystickDeadzoneAttribute.as_float(0.0f));
+		}
 
 		pugi::xml_node buttonsNode = controllerConfigNode.child("Buttons");
 
@@ -54,6 +67,41 @@ namespace diamond_engine
 				}
 
 				result.addButtonConfig({ name, buttonIt->second });
+			}
+		}
+
+		pugi::xml_node joysticksNode = controllerConfigNode.child("Joysticks");
+
+		if (joysticksNode)
+		{
+			for (const auto& joystickNode : joysticksNode.children("Joystick"))
+			{
+				pugi::xml_attribute nameAttribute = joystickNode.attribute("name");
+
+				if (!nameAttribute)
+				{
+					throw std::runtime_error("<Joystick/> node must have a value for the \"name\" attribute");
+				}
+
+				std::string name(nameAttribute.as_string());
+
+				pugi::xml_attribute joystickAttribute = joystickNode.attribute("joystick");
+
+				if (!joystickAttribute)
+				{
+					throw std::runtime_error("<Joystick/> node must have a value for the \"joystick\" attribute");
+				}
+
+				const std::string joystick(joystickAttribute.as_string());
+
+				auto joystickIt = kStringToJoystickMap.find(joystick);
+
+				if (joystickIt == kStringToJoystickMap.cend())
+				{
+					throw std::runtime_error("Unrecognised joystick: " + joystick);
+				}
+
+				result.addJoystickConfig({ name, joystickIt->second });
 			}
 		}
 

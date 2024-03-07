@@ -9,7 +9,7 @@
 		<Key name="Left" code="LEFT"/>
 		<Key name="Right" code="RIGHT"/>
 	</Keyboard>
-	<Controller>
+	<Controller joystickDeadzone="0.25">
 		<Buttons>
 			<Button name="A" button="BUTTON_0"/>
 			<Button name="X" button="BUTTON_1"/>
@@ -20,5 +20,8 @@
 			<Button name="Start" button="BUTTON_6"/>
 			<Button name="Select" button="BUTTON_7"/>
 		</Buttons>
+		<Joysticks>
+			<Joystick name="LeftStick" joystick="LEFT"/>
+		</Joysticks>
 	</Controller>
 </Engine>

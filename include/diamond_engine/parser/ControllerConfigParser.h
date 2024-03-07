@@ -13,6 +13,8 @@ namespace diamond_engine
 	public:
 		static const std::unordered_map<std::string, Button> kStringToButtonMap;
 
+		static const std::unordered_map<std::string, Joystick> kStringToJoystickMap;
+
 		static ControllerConfig Parse(const pugi::xml_node& controllerConfigNode);
 	};
 }
