@@ -119,12 +119,7 @@ namespace diamond_engine {
 			const glm::vec2& materialTextureOffset = renderableObject->material.GetTextureOffset();
 			glUniform2f(renderableObject->textureOffsetUniformLocation, materialTextureOffset.x, materialTextureOffset.y);
 
-			const GLint texture = renderableObject->material.GetTexture();
-			if ((!m_boundTexture.has_value() || (m_boundTexture.value() != texture)) && texture != 0)
-			{
-				glBindTexture(GL_TEXTURE_2D, texture);
-				m_boundTexture = texture;
-			}
+			glBindTexture(GL_TEXTURE_2D, renderableObject->material.GetTexture());
 
 			glBindVertexArray(renderableObject->vertexArrayObject);
 			glDrawElements(renderableObject->drawCall.drawMode, renderableObject->drawCall.elementCount, GL_UNSIGNED_INT, nullptr);
