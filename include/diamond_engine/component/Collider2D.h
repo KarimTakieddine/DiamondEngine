@@ -12,13 +12,13 @@ namespace diamond_engine {
 	class Collider2D : public Component
 	{
 	public:
-		GLuint getWidth() const;
+		GLfloat getWidth() const;
 
-		void setWidth(GLuint width);
+		void setWidth(GLfloat width);
 
-		GLuint getHeight() const;
+		GLfloat getHeight() const;
 
-		void setHeight(GLuint height);
+		void setHeight(GLfloat height);
 
 		ColliderType getColliderType() const;
 
@@ -32,7 +32,7 @@ namespace diamond_engine {
 
 	private:
 		ColliderType m_colliderType{ ColliderType::OBSTACLE };
-		GLuint m_width{ 0 };
-		GLuint m_height{ 0 };
+		GLfloat m_width{ 0.0f };
+		GLfloat m_height{ 0.0f };
 	};
 }

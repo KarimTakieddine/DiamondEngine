@@ -9,7 +9,7 @@ namespace diamond_engine {
 		m_yAngle += m_yAnglePerSecond * deltaTime;
 		m_zAngle += m_zAnglePerSecond * deltaTime;
 
-		m_gameObject->GetRenderableObject()->transform.SetLocalEulerAngles({ m_xAngle, m_yAngle, m_zAngle });
+		m_gameObject->GetRenderableObject()->transform.Translate({ 0.0f, -deltaTime, 0.0f });
 	}
 
 	void RotateBehaviour::SetXAnglePerSecond(GLfloat xAnglePerSecond) {

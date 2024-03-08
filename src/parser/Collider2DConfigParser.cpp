@@ -21,12 +21,12 @@ namespace diamond_engine
 
 		pugi::xml_attribute widthAttribute = componentNode.attribute("width");
 		if (widthAttribute) {
-			result->setWidth(widthAttribute.as_uint());
+			result->setWidth(widthAttribute.as_float());
 		}
 
 		pugi::xml_attribute heightAttribute = componentNode.attribute("height");
 		if (heightAttribute) {
-			result->setHeight(heightAttribute.as_uint());
+			result->setHeight(heightAttribute.as_float());
 		}
 
 		pugi::xml_attribute typeAttribute = componentNode.attribute("type");

@@ -6,22 +6,22 @@
 
 namespace diamond_engine
 {
-	GLuint Collider2D::getWidth() const
+	GLfloat Collider2D::getWidth() const
 	{
 		return m_width;
 	}
 
-	void Collider2D::setWidth(GLuint width)
+	void Collider2D::setWidth(GLfloat width)
 	{
 		m_width = width;
 	}
 
-	GLuint Collider2D::getHeight() const
+	GLfloat Collider2D::getHeight() const
 	{
 		return m_height;
 	}
 
-	void Collider2D::setHeight(GLuint height)
+	void Collider2D::setHeight(GLfloat height)
 	{
 		m_height = height;
 	}
