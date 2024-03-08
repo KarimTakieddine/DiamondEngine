@@ -30,6 +30,8 @@ public:
 
 	void SetSize(const Size& size);
 
+	const Size& getCurrentSize() const;
+
 	void StartUpdateLoop();
 
 	void Close();

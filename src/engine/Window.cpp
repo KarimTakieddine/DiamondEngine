@@ -54,6 +54,11 @@ namespace diamond_engine {
 		glfwSetWindowSize(m_handle, size.width, size.height);
 	}
 
+	const Size& Window::getCurrentSize() const
+	{
+		return m_currentSize;
+	}
+
 	void Window::StartUpdateLoop() {
 		DeltaTimer deltaTimer;
 		GLfloat deltaTime = 0.0f;

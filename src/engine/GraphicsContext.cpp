@@ -65,6 +65,8 @@ namespace diamond_engine {
 
 	void GraphicsContext::SetScene(Scene* scene) {
 		m_scene = scene;
+
+		OnWindowResize(m_window->getCurrentSize());
 	}
 
 	void GraphicsContext::Execute() {
