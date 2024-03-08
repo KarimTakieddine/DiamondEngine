@@ -32,13 +32,22 @@ namespace diamond_engine {
 
 		SetBufferAllocator(result->GetBufferAllocator());
 
-		for (const auto& gameObjectConfig : sceneConfig->GetGameObjectConfigs()) {
+		const auto& gameObjectConfigs = sceneConfig->GetGameObjectConfigs();
+
+		for (size_t i = 0; i < gameObjectConfigs.size(); ++i) {
 			if (!m_bufferAllocator) {
 				throw std::runtime_error("Null or no buffer allocator set on SceneBuilder instance");
 			}
 
+			const GameObjectConfig* gameObjectConfig	= gameObjectConfigs[i].get();
+			const std::string& gameObjectName			= gameObjectConfig->getName();
+
+			std::unique_ptr<GameObject> gameObject = GameObjectBuilder::Build(m_bufferAllocator, gameObjectConfig);
+
+			gameObject->setName(gameObjectName.empty() ? "GameObject_" + std::to_string(i) : gameObjectName);
+
 			result->AddGameObject(
-				GameObjectBuilder::Build(m_bufferAllocator, gameObjectConfig.get()),
+				std::move(gameObject),
 				gameObjectConfig->GetMaterialConfig(),
 				gameObjectConfig->GetPosition(),
 				gameObjectConfig->GetScale(),

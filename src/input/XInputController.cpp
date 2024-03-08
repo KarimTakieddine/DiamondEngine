@@ -280,16 +280,31 @@ namespace diamond_engine
 			{
 				buttonKey.UnsetState(input::KeyState::RELEASED | input::KeyState::WAS_RELEASED_LAST_FRAME);
 
-				buttonKey.SetState(input::KeyState::PRESSED_DOWN);
-				buttonKey.SetState(input::KeyState::WAS_PRESSED_LAST_FRAME);
+				if (!buttonKey.WasPressedLastFrame())
+				{
+					buttonKey.SetState(input::KeyState::PRESSED_DOWN);
+					buttonKey.SetState(input::KeyState::WAS_PRESSED_LAST_FRAME);
+				}
+				else
+				{
+					buttonKey.UnsetState(input::KeyState::PRESSED_DOWN);
+				}
+
 				buttonKey.SetState(input::KeyState::PRESSED);
 			}
 			else
 			{
 				buttonKey.UnsetState(input::KeyState::PRESSED | input::KeyState::PRESSED_DOWN | input::KeyState::WAS_PRESSED_LAST_FRAME);
 
-				buttonKey.SetState(input::KeyState::RELEASED);
-				buttonKey.SetState(input::KeyState::WAS_RELEASED_LAST_FRAME);
+				if (!buttonKey.WasReleasedLastFrame())
+				{
+					buttonKey.SetState(input::KeyState::RELEASED);
+					buttonKey.SetState(input::KeyState::WAS_RELEASED_LAST_FRAME);
+				}
+				else
+				{
+					buttonKey.UnsetState(input::KeyState::RELEASED);
+				}
 			}
 		}
 

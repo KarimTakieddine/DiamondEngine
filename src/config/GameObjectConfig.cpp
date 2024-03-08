@@ -41,6 +41,16 @@ namespace diamond_engine {
 		return m_type;
 	}
 
+	const std::string& GameObjectConfig::getName() const
+	{
+		return m_name;
+	}
+
+	void GameObjectConfig::setName(const std::string& name)
+	{
+		m_name = name;
+	}
+
 	void GameObjectConfig::SetScale(const glm::vec3& scale)
 	{
 		m_scale = scale;

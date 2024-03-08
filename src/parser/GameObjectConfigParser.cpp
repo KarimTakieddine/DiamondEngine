@@ -30,6 +30,8 @@ namespace diamond_engine {
 			throw std::runtime_error("No <GameObject/> node supplied to GameObjectConfigParser::Parse()");
 		}
 
+		// TODO: Ensure no 2 gameobjects have the same name
+
 		pugi::xml_attribute typeAttribute = gameObjectNode.attribute("type");
 		if (!typeAttribute) {
 			throw std::runtime_error("No \"type\" attribute specified for parsed <GameObject/> node");
@@ -43,6 +45,12 @@ namespace diamond_engine {
 		
 		std::unique_ptr<GameObjectConfig> gameObjectConfig = std::make_unique<GameObjectConfig>();
 		gameObjectConfig->SetType(typeIt->second);
+
+		pugi::xml_attribute nameAttribute = gameObjectNode.attribute("name");
+		if (nameAttribute)
+		{
+			gameObjectConfig->setName(nameAttribute.as_string());
+		}
 
 		pugi::xml_node componentsNode = gameObjectNode.child("Components");
 		if (componentsNode) {

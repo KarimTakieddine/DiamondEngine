@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 
 #include <GL/glew.h>
 
@@ -28,7 +29,8 @@ namespace diamond_engine
 		void ResolveCollisions();
 
 	private:
-		std::vector<GameObject*> m_characterSprites{ };
-		std::vector<GameObject*> m_obstacleSprites{ };
+		std::unordered_map<std::string, std::string> m_collisionResolutionMap;
+		std::vector<GameObject*> m_characterSprites;
+		std::vector<GameObject*> m_obstacleSprites;
 	};
 }

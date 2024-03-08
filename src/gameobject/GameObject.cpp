@@ -71,4 +71,30 @@ namespace diamond_engine {
 
 		m_behaviours.push_back(std::move(behaviour));
 	}
+
+	void GameObject::OnCollisionEnter(const glm::vec2& resolutionAxis, const std::string& name)
+	{
+		for (const auto& behaviour : m_behaviours)
+		{
+			behaviour->OnCollisionEnter(resolutionAxis, name);
+		}
+	}
+
+	void GameObject::OnCollisionExit(const std::string& name)
+	{
+		for (const auto& behaviour : m_behaviours)
+		{
+			behaviour->OnCollisionExit(name);
+		}
+	}
+
+	const std::string& GameObject::getName() const
+	{
+		return m_name;
+	}
+
+	void GameObject::setName(const std::string& name)
+	{
+		m_name = name;
+	}
 }

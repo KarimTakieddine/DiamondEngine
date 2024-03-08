@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "BehaviourConfig.h"
@@ -38,10 +39,15 @@ public:
 
 	GameObjectType GetType() const;
 
+	const std::string& getName() const;
+
+	void setName(const std::string& name);
+
 private:
 	ComponentConfigList m_componentConfigs{ };
 	BehaviourConfigList m_behaviourConfigs{ };
 	MaterialConfig m_materialConfig{ };
+	std::string m_name{ "" };
 	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
 	glm::vec3 m_scale{ 1.0f, 1.0f, 1.0f };
 	GameObjectType m_type{ GameObjectType::SPRITE };

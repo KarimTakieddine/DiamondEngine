@@ -87,6 +87,12 @@ namespace diamond_engine
 
 					if (obstacleMinimum > characterMaximum || characterMinimum > obstacleMaximum)
 					{
+						if (m_collisionResolutionMap.find(obstacleSprite->getName()) != m_collisionResolutionMap.cend())
+						{
+							m_collisionResolutionMap.erase(obstacleSprite->getName());
+							characterSprite->OnCollisionExit(obstacleSprite->getName());
+						}
+
 						colliding = false;
 						break;
 					}
@@ -104,23 +110,32 @@ namespace diamond_engine
 						absolutePenetrations.push_back(std::abs(penetration));
 					}
 
-					const GLfloat minimumPenetration = *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
+					const GLfloat minimumPenetration	= *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
+					glm::vec2 resolutionVector			= { };
 
 					if (minimumPenetration == absolutePenetrations[0])
 					{
-						characterSprite->GetRenderableObject()->transform.Translate(axes[0] * penetrations[0]);
+						resolutionVector = axes[0] * penetrations[0];
 					}
 					else if (minimumPenetration == absolutePenetrations[1])
 					{
-						characterSprite->GetRenderableObject()->transform.Translate(axes[0] * penetrations[1]);
+						resolutionVector = axes[0] * penetrations[1];
 					}
 					else if (minimumPenetration == absolutePenetrations[2])
 					{
-						characterSprite->GetRenderableObject()->transform.Translate(axes[1] * penetrations[2]);
+						resolutionVector = axes[1] * penetrations[2];
 					}
 					else if (minimumPenetration == absolutePenetrations[3])
 					{
-						characterSprite->GetRenderableObject()->transform.Translate(axes[1] * penetrations[3]);
+						resolutionVector = axes[1] * penetrations[3];
+					}
+
+					characterSprite->GetRenderableObject()->transform.Translate(resolutionVector);
+
+					if (m_collisionResolutionMap.find(obstacleSprite->getName()) == m_collisionResolutionMap.cend())
+					{
+						m_collisionResolutionMap.insert({ obstacleSprite->getName(), characterSprite->getName() });
+						characterSprite->OnCollisionEnter(glm::normalize(resolutionVector), obstacleSprite->getName());
 					}
 				}
 			}

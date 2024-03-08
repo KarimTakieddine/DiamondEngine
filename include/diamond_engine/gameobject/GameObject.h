@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <string>
 #include <vector>
 
 #include "Behaviour.h"
@@ -40,9 +41,17 @@ public:
 
 	void AddBehaviour(std::unique_ptr<Behaviour> behaviour);
 
+	void OnCollisionEnter(const glm::vec2& resolutionAxis, const std::string& name);
+	void OnCollisionExit(const std::string& name);
+
+	const std::string& getName() const;
+
+	void setName(const std::string& name);
+
 private:
 	std::vector<std::unique_ptr<Component>> m_components{ };
 	std::vector<std::unique_ptr<Behaviour>> m_behaviours{ };
+	std::string m_name{ "" };
 	RenderableObject* m_renderableObject{ nullptr };
 	GameObject* m_parent{ nullptr };
 };
