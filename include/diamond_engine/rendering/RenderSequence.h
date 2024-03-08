@@ -55,7 +55,6 @@ private:
 	std::shared_ptr<Camera> m_camera{ nullptr };
 	std::shared_ptr<GLAllocator> m_vertexArrayAllocator{ nullptr };
 	std::shared_ptr<TextureLoader> m_textureLoader{ nullptr };
-	std::optional<GLint> m_boundTexture{ };
 	SharedShaderProgram m_shaderProgram{ nullptr };
 	SharedObjectAllocator m_objectAllocator{ nullptr };
 	GLint m_projectionUniformLocation{ -1 };
