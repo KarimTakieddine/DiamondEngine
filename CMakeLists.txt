@@ -18,6 +18,7 @@ set(IRR_KLANG_DIR irrKlang-64bit-1.6.0)
 
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
+set(AUDIO_DIR audio)
 set(SHADERS_DIR shaders)
 set(SCENES_DIR scenes)
 set(TEXTURES_DIR textures)
@@ -25,6 +26,7 @@ set(CONFIG_DIR config)
 
 set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
 set(SRC_DIR ${SRC_DIR} PARENT_SCOPE)
+set(AUDIO_DIR ${AUDIO_DIR} PARENT_SCOPE)
 set(SHADERS_DIR ${SHADERS_DIR} PARENT_SCOPE)
 set(SCENES_DIR ${SCENES_DIR} PARENT_SCOPE)
 set(TEXTURES_DIR ${TEXTURES_DIR} PARENT_SCOPE)
@@ -65,6 +67,9 @@ add_subdirectory(${PUGI_XML_DIR})
 
 set(SOURCES
     ${SRC_DIR}/allocator/GLAllocator.cpp
+    ${SRC_DIR}/${AUDIO_DIR}/AudioDevice.cpp
+    ${SRC_DIR}/${AUDIO_DIR}/AudioEngine.cpp
+    ${SRC_DIR}/${AUDIO_DIR}/AudioLoader.cpp
     ${SRC_DIR}/behaviour/BehaviourRegistry.cpp
     ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
     ${SRC_DIR}/behaviour/RotateBehaviour.cpp
@@ -93,6 +98,7 @@ set(SOURCES
     ${SRC_DIR}/input/Input.cpp
     ${SRC_DIR}/mesh/Mesh.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
+    ${SRC_DIR}/parser/AudioMetadataParser.cpp
     ${SRC_DIR}/parser/Collider2DConfigParser.cpp
     ${SRC_DIR}/parser/ControllerConfigParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
@@ -139,6 +145,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${IRR_KLANG_DIR}/include"
     "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
+    "${INCLUDE_DIR}/diamond_engine/${AUDIO_DIR}"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
     "${INCLUDE_DIR}/diamond_engine/builder"
     "${INCLUDE_DIR}/diamond_engine/common"
@@ -148,6 +155,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${INCLUDE_DIR}/diamond_engine/gameobject"
     "${INCLUDE_DIR}/diamond_engine/input"
     "${INCLUDE_DIR}/diamond_engine/mesh"
+    "${INCLUDE_DIR}/diamond_engine/metadata"
     "${INCLUDE_DIR}/diamond_engine/parser"
     "${INCLUDE_DIR}/diamond_engine/physics"
     "${INCLUDE_DIR}/diamond_engine/rendering"
