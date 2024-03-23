@@ -14,6 +14,7 @@ set(PREBUILT_CONFIG Release)
 set(GLEW_DIR glew-2.1.0-win32/glew-2.1.0)
 set(GLFW_DIR glfw)
 set(GLM_DIR glm)
+set(IRR_KLANG_DIR irrKlang-64bit-1.6.0)
 
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
@@ -48,7 +49,14 @@ set(PUGI_XML_DIR pugixml)
 
 # STB
 
-set (STB_DIR stb)
+set(STB_DIR stb)
+
+# irrKlang
+
+set(IRR_KLANG_LIBRARY_DIR "${IRR_KLANG_DIR}/lib/Winx64-visualStudio")
+set(IRR_KLANG_BINARY_DIR "${IRR_KLANG_DIR}/bin/winx64-visualStudio")
+
+set(IRR_KLANG_BINARY_DIR ${IRR_KLANG_BINARY_DIR} PARENT_SCOPE)
 
 add_subdirectory(${GLFW_DIR})
 add_subdirectory(${PUGI_XML_DIR})
@@ -128,6 +136,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${GLM_DIR}
     "${PUGI_XML_DIR}/src"
     ${STB_DIR}
+    "${IRR_KLANG_DIR}/include"
     "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
@@ -152,7 +161,10 @@ find_library(GLEW
     HINTS ${GLEW_LIBRARY_DIR}
 )
 
-add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} Xinput pugixml)
+find_library(IRR_KLANG
+    NAMES irrKlang
+    HINTS ${IRR_KLANG_LIBRARY_DIR}
+)
 
-# TODO: Changes to shaders / scenes etc... basically anything directly editable that the engine depends on
+add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
+target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 ${GLEW} ${GLFW_DIR} Xinput pugixml ${IRR_KLANG})
