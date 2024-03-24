@@ -151,7 +151,7 @@ namespace diamond_engine {
 		m_collider2DRenderSequence->Update(deltaTime);
 
 		m_spriteRenderSequence->Render();
-		//m_collider2DRenderSequence->Render();
+		m_collider2DRenderSequence->Render();
 	}
 
 	void Scene::OnWindowResize(int width, int height) {
