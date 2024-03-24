@@ -15,6 +15,11 @@ namespace diamond_engine {
 		m_sharedTextureLoader = sharedTextureLoader;
 	}
 
+	void SceneLoader::setSharedSpriteSheetLoader(const std::shared_ptr<SpriteSheetLoader>& spriteSheetLoader)
+	{
+		m_sharedSpriteSheetLoader = spriteSheetLoader;
+	}
+
 	void SceneLoader::LoadScenes(const std::filesystem::path& rootDirectory) {
 		m_sceneMap.clear();
 
@@ -51,6 +56,12 @@ namespace diamond_engine {
 				throw std::runtime_error("No shared texture loader set for SceneLoader instance");
 			}
 			sceneBuilder.SetSharedTextureLoader(m_sharedTextureLoader);
+
+			if (!m_sharedSpriteSheetLoader)
+			{
+				throw std::runtime_error("No shared sprite sheet loader set for SceneLoader instance");
+			}
+			sceneBuilder.SetSharedSpriteSheetLoader(m_sharedSpriteSheetLoader);
 
 			std::unique_ptr<Scene> scene = sceneBuilder.Build(sceneConfig.get());
 

@@ -6,11 +6,13 @@
 #include "MeshRendererBuilder.h"
 #include "RotateBehaviourBuilder.h"
 #include "ScrollingBackgroundBehaviourBuilder.h"
+#include "SpriteAnimationPlayerBuilder.h"
 
 namespace diamond_engine {
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::ComponentBuildFunc> GameObjectBuilder::StringToComponentMap = {
-		{ "Collider2D",		&Colllider2DBuilder::Build },
-		{ "MeshRenderer",	&MeshRendererBuilder::Build }
+		{ "Collider2D",				&Colllider2DBuilder::Build },
+		{ "MeshRenderer",			&MeshRendererBuilder::Build },
+		{ "SpriteAnimationPlayer",	&SpriteAnimationPlayerBuilder::Build }
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectBuilder::BehaviourBuildFunc> GameObjectBuilder::StringToBehaviourMap = {

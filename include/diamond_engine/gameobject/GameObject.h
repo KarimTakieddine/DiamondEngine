@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "AnimationPlayer.h"
 #include "Behaviour.h"
 #include "Component.h"
 #include "RenderableObject.h"
@@ -53,7 +52,6 @@ private:
 	std::vector<std::unique_ptr<Component>> m_components{ };
 	std::vector<std::unique_ptr<Behaviour>> m_behaviours{ };
 	std::string m_name{ "" };
-	std::unique_ptr<AnimationPlayer> m_animationPlayer{ nullptr };
 	RenderableObject* m_renderableObject{ nullptr };
 	GameObject* m_parent{ nullptr };
 };

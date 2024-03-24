@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <string>
 
 namespace diamond_engine
@@ -7,9 +9,9 @@ namespace diamond_engine
 	struct Animation
 	{
 		std::string name{ "Unnamed" };
-		unsigned int frame{ 0 };
-		float duration{ 0.0f };
-		float delayBetweenFrames{ 0.0f };
-		float timeBetweenFrames{ 0.0f };
+		GLuint frame{ 0 };
+		GLfloat duration{ 0.0f };
+		GLfloat delayBetweenFrames{ 0.0f };
+		GLfloat timeBetweenFrames{ 0.0f };
 	};
 }

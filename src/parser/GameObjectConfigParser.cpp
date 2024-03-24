@@ -8,6 +8,7 @@
 #include "MeshRendererConfigParser.h"
 #include "RotateBehaviourConfigParser.h"
 #include "ScrollingBackgroundBehaviourConfigParser.h"
+#include "SpriteAnimationPlayerConfigParser.h"
 #include "Vector3Parser.h"
 
 namespace diamond_engine {
@@ -16,8 +17,9 @@ namespace diamond_engine {
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectConfigParser::ComponentParseFunc> GameObjectConfigParser::StringToComponentMap = {
-		{ "MeshRenderer",	&MeshRendererConfigParser::Parse },
-		{ "Collider2D",		&Collider2DConfigParser::Parse }
+		{ "MeshRenderer",			&MeshRendererConfigParser::Parse },
+		{ "Collider2D",				&Collider2DConfigParser::Parse },
+		{ "SpriteAnimationPlayer",	&SpriteAnimationPlayerConfigParser::Parse }
 	};
 
 	/* static */ std::unordered_map<std::string, GameObjectConfigParser::BehaviourParseFunc> GameObjectConfigParser::StringToBehaviourMap = {

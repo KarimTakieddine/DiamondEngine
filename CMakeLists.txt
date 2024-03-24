@@ -69,6 +69,7 @@ add_subdirectory(${PUGI_XML_DIR})
 
 set(SOURCES
     ${SRC_DIR}/allocator/GLAllocator.cpp
+    ${SRC_DIR}/${ANIMATION_DIR}/SpriteSheetLoader.cpp
     ${SRC_DIR}/${AUDIO_DIR}/AudioDevice.cpp
     ${SRC_DIR}/${AUDIO_DIR}/AudioEngine.cpp
     ${SRC_DIR}/${AUDIO_DIR}/AudioLoader.cpp
@@ -82,19 +83,21 @@ set(SOURCES
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/builder/ScrollingBackgroundBehaviourBuilder.cpp
+    ${SRC_DIR}/builder/SpriteAnimationPlayerBuilder.cpp
     ${SRC_DIR}/component/AnimationPlayer.cpp
     ${SRC_DIR}/component/MeshRenderer.cpp
     ${SRC_DIR}/component/Collider2D.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     ${SRC_DIR}/config/Collider2DConfig.cpp
     ${SRC_DIR}/config/ControllerConfig.cpp
+    ${SRC_DIR}/config/EngineConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
     ${SRC_DIR}/config/GameObjectConfig.cpp
     ${SRC_DIR}/config/MaterialConfig.cpp
-    ${SRC_DIR}/config/SceneConfig.cpp
     ${SRC_DIR}/config/MeshRendererConfig.cpp
+    ${SRC_DIR}/config/SceneConfig.cpp
+    ${SRC_DIR}/config/SpriteAnimationPlayerConfig.cpp
     ${SRC_DIR}/config/WindowConfig.cpp
-    ${SRC_DIR}/config/EngineConfig.cpp
     ${SRC_DIR}/engine/GraphicsContext.cpp
     ${SRC_DIR}/engine/Window.cpp
     ${SRC_DIR}/gameobject/GameObject.cpp
@@ -102,9 +105,11 @@ set(SOURCES
     ${SRC_DIR}/input/Input.cpp
     ${SRC_DIR}/mesh/Mesh.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
+    ${SRC_DIR}/parser/AnimationParser.cpp
     ${SRC_DIR}/parser/AudioMetadataParser.cpp
     ${SRC_DIR}/parser/Collider2DConfigParser.cpp
     ${SRC_DIR}/parser/ControllerConfigParser.cpp
+    ${SRC_DIR}/parser/FrameMetadataParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
     ${SRC_DIR}/parser/MeshRendererConfigParser.cpp
     ${SRC_DIR}/parser/GameObjectConfigParser.cpp
@@ -117,6 +122,8 @@ set(SOURCES
     ${SRC_DIR}/parser/SceneConfigParser.cpp
     ${SRC_DIR}/parser/ScrollingBackgroundBehaviourConfigParser.cpp
     ${SRC_DIR}/parser/ShaderMetadataParser.cpp
+    ${SRC_DIR}/parser/SpriteAnimationPlayerConfigParser.cpp
+    ${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/physics/CollisionResolver2D.cpp
     ${SRC_DIR}/rendering/Material.cpp

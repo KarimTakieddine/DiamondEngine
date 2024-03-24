@@ -3,11 +3,13 @@
 #include "MeshRenderer.h"
 #include "Scene.h"
 #include "SharedMeshStore.h"
+#include "SpriteAnimationPlayer.h"
 
 namespace diamond_engine {
-	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore, const std::shared_ptr<TextureLoader>& sharedTextureLoader) :
+	Scene::Scene(const std::shared_ptr<SharedShaderStore>& sharedShaderStore, const std::shared_ptr<TextureLoader>& sharedTextureLoader, const std::shared_ptr<SpriteSheetLoader>& spriteSheetLoader) :
 		m_sharedShaderStore(sharedShaderStore),
 		m_sharedTextureLoader(sharedTextureLoader),
+		m_sharedSpriteSheetLoader(spriteSheetLoader),
 		m_vertexArrayAllocator(std::make_shared<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays)),
 		m_bufferAllocator(std::make_shared<GLAllocator>(glGenBuffers, glDeleteBuffers)),
 		m_camera(std::make_shared<Camera>()),
@@ -124,6 +126,12 @@ namespace diamond_engine {
 				}
 			}
 
+			SpriteAnimationPlayer* spriteAnimationPlayer = gameObject->GetComponent<SpriteAnimationPlayer>("AnimationPlayer");
+			if (spriteAnimationPlayer)
+			{
+				spriteAnimationPlayer->setSharedSpriteSheetLoader(m_sharedSpriteSheetLoader);
+			}
+
 			m_spriteRenderSequence->AddGameObject(std::move(gameObject), materialConfig, position, scale);
 			break;
 		}
@@ -143,7 +151,7 @@ namespace diamond_engine {
 		m_collider2DRenderSequence->Update(deltaTime);
 
 		m_spriteRenderSequence->Render();
-		m_collider2DRenderSequence->Render();
+		//m_collider2DRenderSequence->Render();
 	}
 
 	void Scene::OnWindowResize(int width, int height) {

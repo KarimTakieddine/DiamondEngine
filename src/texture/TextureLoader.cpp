@@ -33,7 +33,7 @@ namespace diamond_engine {
 
 		const auto& textureMetadataList = textureCollectionMetadata.GetTextures();
 
-		const size_t maxTextureCount = textureMetadataList.size();
+		const GLuint maxTextureCount = textureCollectionMetadata.getMaxTextureCount();
 
 		m_textureAllocator->Reserve(maxTextureCount);
 		m_textureAllocator->Allocate(maxTextureCount);

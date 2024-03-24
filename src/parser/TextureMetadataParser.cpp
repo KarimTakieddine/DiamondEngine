@@ -59,6 +59,14 @@ namespace diamond_engine {
 		m_textures.push_back(texture);
 	}
 
+	GLuint TextureCollectionMetadata::getMaxTextureCount() const {
+		return m_maxTextureCount;
+	}
+
+	void TextureCollectionMetadata::setMaxTextureCount(GLuint maxTextureCount) {
+		m_maxTextureCount = maxTextureCount;
+	}
+
 	/* static */ const std::unordered_map<std::string, GLenum> TextureMetadataParser::kStringToWrapModeMap = {
 		{ "repeat",					GL_REPEAT },
 		{ "mirroredRepeat",			GL_MIRRORED_REPEAT },
@@ -107,6 +115,13 @@ namespace diamond_engine {
 		}
 
 		TextureCollectionMetadata result;
+
+		pugi::xml_attribute maxTextureCountAttribute = textureCollectionNode.attribute("maxTextureCount");
+		if (maxTextureCountAttribute)
+		{
+			result.setMaxTextureCount(maxTextureCountAttribute.as_uint(result.getMaxTextureCount()));
+		}
+
 		for (const auto& textureNode : textureCollectionNode.children("Texture")) {
 			result.AddTexture(Parse(textureNode));
 		}

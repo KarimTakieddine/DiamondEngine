@@ -2,7 +2,7 @@
 
 namespace diamond_engine
 {
-	void AnimationPlayer::run(float deltaTime)
+	void AnimationPlayer::run(GLfloat deltaTime)
 	{
 		if ((m_animationState & AnimationState::PLAYING) == AnimationState::PLAYING)
 		{
@@ -13,15 +13,20 @@ namespace diamond_engine
 
 				if (m_playTime >= playingAnimation.duration)
 				{
-					stop();
+					m_animationQueue.pop_front();
+					m_playTime = 0.0f;
 				}
-				else if (m_playTime >= (playingAnimation.timeBetweenFrames * currentFrame + playingAnimation.delayBetweenFrames))
+				else if (m_playTime >= playingAnimation.timeBetweenFrames * currentFrame)
 				{
 					animate(playingAnimation, deltaTime);
 					++currentFrame;
 				}
 
 				m_playTime += deltaTime;
+			}
+			else
+			{
+				m_animationState &= ~(AnimationState::PLAYING | AnimationState::PAUSED);
 			}
 		}
 	}
@@ -30,7 +35,7 @@ namespace diamond_engine
 	{
 		if (immediate)
 		{
-			m_animationQueue.clear();
+			stop();
 		}
 
 		m_animationQueue.push_back(animation);
@@ -49,7 +54,10 @@ namespace diamond_engine
 
 	void AnimationPlayer::stop()
 	{
-		m_animationQueue.pop_front();
+		if (!m_animationQueue.empty())
+		{
+			m_animationQueue.pop_front();
+		}
 
 		m_playTime			= 0.0f;
 		m_animationState	&= ~(AnimationState::PLAYING|AnimationState::PAUSED);

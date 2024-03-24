@@ -50,8 +50,12 @@ public:
 
 	void AddTexture(const TextureMetadata& texture);
 
+	void setMaxTextureCount(GLuint maxTextureCount);
+	GLuint getMaxTextureCount() const;
+
 private:
 	std::vector<TextureMetadata> m_textures;
+	GLuint m_maxTextureCount{ 256 };
 };
 
 class TextureMetadataParser {

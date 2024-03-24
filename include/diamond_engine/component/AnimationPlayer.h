@@ -48,9 +48,9 @@ namespace diamond_engine
 	public:
 		virtual ~AnimationPlayer() = default;
 
-		virtual void animate(const Animation& animation, float deltaTime) = 0;
+		virtual void animate(const Animation& animation, GLfloat deltaTime) = 0;
 
-		void run(float deltaTime);
+		void run(GLfloat deltaTime);
 		void play(const Animation& animation, bool immediate = false);
 		void pause();
 		void resume();

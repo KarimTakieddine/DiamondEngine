@@ -1,17 +1,10 @@
 #pragma once
 
 #include "AnimationPlayer.h"
-#include "Component.h"
-#include "Texture.h"
-#include "TextureLoader.h"
+#include "SpriteSheetLoader.h"
 
 namespace diamond_engine
 {
-	struct SpriteSheet
-	{
-		std::vector<Texture> m_frames;
-	};
-
 	struct SpriteSheetAnimation
 	{
 		SpriteSheet spriteSheet;
@@ -21,19 +14,22 @@ namespace diamond_engine
 	class SpriteAnimationPlayer : public AnimationPlayer
 	{
 	public:
-		void setSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader);
+		void setSharedSpriteSheetLoader(const std::shared_ptr<SpriteSheetLoader>& spriteSheetLoader);
+		void setAnimations(const std::vector<Animation>& animations);
+		void playAnimation(const std::string& name, bool immediate = false);
 
-		virtual void BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) override;
-		virtual void OnAddedToScene() override;
-		virtual const char* GetName() const override;
+		void animate(const Animation& animation, GLfloat deltaTime) final override;
 
-		virtual ~SpriteAnimationPlayer() override = default;
+		void BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
+		void OnAddedToScene() final override;
+		const char* GetName() const final override;
+
+		virtual ~SpriteAnimationPlayer() final override = default;
 
 	private:
-		void loadSpriteSheet(const std::string& spriteSheetName);
-
 		std::unordered_map<std::string, SpriteSheetAnimation> m_spriteSheetAnimations;
-		std::vector<std::string> m_spriteSheetNames;
-		std::shared_ptr<TextureLoader> m_sharedTextureLoader{ nullptr };
+		std::shared_ptr<SpriteSheetLoader> m_sharedSpriteSheetLoader{ nullptr };
+		std::vector<Animation> m_animations;
+		const SpriteSheet* m_currentSpriteSheet{ nullptr };
 	};
 }

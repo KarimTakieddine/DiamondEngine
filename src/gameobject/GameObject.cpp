@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "AnimationPlayer.h"
 #include "GameObject.h"
 
 namespace diamond_engine {
@@ -65,9 +66,10 @@ namespace diamond_engine {
 			behaviour->Update(deltaTime);
 		}
 
-		if (m_animationPlayer)
+		AnimationPlayer* animationPlayer = GetComponent<AnimationPlayer>("AnimationPlayer");
+		if (animationPlayer)
 		{
-			m_animationPlayer->run(deltaTime);
+			animationPlayer->run(deltaTime);
 		}
 	}
 
