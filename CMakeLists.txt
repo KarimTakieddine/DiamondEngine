@@ -18,6 +18,7 @@ set(IRR_KLANG_DIR irrKlang-64bit-1.6.0)
 
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
+set(ANIMATION_DIR animation)
 set(AUDIO_DIR audio)
 set(SHADERS_DIR shaders)
 set(SCENES_DIR scenes)
@@ -26,6 +27,7 @@ set(CONFIG_DIR config)
 
 set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
 set(SRC_DIR ${SRC_DIR} PARENT_SCOPE)
+set(ANIMATION_DIR ${ANIMATION_DIR} PARENT_SCOPE)
 set(AUDIO_DIR ${AUDIO_DIR} PARENT_SCOPE)
 set(SHADERS_DIR ${SHADERS_DIR} PARENT_SCOPE)
 set(SCENES_DIR ${SCENES_DIR} PARENT_SCOPE)
@@ -80,8 +82,10 @@ set(SOURCES
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/builder/ScrollingBackgroundBehaviourBuilder.cpp
+    ${SRC_DIR}/component/AnimationPlayer.cpp
     ${SRC_DIR}/component/MeshRenderer.cpp
     ${SRC_DIR}/component/Collider2D.cpp
+    ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     ${SRC_DIR}/config/Collider2DConfig.cpp
     ${SRC_DIR}/config/ControllerConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
@@ -145,6 +149,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${IRR_KLANG_DIR}/include"
     "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
+    "${INCLUDE_DIR}/diamond_engine/${ANIMATION_DIR}"
     "${INCLUDE_DIR}/diamond_engine/${AUDIO_DIR}"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
     "${INCLUDE_DIR}/diamond_engine/builder"

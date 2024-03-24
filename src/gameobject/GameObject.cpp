@@ -64,6 +64,11 @@ namespace diamond_engine {
 		for (auto& behaviour : m_behaviours) {
 			behaviour->Update(deltaTime);
 		}
+
+		if (m_animationPlayer)
+		{
+			m_animationPlayer->run(deltaTime);
+		}
 	}
 
 	void GameObject::AddBehaviour(std::unique_ptr<Behaviour> behaviour) {

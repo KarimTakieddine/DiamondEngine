@@ -23,6 +23,8 @@ public:
 
 	void AddTexture(const std::string& name, const Texture& texture);
 
+	void allocateTexture(Texture& texture, const GLubyte* imageData);
+
 	void DeleteTexture(const std::string& name);
 
 	Texture GetTexture(const std::string& name) const;

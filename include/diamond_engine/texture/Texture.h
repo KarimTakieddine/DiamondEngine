@@ -11,5 +11,6 @@ namespace diamond_engine {
 		GLenum wrapModeT{ GL_REPEAT };
 		GLenum minFilter{ GL_NEAREST };
 		GLenum magFilter{ GL_NEAREST };
+		GLenum format{ GL_RGB };
 	};
 }

@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "GameObject.h"
-#include "GLAllocator.h"
+#include "TextureLoader.h"
 
 namespace diamond_engine {
 class GameObjectConfig;

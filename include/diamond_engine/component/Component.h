@@ -21,6 +21,7 @@ public:
 
 	virtual ~Component() = default;
 
+protected:
 	GameObject* m_gameObject{ nullptr };
 };
 }

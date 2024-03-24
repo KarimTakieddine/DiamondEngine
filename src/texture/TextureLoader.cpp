@@ -3,8 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "TextureMetadataParser.h"
 #include "TextureLoader.h"
+#include "TextureMetadataParser.h"
 
 namespace diamond_engine {
 	/* static */ const std::string TextureLoader::kTextureCollectionMetadataFilename = "textureMetadata.xml";
@@ -44,9 +44,9 @@ namespace diamond_engine {
 			std::filesystem::path texturePath(textureMetadata.GetPath());
 			if (texturePath.is_relative()) {
 				texturePath = rootDirectoryPath / texturePath;
+				texturePath.make_preferred();
 			}
 
-			texture.index		= m_textureAllocator->Get();
 			texture.wrapModeS	= textureMetadata.GetWrapModeS();
 			texture.wrapModeT	= textureMetadata.GetWrapModeT();
 			texture.minFilter	= textureMetadata.GetMinFilter();
@@ -60,6 +60,18 @@ namespace diamond_engine {
 
 	void TextureLoader::AddTexture(const std::string& name, const Texture& texture) {
 		m_textureMap.emplace(name, texture);
+	}
+
+	void TextureLoader::allocateTexture(Texture& texture, const GLubyte* imageData)
+	{
+		texture.index = m_textureAllocator->Get();
+
+		glBindTexture(GL_TEXTURE_2D, texture.index);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.wrapModeS);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapModeT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
+		glTexImage2D(GL_TEXTURE_2D, 0, texture.format, texture.width, texture.height, 0, texture.format, GL_UNSIGNED_BYTE, imageData);
 	}
 	
 	void TextureLoader::DeleteTexture(const std::string& name) {
@@ -83,11 +95,9 @@ namespace diamond_engine {
 	}
 
 	void TextureLoader::loadTexture(const std::filesystem::path& texturePath, Texture& texture) {
-		GLint width			= 0;
-		GLint height		= 0;
 		GLint channelCount	= 0;
 
-		GLubyte* imageData = stbi_load(texturePath.string().c_str(), &width, &height, &channelCount, 0);
+		GLubyte* imageData = stbi_load(texturePath.string().c_str(), &texture.width, &texture.height, &channelCount, 0);
 
 		if (!imageData) {
 			throw std::runtime_error("Failed to load image from path: " + texturePath.string());
@@ -97,13 +107,9 @@ namespace diamond_engine {
 		if (formatIt == kChannelCountToFormatMap.end()) {
 			throw std::runtime_error("Could not find format matching channel count: " + std::to_string(channelCount));
 		}
+		texture.format = formatIt->second;
 
-		glBindTexture(GL_TEXTURE_2D, texture.index);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.wrapModeS);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapModeT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.minFilter);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter);
-		glTexImage2D(GL_TEXTURE_2D, 0, channelCount > 3 ? GL_RGBA : GL_RGB, width, height, 0, formatIt->second, GL_UNSIGNED_BYTE, imageData);
+		allocateTexture(texture, imageData);
 
 		stbi_image_free(imageData);
 	}
