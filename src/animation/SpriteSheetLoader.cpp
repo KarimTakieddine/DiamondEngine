@@ -36,11 +36,12 @@ namespace diamond_engine
 
 		for (const auto& spriteSheetData : spriteSheets)
 		{
-			const std::string textureName = spriteSheetData.getName();
+			const std::string spriteSheetName	= spriteSheetData.getName();
+			const std::string textureName		= spriteSheetData.getSpriteSheet();
 
-			if (m_spriteSheets.find(textureName) != m_spriteSheets.cend())
+			if (m_spriteSheets.find(spriteSheetName) != m_spriteSheets.cend())
 			{
-				throw std::runtime_error("Cannot load two or more sprite sheets with the same name: " + textureName);
+				throw std::runtime_error("Cannot load two or more sprite sheets with the same name: " + spriteSheetName);
 			}
 
 			const Texture texture = m_sharedTextureLoader->GetTexture(textureName);
@@ -118,7 +119,7 @@ namespace diamond_engine
 				delete[] frameData;
 			}
 
-			m_spriteSheets.insert({ textureName, spriteSheet });
+			m_spriteSheets.insert({ spriteSheetName, spriteSheet });
 
 			delete[] textureData;
 		}

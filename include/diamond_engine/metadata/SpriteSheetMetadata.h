@@ -30,8 +30,19 @@ namespace diamond_engine
 			return m_name;
 		}
 
+		void setSpriteSheet(const std::string& spriteSheet)
+		{
+			m_spriteSheet = spriteSheet;
+		}
+
+		const std::string& getSpriteSheet() const
+		{
+			return m_spriteSheet;
+		}
+
 	private:
 		std::vector<FrameMetadata> m_frames;
 		std::string m_name{ "Unnamed" };
+		std::string m_spriteSheet{ "Unnamed" };
 	};
 }

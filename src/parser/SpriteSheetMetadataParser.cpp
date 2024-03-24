@@ -20,6 +20,15 @@ namespace diamond_engine
 
 		result.setName(nameAttribute.as_string(result.getName().c_str()));
 
+		pugi::xml_attribute spriteSheetAttribute = node.attribute("spriteSheet");
+
+		if (!spriteSheetAttribute)
+		{
+			throw std::runtime_error("No sprite sheet \"spriteSheet\" attribute was set");
+		}
+
+		result.setSpriteSheet(spriteSheetAttribute.as_string(result.getSpriteSheet().c_str()));
+
 		for (const auto& frameNode : node.children("Frame"))
 		{
 			result.addFrame(FrameMetadataParser::Parse(frameNode));
