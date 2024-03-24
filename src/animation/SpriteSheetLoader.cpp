@@ -50,11 +50,18 @@ namespace diamond_engine
 				throw std::runtime_error("Failed to load sprite sheet. Invalid texture: " + textureName);
 			}
 
-			const size_t textureSize	= texture.width * texture.height * 4 * sizeof(GLubyte);
-			const bool ignoreAlpha		= texture.format != GL_RGBA;
+			const size_t textureSize = texture.width * texture.height * 4 * sizeof(GLubyte);
 
 			glBindTexture(GL_TEXTURE_2D, texture.index);
 			GLubyte* textureData = new GLubyte[textureSize]();
+
+			/*
+			* If the selected texture image does not contain four components, the following mappings are applied:
+			* Single-component textures are treated as RGBA buffers with red set to the single-component value, green set to 0, blue set to 0, and alpha set to 1.
+			* Two-component textures are treated as RGBA buffers with red set to the value of component zero, alpha set to the value of component one, and green and blue set to 0.
+			* Finally, three-component textures are treated as RGBA buffers with red set to component zero, green set to component one, blue set to component two, and alpha set to 1.
+			*/
+
 			glGetTexImage(GL_TEXTURE_2D, 0, texture.format, GL_UNSIGNED_BYTE, textureData);
 
 			SpriteSheet spriteSheet;
