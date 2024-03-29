@@ -127,9 +127,20 @@ set(SOURCES
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/physics/CollisionResolver2D.cpp
     ${SRC_DIR}/rendering/Material.cpp
+    ${SRC_DIR}/rendering/MaterialRenderComponent.cpp
+    ${SRC_DIR}/rendering/MeshRenderComponent.cpp
+    ${SRC_DIR}/rendering/MeshRenderConfig.cpp
     ${SRC_DIR}/rendering/Transform.cpp
     ${SRC_DIR}/rendering/Camera.cpp
+    ${SRC_DIR}/rendering/GameInstanceManager.cpp
+    ${SRC_DIR}/rendering/Renderer.cpp
+    ${SRC_DIR}/rendering/RenderingSubsystem.cpp
+    ${SRC_DIR}/rendering/RenderInstance.cpp
+    ${SRC_DIR}/rendering/RenderInstanceManager.cpp
     ${SRC_DIR}/rendering/RenderSequence.cpp
+    ${SRC_DIR}/rendering/RenderUploadObject.cpp
+    ${SRC_DIR}/rendering/SpriteInstanceConfig.cpp
+    ${SRC_DIR}/rendering/SpriteInstanceManager.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
     ${SRC_DIR}/shader/Shader.cpp

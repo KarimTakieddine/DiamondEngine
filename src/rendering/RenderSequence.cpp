@@ -95,6 +95,8 @@ namespace diamond_engine {
 		glUseProgram(m_shaderProgram->GetObject());
 
 		const glm::mat4& projectionMatrix = m_camera->GetProjection();
+
+		// TODO: Need to be able to move the camera I guess? hehe
 		const glm::mat4& cameraTranslationMatrix = glm::mat4{ 1.0f };
 		const glm::mat4& cameraRotationMatrix = glm::mat4{ 1.0f };
 		const glm::mat4& cameraScaleMatrix = glm::mat4{ 1.0f };

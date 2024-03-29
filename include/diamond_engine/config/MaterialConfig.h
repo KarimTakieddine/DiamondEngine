@@ -5,8 +5,10 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-namespace diamond_engine {
-class MaterialConfig {
+namespace diamond_engine
+{
+class MaterialConfig
+{
 public:
 	const std::string& GetTextureName() const;
 
