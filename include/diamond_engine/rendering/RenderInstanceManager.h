@@ -12,7 +12,7 @@ namespace diamond_engine
 	using SharedRenderingSubsystem		= std::shared_ptr<RenderingSubsystem>;
 
 	class Camera;
-	class InstanceConfig;
+	class GameInstanceConfig;
 	class RenderInstanceManager
 	{
 	public:
@@ -20,11 +20,11 @@ namespace diamond_engine
 		EngineStatus setSharedRenderingSubsystem(const SharedRenderingSubsystem& sharedRenderingSubsystem);
 		EngineStatus setShaderProgramName(const std::string& shaderProgramName);
 
-		EngineStatus allocateInstance(const InstanceConfig* instanceConfig);
+		EngineStatus allocateInstance(const GameInstanceConfig* instanceConfig);
 		void setCamera(const std::shared_ptr<Camera>& camera);
 
 	protected:
-		virtual std::vector<std::unique_ptr<IRenderComponent>> getComponents(const InstanceConfig* instanceConfig) const = 0;
+		virtual std::vector<std::unique_ptr<IRenderComponent>> getComponents(const GameInstanceConfig* instanceConfig) const = 0;
 
 	private:
 		std::vector<std::unique_ptr<RenderInstance>> m_instances;

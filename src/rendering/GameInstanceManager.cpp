@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Camera.h"
 #include "GameInstanceManager.h"
 #include "RenderingSubsystem.h"
@@ -36,24 +34,32 @@ namespace diamond_engine
 		m_renderObjectAllocator->Free();
 	}
 
-	EngineStatus GameInstanceManager::loadScene(const SceneConfig& sceneConfig)
+	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
 	{
 		unloadCurrentScene();
 
-		const size_t maxObjects = static_cast<size_t>(sceneConfig.GetMaxObjects());
+		const size_t maxObjects = static_cast<size_t>(sceneConfig.getMaxInstanceCount());
 
 		m_renderObjectAllocator->Allocate(maxObjects);
 		m_renderObjectAllocator->Expand(maxObjects);
 
 		m_renderingSubsystem->setMaxInstanceCount(maxObjects);
 
-		/*
-		for (const auto& gameObjectConfig : sceneConfig.GetGameObjectConfigs())
+		EngineStatus allocateStatus = { };
+		for (const auto& instanceConfig : sceneConfig.getInstanceConfigs())
 		{
-
+			switch (instanceConfig->getType())
+			{
+			case GameInstanceType::SPRITE:
+				allocateStatus = m_spriteInstanceManager->allocateInstance(instanceConfig.get());
+				break;
+			default:
+				allocateStatus = { "Failed to allocate game instance. Unknown instance type", true };
+				break;
+			}
 		}
-		*/
 
+		/*
 		MaterialConfig materialConfig;
 		materialConfig.SetTextureName("cat");
 
@@ -70,6 +76,7 @@ namespace diamond_engine
 		{
 			throw std::runtime_error(allocateStatus.message);
 		}
+		*/
 
 		return { };
 	}

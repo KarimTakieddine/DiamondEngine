@@ -1,20 +1,20 @@
 #pragma once
 
-#include "InstanceConfig.h"
+#include "GameInstanceConfig.h"
 #include "MaterialConfig.h"
 #include "MeshRenderConfig.h"
 #include "TransformConfig.h"
 
 namespace diamond_engine
 {
-	class SpriteInstanceConfig : public InstanceConfig
+	class SpriteInstanceConfig : public GameInstanceConfig
 	{
 	public:
 		~SpriteInstanceConfig() final override = default;
 
-		const char* getName() const final override
+		GameInstanceType getType() const final override
 		{
-			return "Sprite";
+			return GameInstanceType::SPRITE;
 		}
 
 		const MaterialConfig& getMaterialConfig() const;

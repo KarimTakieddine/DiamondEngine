@@ -12,7 +12,7 @@ namespace diamond_engine
 		m_sharedTextureLoader = sharedTextureLoader;
 	}
 
-	std::vector<std::unique_ptr<IRenderComponent>> SpriteInstanceManager::getComponents(const InstanceConfig* instanceConfig) const
+	std::vector<std::unique_ptr<IRenderComponent>> SpriteInstanceManager::getComponents(const GameInstanceConfig* instanceConfig) const
 	{
 		const SpriteInstanceConfig* spriteInstanceConfig = dynamic_cast<const SpriteInstanceConfig*>(instanceConfig);
 

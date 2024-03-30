@@ -132,7 +132,10 @@ set(SOURCES
     ${SRC_DIR}/rendering/MeshRenderConfig.cpp
     ${SRC_DIR}/rendering/Transform.cpp
     ${SRC_DIR}/rendering/Camera.cpp
+    ${SRC_DIR}/rendering/GameInstanceConfigParser.cpp
     ${SRC_DIR}/rendering/GameInstanceManager.cpp
+    ${SRC_DIR}/rendering/GameSceneConfig.cpp
+    ${SRC_DIR}/rendering/GameSceneConfigParser.cpp
     ${SRC_DIR}/rendering/Renderer.cpp
     ${SRC_DIR}/rendering/RenderingSubsystem.cpp
     ${SRC_DIR}/rendering/RenderInstance.cpp

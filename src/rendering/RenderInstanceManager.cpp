@@ -43,7 +43,7 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus RenderInstanceManager::allocateInstance(const InstanceConfig* instanceConfig)
+	EngineStatus RenderInstanceManager::allocateInstance(const GameInstanceConfig* instanceConfig)
 	{
 		RenderObject* renderObject = m_objectAllocator->Get();
 

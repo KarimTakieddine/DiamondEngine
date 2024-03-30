@@ -5,7 +5,7 @@
 #include "AlignedAllocator.hpp"
 #include "EngineStatus.h"
 #include "RenderObject.h"
-#include "SceneConfig.h"
+#include "GameSceneConfig.h"
 #include "SpriteInstanceManager.h"
 
 namespace diamond_engine
@@ -23,9 +23,7 @@ namespace diamond_engine
 
 		void unloadCurrentScene();
 
-		EngineStatus loadScene(const SceneConfig& sceneConfig);
-
-		void setCamera(const std::shared_ptr<Camera>& camera);
+		EngineStatus loadScene(const GameSceneConfig& sceneConfig);
 
 	private:
 		std::shared_ptr<SharedShaderStore> m_sharedShaderStore;
