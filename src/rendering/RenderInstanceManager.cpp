@@ -43,6 +43,11 @@ namespace diamond_engine
 		return { };
 	}
 
+	void RenderInstanceManager::setSharedBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator)
+	{
+		m_bufferAllocator = bufferAllocator;
+	}
+
 	EngineStatus RenderInstanceManager::allocateInstance(const GameInstanceConfig* instanceConfig)
 	{
 		RenderObject* renderObject = m_objectAllocator->Get();

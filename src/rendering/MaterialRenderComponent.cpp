@@ -66,4 +66,34 @@ namespace diamond_engine
 	{
 		return m_texture;
 	}
+
+	void MaterialRenderComponent::setColor(const glm::vec3& color)
+	{
+		m_color = color;
+	}
+
+	const glm::vec3& MaterialRenderComponent::getColor() const
+	{
+		return m_color;
+	}
+
+	glm::vec3& MaterialRenderComponent::getColor()
+	{
+		return m_color;
+	}
+
+	void MaterialRenderComponent::setTextureOffset(const glm::vec2& textureOffset)
+	{
+		m_textureOffset = textureOffset;
+	}
+
+	const glm::vec2& MaterialRenderComponent::getTextureOffset() const
+	{
+		return m_textureOffset;
+	}
+
+	glm::vec2& MaterialRenderComponent::getTextureOffset()
+	{
+		return m_textureOffset;
+	}
 }

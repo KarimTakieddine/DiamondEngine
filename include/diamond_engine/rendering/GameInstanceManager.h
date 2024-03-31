@@ -10,10 +10,11 @@
 
 namespace diamond_engine
 {
+	class Camera;
+	class GLAllocator;
 	class RenderingSubsystem;
 	class SharedShaderStore;
 	class TextureLoader;
-	class Camera;
 	class GameInstanceManager
 	{
 	public:
@@ -29,6 +30,7 @@ namespace diamond_engine
 		std::shared_ptr<SharedShaderStore> m_sharedShaderStore;
 		std::shared_ptr<TextureLoader> m_sharedTextureLoader;
 		std::shared_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectAllocator{ nullptr };
+		std::shared_ptr<GLAllocator> m_bufferAllocator{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::shared_ptr<Camera> m_camera{ nullptr };
 

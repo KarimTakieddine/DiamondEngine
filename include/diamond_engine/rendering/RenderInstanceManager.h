@@ -5,10 +5,12 @@
 
 namespace diamond_engine
 {
+	class GLAllocator;
 	class RenderingSubsystem;
 	class SharedShaderStore;
 
 	using SharedRenderObjectAllocator	= std::shared_ptr<AlignedAllocator<RenderObject, 4>>;
+	using SharedBufferAllocator			= std::shared_ptr<GLAllocator>;
 	using SharedRenderingSubsystem		= std::shared_ptr<RenderingSubsystem>;
 
 	class Camera;
@@ -20,11 +22,13 @@ namespace diamond_engine
 		EngineStatus setSharedRenderingSubsystem(const SharedRenderingSubsystem& sharedRenderingSubsystem);
 		EngineStatus setShaderProgramName(const std::string& shaderProgramName);
 
+		void setSharedBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator);
 		EngineStatus allocateInstance(const GameInstanceConfig* instanceConfig);
 		void setCamera(const std::shared_ptr<Camera>& camera);
 
 	protected:
 		virtual std::vector<std::unique_ptr<IRenderComponent>> getComponents(const GameInstanceConfig* instanceConfig) const = 0;
+		SharedBufferAllocator m_bufferAllocator{ nullptr };
 
 	private:
 		std::vector<std::unique_ptr<RenderInstance>> m_instances;

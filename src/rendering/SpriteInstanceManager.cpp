@@ -23,14 +23,18 @@ namespace diamond_engine
 
 		std::vector<std::unique_ptr<IRenderComponent>> result;
 
-		std::unique_ptr<MeshRenderComponent> meshRenderComponent = std::make_unique<MeshRenderComponent>();
-		// TODO
-		//meshRenderComponent->setSharedMesh(SharedMeshStore::GetInstance().FindMesh(spriteInstanceConfig->getMeshRenderConfig().GetMeshType()));
+		const MeshRenderConfig& meshRenderConfig					= spriteInstanceConfig->getMeshRenderConfig();
+		std::unique_ptr<MeshRenderComponent> meshRenderComponent	= std::make_unique<MeshRenderComponent>();
+		meshRenderComponent->setSharedBufferAllocator(m_bufferAllocator);
+		meshRenderComponent->setSharedMesh(SharedMeshStore::GetInstance().FindMesh(meshRenderConfig.GetMeshType()));
+		meshRenderComponent->setDrawMode(meshRenderConfig.GetDrawMode());
 		result.push_back(std::move(meshRenderComponent));
 
-		std::unique_ptr<MaterialRenderComponent> materialRenderComponent = std::make_unique<MaterialRenderComponent>();
-		// TODO
-		materialRenderComponent->setTexture(m_sharedTextureLoader->GetTexture(spriteInstanceConfig->getMaterialConfig().GetTextureName()));
+		const MaterialConfig& materialConfig								= spriteInstanceConfig->getMaterialConfig();
+		std::unique_ptr<MaterialRenderComponent> materialRenderComponent	= std::make_unique<MaterialRenderComponent>();
+		materialRenderComponent->setTexture(m_sharedTextureLoader->GetTexture(materialConfig.GetTextureName()));
+		materialRenderComponent->setColor(materialConfig.GetColor());
+		materialRenderComponent->setTextureOffset(materialConfig.GetTextureOffset());
 		result.push_back(std::move(materialRenderComponent));
 
 		// TODO: Transform component as well

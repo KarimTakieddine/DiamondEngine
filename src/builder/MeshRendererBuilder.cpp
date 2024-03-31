@@ -22,22 +22,22 @@ namespace diamond_engine {
 		switch (meshRendererConfig->GetMeshType())
 		{
 		case MeshType::TRIANGLE: {
-			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::TRIANGLE);
+			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(MeshType::TRIANGLE);
 			meshRenderer->SetMesh(quadMesh);
 			break;
 		}
 		case MeshType::QUAD: {
-			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(Shape::QUAD);
+			const std::shared_ptr<Mesh> quadMesh = SharedMeshStore::GetInstance().FindMesh(MeshType::QUAD);
 			meshRenderer->SetMesh(quadMesh);
 			break;
 		}
 		case MeshType::CUBE: {
-			const std::shared_ptr<Mesh> cubeMesh = SharedMeshStore::GetInstance().FindMesh(Shape::CUBE);
+			const std::shared_ptr<Mesh> cubeMesh = SharedMeshStore::GetInstance().FindMesh(MeshType::CUBE);
 			meshRenderer->SetMesh(cubeMesh);
 			break;
 		}
 		case MeshType::COLLIDER: {
-			const std::shared_ptr<Mesh> colliderMesh = SharedMeshStore::GetInstance().FindMesh(Shape::COLLIDER);
+			const std::shared_ptr<Mesh> colliderMesh = SharedMeshStore::GetInstance().FindMesh(MeshType::COLLIDER);
 			meshRenderer->SetMesh(colliderMesh);
 			break;
 		}

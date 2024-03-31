@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "GameInstanceManager.h"
+#include "GLAllocator.h"
 #include "RenderingSubsystem.h"
 #include "SpriteInstanceConfig.h"
 
@@ -11,6 +12,7 @@ namespace diamond_engine
 		m_sharedShaderStore(sharedShaderStore),
 		m_sharedTextureLoader(sharedTextureLoader),
 		m_renderObjectAllocator(std::make_shared<AlignedAllocator<RenderObject, 4>>()),
+		m_bufferAllocator(std::make_shared<GLAllocator>(glGenBuffers, glDeleteBuffers)),
 		m_renderingSubsystem(std::make_shared<RenderingSubsystem>(m_sharedShaderStore)),
 		m_spriteInstanceManager(std::make_unique<SpriteInstanceManager>()),
 		m_camera(std::make_shared<Camera>())
@@ -19,6 +21,7 @@ namespace diamond_engine
 		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
 
 		m_spriteInstanceManager->setSharedObjectAllocator(m_renderObjectAllocator);
+		m_spriteInstanceManager->setSharedBufferAllocator(m_bufferAllocator);
 		m_spriteInstanceManager->setSharedRenderingSubsystem(m_renderingSubsystem);
 		m_spriteInstanceManager->setSharedTextureLoader(m_sharedTextureLoader);
 		m_spriteInstanceManager->setShaderProgramName("sprite");
@@ -30,6 +33,7 @@ namespace diamond_engine
 		// Time to free any previously loaded scene objects:
 		// TODO: Also free allocated vertex/element buffers
 
+		m_bufferAllocator->Free(m_bufferAllocator->GetAllocatedObjectCount());
 		m_renderingSubsystem->freeAllocatedInstances();
 		m_renderObjectAllocator->Free();
 	}
@@ -44,6 +48,10 @@ namespace diamond_engine
 		m_renderObjectAllocator->Expand(maxObjects);
 
 		m_renderingSubsystem->setMaxInstanceCount(maxObjects);
+
+		// TODO: Don't keep allocating new memory. Reuse exisitng heap memory!
+		m_bufferAllocator->Reserve(maxObjects << 1);
+		m_bufferAllocator->Allocate(maxObjects << 1);
 
 		EngineStatus allocateStatus = { };
 		for (const auto& instanceConfig : sceneConfig.getInstanceConfigs())

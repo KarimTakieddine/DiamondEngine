@@ -98,7 +98,7 @@ namespace diamond_engine {
 				collider2DMeshRenderer->SetElementBufferObject(m_bufferAllocator->Get());
 				collider2DMeshRenderer->SetDrawMode(GL_DYNAMIC_DRAW);
 				collider2DMeshRenderer->SetRenderMode(GL_LINES);
-				collider2DMeshRenderer->SetMesh(SharedMeshStore::GetInstance().FindMesh(Shape::COLLIDER));
+				collider2DMeshRenderer->SetMesh(SharedMeshStore::GetInstance().FindMesh(MeshType::COLLIDER));
 				collider2DGameObject->AcquireComponent(std::move(collider2DMeshRenderer));
 
 				std::unique_ptr<Collider2DBehaviour> collider2DBehaviour = std::make_unique<Collider2DBehaviour>();
