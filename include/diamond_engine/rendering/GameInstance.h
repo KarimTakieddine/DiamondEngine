@@ -29,6 +29,10 @@ namespace diamond_engine
 			return componentIt == m_renderComponents.cend() ? nullptr : dynamic_cast<T*>(componentIt->get());
 		}
 
+		const std::vector<std::unique_ptr<IRenderComponent>>& getRenderComponents() const;
+
+		RenderObject* getRenderObject() const;
+
 	private:
 		std::vector<std::unique_ptr<IRenderComponent>> m_renderComponents;
 		RenderObject* m_renderObject{ nullptr };

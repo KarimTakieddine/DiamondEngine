@@ -16,6 +16,11 @@ namespace diamond_engine
 		m_spriteInstanceBuilder->setSharedTextureLoader(m_sharedTextureLoader);
 	}
 
+	void GameInstanceManager::setRenderingSubsystem(const std::shared_ptr<RenderingSubsystem>& renderingSubsystem)
+	{
+		m_renderingSubsystem = renderingSubsystem;
+	}
+
 	void GameInstanceManager::unloadCurrentScene()
 	{
 		// Time to free any previously loaded scene objects:
@@ -26,7 +31,74 @@ namespace diamond_engine
 		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAllocatedObjectCount());
 	}
 
-	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig, const std::shared_ptr<RenderingSubsystem>& renderingSubsystem)
+	std::unique_ptr<GameInstance> GameInstanceManager::createInstance()
+	{
+		std::unique_ptr<GameInstance> result = std::make_unique<GameInstance>();
+		result->setRenderObject(m_renderObjectAllocator->Get());
+		return result;
+	}
+
+	EngineStatus GameInstanceManager::registerInstance(const GameInstanceConfig* instanceConfig, std::unique_ptr<GameInstance> instance)
+	{
+		if (!instance)
+		{
+			return { "Failed to register game instance. No allocated instance was provided", true };
+		}
+
+		const GameInstanceType instanceType = instanceConfig->getType();
+
+		std::vector<std::unique_ptr<IRenderComponent>> renderComponents;
+		switch (instanceType)
+		{
+		case GameInstanceType::SPRITE:
+			renderComponents = m_spriteInstanceBuilder->getRenderComponents(instanceConfig);
+			break;
+		default:
+			return { "Failed to register game instance of unknown type", true };
+		}
+
+		for (auto& renderComponent : renderComponents)
+		{
+			EngineStatus status = renderComponent->onRenderObjectAllocated(instance->getRenderObject());
+
+			if (!status)
+			{
+				return status;
+			}
+
+			instance->acquireRenderComponent(std::move(renderComponent));
+		}
+
+		EngineStatus registerStatus = registerInstance(instanceType, instance.get());
+
+		if (!registerStatus)
+		{
+			return registerStatus;
+		}
+
+		m_instances.push_back(std::move(instance));
+
+		return { };
+	}
+
+	EngineStatus GameInstanceManager::registerInstance(GameInstanceType instanceType, const GameInstance* instance)
+	{
+		EngineStatus registerStatus;
+
+		switch (instanceType)
+		{
+		case GameInstanceType::SPRITE:
+			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_2", instance->getRenderComponents());
+			break;
+		default:
+			registerStatus = { "Failed to register game instance of unknown type", true };
+			break;
+		}
+
+		return registerStatus;
+	}
+
+	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
 	{
 		const size_t maxObjects = static_cast<size_t>(sceneConfig.getMaxInstanceCount());
 
@@ -43,66 +115,23 @@ namespace diamond_engine
 		* Voila! -- DONE YO!
 		*/
 
-		EngineStatus allocateStatus = { };
 		for (const auto& instanceConfig : sceneConfig.getInstanceConfigs())
 		{
-			switch (instanceConfig->getType())
+			auto gameInstance = createInstance();
+
+			if (!gameInstance)
 			{
-				case GameInstanceType::SPRITE: {
-					RenderObject* renderObject = m_renderObjectAllocator->Get();
+				return { "Failed to create game instance", true };
+			}
 
-					std::vector<std::unique_ptr<IRenderComponent>> renderComponents = m_spriteInstanceBuilder->getRenderComponents(instanceConfig.get());
-					for (const auto& renderComponent : renderComponents)
-					{
-						allocateStatus = renderComponent->onRenderObjectAllocated(renderObject);
+			EngineStatus registerStatus = registerInstance(instanceConfig.get(), std::move(gameInstance));
 
-						if (!allocateStatus)
-						{
-							break;
-						}
-					}
-
-					if (!allocateStatus)
-					{
-						break;
-					}
-
-					allocateStatus = renderingSubsystem->registerRenderObject("sprite_2", renderComponents);
-
-					if (!allocateStatus)
-					{
-						break;
-					}
-
-					std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
-					gameInstance->setRenderObject(renderObject);
-
-					for (auto& renderComponent : renderComponents)
-					{
-						allocateStatus = gameInstance->acquireRenderComponent(std::move(renderComponent));
-
-						if (!allocateStatus)
-						{
-							break;
-						}
-					}
-
-					if (!allocateStatus)
-					{
-						break;
-					}
-					
-					m_instances.push_back(std::move(gameInstance));
-
-					break;
-				}
-				default: {
-					allocateStatus = { "Failed to allocate game instance. Unknown instance type", true };
-					break;
-				}
+			if (!registerStatus)
+			{
+				return registerStatus;
 			}
 		}
 
-		return allocateStatus;
+		return { };
 	}
 }

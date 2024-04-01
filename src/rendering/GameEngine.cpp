@@ -28,6 +28,8 @@ namespace diamond_engine
 		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>(m_shaderStore);
 		m_renderingSubsystem->registerRenderer("sprite_2");
 
+		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
+
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
 		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
@@ -114,7 +116,7 @@ namespace diamond_engine
 
 		const auto& sceneConfig = sceneIt->second;
 		m_renderingSubsystem->setMaxInstanceCount(sceneConfig->getMaxInstanceCount());
-		EngineStatus loadStatus = m_instanceManager->loadScene((*sceneConfig.get()), m_renderingSubsystem);
+		EngineStatus loadStatus = m_instanceManager->loadScene(*sceneConfig.get());
 
 		if (!loadStatus)
 		{

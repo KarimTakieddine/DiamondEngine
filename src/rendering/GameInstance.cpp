@@ -18,4 +18,14 @@ namespace diamond_engine
 
 		return { };
 	}
+
+	const std::vector<std::unique_ptr<IRenderComponent>>& GameInstance::getRenderComponents() const
+	{
+		return m_renderComponents;
+	}
+
+	RenderObject* GameInstance::getRenderObject() const
+	{
+		return m_renderObject;
+	}
 }
