@@ -95,6 +95,11 @@ namespace diamond_engine
 
 	void MeshRenderComponent::setDrawMode(GLenum drawMode)
 	{
+		if (m_renderDrawCall)
+		{
+			m_renderDrawCall->drawMode = drawMode;
+		}
+
 		m_drawMode = drawMode;
 	}
 
