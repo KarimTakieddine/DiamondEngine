@@ -13,12 +13,11 @@ namespace diamond_engine
 	{
 	public:
 		void setRenderObject(RenderObject* renderObject);
-		void setRenderComponents(std::vector<std::unique_ptr<IRenderComponent>> renderComponents);
+		EngineStatus acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent);
 
 		template<typename T>
 		T* getRenderComponent(RenderComponentType componentType) const
 		{
-			// TODO: Ensure no two components of the same type are added. Maybe via acquire semantics?
 			auto componentIt = std::find_if(
 				m_renderComponents.begin(),
 				m_renderComponents.end(),
@@ -27,7 +26,7 @@ namespace diamond_engine
 					return renderComponent->getComponentType() == componentType;
 				});
 
-			return dynamic_cast<T*>(componentIt->get());
+			return componentIt == m_renderComponents.cend() ? nullptr : dynamic_cast<T*>(componentIt->get());
 		}
 
 	private:

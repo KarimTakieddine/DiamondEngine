@@ -54,7 +54,17 @@ namespace diamond_engine
 					std::vector<std::unique_ptr<IRenderComponent>> renderComponents = m_spriteInstanceBuilder->getRenderComponents(instanceConfig.get());
 					for (const auto& renderComponent : renderComponents)
 					{
-						renderComponent->onRenderObjectAllocated(renderObject);
+						allocateStatus = renderComponent->onRenderObjectAllocated(renderObject);
+
+						if (!allocateStatus)
+						{
+							break;
+						}
+					}
+
+					if (!allocateStatus)
+					{
+						break;
 					}
 
 					allocateStatus = renderingSubsystem->registerRenderObject("sprite_2", renderComponents);
@@ -66,7 +76,21 @@ namespace diamond_engine
 
 					std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
 					gameInstance->setRenderObject(renderObject);
-					gameInstance->setRenderComponents(std::move(renderComponents));
+
+					for (auto& renderComponent : renderComponents)
+					{
+						allocateStatus = gameInstance->acquireRenderComponent(std::move(renderComponent));
+
+						if (!allocateStatus)
+						{
+							break;
+						}
+					}
+
+					if (!allocateStatus)
+					{
+						break;
+					}
 					
 					m_instances.push_back(std::move(gameInstance));
 

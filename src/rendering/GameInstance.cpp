@@ -7,8 +7,15 @@ namespace diamond_engine
 		m_renderObject = renderObject;
 	}
 
-	void GameInstance::setRenderComponents(std::vector<std::unique_ptr<IRenderComponent>> renderComponents)
+	EngineStatus GameInstance::acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent)
 	{
-		m_renderComponents = std::move(renderComponents);
+		if (getRenderComponent<IRenderComponent>(renderComponent->getComponentType()))
+		{
+			return { "Cannot acquire two components of the same type", true };
+		}
+
+		m_renderComponents.push_back(std::move(renderComponent));
+
+		return { };
 	}
 }
