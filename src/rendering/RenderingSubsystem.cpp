@@ -14,6 +14,7 @@ namespace diamond_engine
 		}
 
 		m_vertexArrayAllocator = std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays);
+		m_vertexArrayAllocator->Reserve(256);
 
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
@@ -21,7 +22,6 @@ namespace diamond_engine
 
 	void RenderingSubsystem::setMaxInstanceCount(GLsizei maxInstanceCount)
 	{
-		m_vertexArrayAllocator->Reserve(maxInstanceCount);
 		m_vertexArrayAllocator->Allocate(maxInstanceCount);
 	}
 

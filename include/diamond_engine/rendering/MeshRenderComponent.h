@@ -25,7 +25,6 @@ namespace diamond_engine
 	private:
 		std::shared_ptr<Mesh> m_sharedMesh{ nullptr };
 		std::shared_ptr<GLAllocator> m_sharedBufferAllocator{ nullptr };
-		RenderDrawCall* m_drawCall{ nullptr };
 		GLenum m_drawMode{ GL_STATIC_DRAW };
 		GLuint m_vertexBufferObject{ 0 };
 		GLuint m_elementBufferObject{ 0 };

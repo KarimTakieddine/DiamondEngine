@@ -54,6 +54,11 @@ namespace diamond_engine
 
 	void MaterialRenderComponent::setTexture(const Texture& texture)
 	{
+		if (m_drawCall)
+		{
+			m_drawCall->texture = texture.index;
+		}
+
 		m_texture = texture;
 	}
 

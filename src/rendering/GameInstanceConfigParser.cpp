@@ -86,19 +86,19 @@ namespace diamond_engine
 			return result;
 		}
 
-		pugi::xml_attribute textureAttribute = node.attribute("texture");
+		pugi::xml_attribute textureAttribute = materialNode.attribute("texture");
 		if (textureAttribute)
 		{
 			result.SetTextureName(textureAttribute.as_string(result.GetTextureName().c_str()));
 		}
 
-		pugi::xml_node colorNode = node.child("Color");
+		pugi::xml_node colorNode = materialNode.child("Color");
 		if (colorNode)
 		{
 			result.SetColor(Vector3Parser::Parse(colorNode));
 		}
 
-		pugi::xml_node textureOffsetNode = node.child("TextureOffset");
+		pugi::xml_node textureOffsetNode = materialNode.child("TextureOffset");
 		if (textureOffsetNode)
 		{
 			result.SetTextureOffset(Vector2Parser::Parse(textureOffsetNode));

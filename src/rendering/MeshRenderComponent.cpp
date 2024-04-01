@@ -32,8 +32,6 @@ namespace diamond_engine
 			return { "MeshRenderComponent::onDrawCallRegistered failed. RendererDrawCall was null", true };
 		}
 
-		m_drawCall = renderDrawCall;
-
 		if (!m_sharedBufferAllocator)
 		{
 			return { "MeshRenderComponent::onDrawCallRegistered failed. No shared buffer allocator was set", true };
@@ -47,7 +45,7 @@ namespace diamond_engine
 			return { "MeshRenderComponent::onDrawCallRegistered failed. No shared Mesh was set", true };
 		}
 
-		glBindVertexArray(m_drawCall->vertexArrayObject);
+		glBindVertexArray(renderDrawCall->vertexArrayObject);
 
 		const std::vector<Vertex>& meshVertices = m_sharedMesh->GetVertices();
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject);
@@ -57,7 +55,7 @@ namespace diamond_engine
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferObject);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), m_drawMode);
 
-		m_drawCall->elementCount = meshTriangles.size();
+		renderDrawCall->elementCount = meshTriangles.size();
 
 		glEnableVertexAttribArray(m_vertexAttributeLocation);
 		glVertexAttribPointer(m_vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);

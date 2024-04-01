@@ -10,6 +10,8 @@ namespace diamond_engine
 		m_bufferAllocator(std::make_shared<GLAllocator>(glGenBuffers, glDeleteBuffers)),
 		m_spriteInstanceBuilder(std::make_unique<SpriteInstanceBuilder>())
 	{
+		m_renderObjectAllocator->Allocate(256);
+		m_bufferAllocator->Reserve(512);
 		m_spriteInstanceBuilder->setSharedBufferAllocator(m_bufferAllocator);
 		m_spriteInstanceBuilder->setSharedTextureLoader(m_sharedTextureLoader);
 	}
@@ -21,18 +23,14 @@ namespace diamond_engine
 
 		m_instances.clear();
 		m_bufferAllocator->Free(m_bufferAllocator->GetAllocatedObjectCount());
-		m_renderObjectAllocator->Free();
+		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAllocatedObjectCount());
 	}
 
 	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig, const std::shared_ptr<RenderingSubsystem>& renderingSubsystem)
 	{
 		const size_t maxObjects = static_cast<size_t>(sceneConfig.getMaxInstanceCount());
 
-		m_renderObjectAllocator->Allocate(maxObjects);
 		m_renderObjectAllocator->Expand(maxObjects);
-
-		// TODO: Don't keep allocating new memory. Reuse exisitng heap memory!
-		m_bufferAllocator->Reserve(maxObjects << 1);
 		m_bufferAllocator->Allocate(maxObjects << 1);
 
 		/*
