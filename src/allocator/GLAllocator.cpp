@@ -44,6 +44,11 @@ namespace diamond_engine {
 	}
 
 	void GLAllocator::Free(GLsizei objectCount) {
+		if (objectCount == 0)
+		{
+			return;
+		}
+
 		if (!m_freeFunction) {
 			throw std::runtime_error("No freeing function assigned to GLAllocator");
 		}

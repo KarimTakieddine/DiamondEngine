@@ -26,9 +26,19 @@ public:
 
 	const ControllerConfig& getControllerConfig() const;
 
+	void setShadersDirectory(const std::string& shadersDirectory);
+
+	const std::string& getShadersDirectory() const;
+
+	void setTexturesDirectory(const std::string& texturesDirectory);
+
+	const std::string& getTexturesDirectory() const;
+
 private:
 	KeyboardConfig m_keyboardConfig;
 	ControllerConfig m_controllerConfig;
 	WindowConfig m_windowConfig;
+	std::string m_shadersDirectory;
+	std::string m_texturesDirectory;
 };
 }

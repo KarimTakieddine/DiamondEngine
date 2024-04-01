@@ -4,7 +4,7 @@
 #include "Input.h"
 
 namespace diamond_engine {
-	void GraphicsContext::InitializeWindow(const WindowConfig& windowConfig) {
+	void GraphicsContext::InitializeWindow(const WindowConfig& windowConfig, Window::UpdateHandler updateHandler, Window::ResizeHandler resizeHandler) {
 		/*
 			Additional calls to this function after successful initialization
 			but before termination will return GLFW_TRUE immediately.
@@ -21,28 +21,8 @@ namespace diamond_engine {
 		m_window.reset(new Window(
 			windowConfig.GetSize(),
 			windowConfig.GetTitle(),
-			std::bind(&GraphicsContext::OnWindowResize, this, std::placeholders::_1),
-			std::bind(&GraphicsContext::OnWindowUpdate, this, std::placeholders::_1)));
-	}
-
-	void GraphicsContext::InitializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig) {
-		auto& stateMonitor = input::StateMonitor::GetInstance();
-
-		for (const auto& keyConfig : keyboardConfig.GetKeyConfigs()) {
-			stateMonitor.RegisterKeyboardKey(keyConfig.name, keyConfig.code);
-		}
-
-		for (const auto& buttonConfig : controllerConfig.getButtonConfigs())
-		{
-			stateMonitor.RegisterControllerButton(buttonConfig.name, buttonConfig.button);
-		}
-
-		for (const auto& joystickConfig : controllerConfig.getJoystickConfigs())
-		{
-			stateMonitor.RegisterControllerJoystick(joystickConfig.name, joystickConfig.joystick);
-		}
-
-		stateMonitor.setJoystickDeadzone(controllerConfig.getJoystickDeadzone());
+			resizeHandler,
+			updateHandler));
 	}
 
 	void GraphicsContext::InitializeGLEW() {
@@ -57,16 +37,9 @@ namespace diamond_engine {
 		}
 	}
 
-	void GraphicsContext::Initialize(const EngineConfig& engineConfig) {
-		InitializeWindow(engineConfig.GetWindowConfig());
-		InitializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
+	void GraphicsContext::Initialize(const EngineConfig& engineConfig, Window::UpdateHandler updateHandler, Window::ResizeHandler resizeHandler) {
+		InitializeWindow(engineConfig.GetWindowConfig(), updateHandler, resizeHandler);
 		InitializeGLEW();
-	}
-
-	void GraphicsContext::SetScene(Scene* scene) {
-		m_scene = scene;
-
-		OnWindowResize(m_window->getCurrentSize());
 	}
 
 	void GraphicsContext::Execute() {
@@ -84,6 +57,11 @@ namespace diamond_engine {
 		m_window->StartUpdateLoop();
 	}
 
+	GLFWwindow* GraphicsContext::getWindowHandle() const
+	{
+		return m_window ? m_window->GetHandle() : nullptr;
+	}
+
 	GraphicsContext::~GraphicsContext() {
 		m_window.reset(nullptr);
 
@@ -91,16 +69,6 @@ namespace diamond_engine {
 	}
 
 	void GraphicsContext::OnWindowResize(const Size& windowSize) {
-		if (m_scene) {
-			m_scene->OnWindowResize(windowSize.width, windowSize.height);
-		}
-
 		glViewport(0, 0, windowSize.width, windowSize.height);
-	}
-
-	void GraphicsContext::OnWindowUpdate(GLfloat deltaTime) {
-		if (m_scene) {
-			m_scene->Update(deltaTime);
-		}
 	}
 }

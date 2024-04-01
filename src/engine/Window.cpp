@@ -68,8 +68,6 @@ namespace diamond_engine {
 
 			glfwPollEvents();
 
-			input::StateMonitor::GetInstance().MonitorStates(m_handle);
-
 			m_updateHandler(deltaTime);
 
 			glfwSwapBuffers(m_handle);

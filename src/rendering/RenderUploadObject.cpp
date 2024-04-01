@@ -2,9 +2,11 @@
 
 namespace diamond_engine
 {
-	void RenderUploadObject::registerUpload(const RenderUpload& upload)
+	RenderUploadObject::RenderUploadObject(const std::vector<RenderUpload>& uploads) : m_uploads(uploads) { }
+
+	void RenderUploadObject::setUploads(const std::vector<RenderUpload>& uploads)
 	{
-		m_uploads.push_back(upload);
+		m_uploads = uploads;
 	}
 
 	const std::vector<RenderUpload>& RenderUploadObject::getUploads() const

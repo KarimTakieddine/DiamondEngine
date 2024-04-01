@@ -2,17 +2,22 @@
 #include "MeshRenderComponent.h"
 #include "SharedMeshStore.h"
 #include "SpriteInstanceConfig.h"
-#include "SpriteInstanceManager.h"
+#include "SpriteInstanceBuilder.h"
 #include "TextureLoader.h"
 
 namespace diamond_engine
 {
-	void SpriteInstanceManager::setSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader)
+	void SpriteInstanceBuilder::setSharedTextureLoader(const std::shared_ptr<TextureLoader>& sharedTextureLoader)
 	{
 		m_sharedTextureLoader = sharedTextureLoader;
 	}
 
-	std::vector<std::unique_ptr<IRenderComponent>> SpriteInstanceManager::getComponents(const GameInstanceConfig* instanceConfig) const
+	void SpriteInstanceBuilder::setSharedBufferAllocator(const std::shared_ptr<GLAllocator>& sharedBufferAllocator)
+	{
+		m_sharedBufferAllocator = sharedBufferAllocator;
+	}
+
+	std::vector<std::unique_ptr<IRenderComponent>> SpriteInstanceBuilder::getRenderComponents(const GameInstanceConfig* instanceConfig) const
 	{
 		const SpriteInstanceConfig* spriteInstanceConfig = dynamic_cast<const SpriteInstanceConfig*>(instanceConfig);
 
@@ -25,7 +30,7 @@ namespace diamond_engine
 
 		const MeshRenderConfig& meshRenderConfig					= spriteInstanceConfig->getMeshRenderConfig();
 		std::unique_ptr<MeshRenderComponent> meshRenderComponent	= std::make_unique<MeshRenderComponent>();
-		meshRenderComponent->setSharedBufferAllocator(m_bufferAllocator);
+		meshRenderComponent->setSharedBufferAllocator(m_sharedBufferAllocator);
 		meshRenderComponent->setSharedMesh(SharedMeshStore::GetInstance().FindMesh(meshRenderConfig.GetMeshType()));
 		meshRenderComponent->setDrawMode(meshRenderConfig.GetDrawMode());
 		result.push_back(std::move(meshRenderComponent));

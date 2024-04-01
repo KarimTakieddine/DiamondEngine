@@ -9,8 +9,8 @@ namespace diamond_engine
 	class RenderUploadObject
 	{
 	public:
-		void registerUpload(const RenderUpload& upload);
-
+		explicit RenderUploadObject(const std::vector<RenderUpload>& uploads);
+		void setUploads(const std::vector<RenderUpload>& uploads);
 		const std::vector<RenderUpload>& getUploads() const;
 		std::vector<RenderUpload>& getUploads();
 

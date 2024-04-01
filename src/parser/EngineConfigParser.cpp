@@ -10,11 +10,27 @@
 
 namespace diamond_engine {
 	/* static */ EngineConfig EngineConfigParser::Parse(const pugi::xml_node& engineConfigNode) {
-		return {
+		EngineConfig result{
 			KeyboardConfigParser::Parse(engineConfigNode.child("Keyboard")),
 			ControllerConfigParser::Parse(engineConfigNode.child("Controller")),
 			WindowConfigParser::Parse(engineConfigNode.child("Window"))
 		};
+
+		pugi::xml_attribute shadersDirectoryAttribute = engineConfigNode.attribute("shadersDirectory");
+		if (!shadersDirectoryAttribute)
+		{
+			throw std::runtime_error("Failed to parse EngineConfig. No root \"shadersDirectory\" value was set");
+		}
+		result.setShadersDirectory(shadersDirectoryAttribute.as_string());
+
+		pugi::xml_attribute texturesDirectoryAttribute = engineConfigNode.attribute("texturesDirectory");
+		if (!texturesDirectoryAttribute)
+		{
+			throw std::runtime_error("Failed to parse EngineConfig. No root \"texturesDirectory\" value was set");
+		}
+		result.setTexturesDirectory(texturesDirectoryAttribute.as_string());
+
+		return result;
 	}
 	
 	/* static */ EngineConfig EngineConfigParser::Parse(const pugi::xml_document& engineDocument) {

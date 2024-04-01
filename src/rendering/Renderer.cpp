@@ -3,6 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Camera.h"
+#include "GLAllocator.h"
+#include "IRenderComponent.h"
 #include "Renderer.h"
 
 namespace diamond_engine
@@ -11,19 +13,38 @@ namespace diamond_engine
 	{
 		if (!m_shaderProgram)
 		{
-			throw std::runtime_error{ "Failed to create Renderer.No shader program was set" };
+			throw std::runtime_error{ "Failed to create Renderer. No shader program was set" };
 		}
 	}
 
-	void Renderer::registerUploadObject(const std::vector<RenderUpload>& uploads)
+	void Renderer::registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall)
 	{
-		RenderUploadObject renderObject;
-		for (const auto& upload : uploads)
+		renderDrawCall->drawMode = m_drawMode;
+
+		glUseProgram(m_shaderProgram->GetObject());
+
+		std::vector<RenderUpload> renderUploads;
+		for (const auto& renderComponent : renderComponents)
 		{
-			renderObject.registerUpload(upload);
+			EngineStatus bindStatus = renderComponent->bindToShaderProgram(m_shaderProgram);
+
+			if (!bindStatus)
+			{
+				throw std::runtime_error(bindStatus.message);
+			}
+
+			const std::vector<RenderUpload> componentUploads = renderComponent->getUploads();
+			renderUploads.insert(renderUploads.end(), componentUploads.begin(), componentUploads.end());
+
+			EngineStatus drawCallStatus = renderComponent->onDrawCallRegistered(renderDrawCall);
+
+			if (!drawCallStatus)
+			{
+				throw std::runtime_error(drawCallStatus.message);
+			}
 		}
 
-		m_renderInstructions.push_back({ renderObject, { } });
+		m_renderInstructions.push_back({ RenderUploadObject{ renderUploads }, *renderDrawCall });
 	}
 
 	const std::vector<RenderInstruction>& Renderer::getInstructions() const
