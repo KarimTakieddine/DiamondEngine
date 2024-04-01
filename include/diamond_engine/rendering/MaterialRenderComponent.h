@@ -36,7 +36,7 @@ namespace diamond_engine
 		glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
 		glm::vec2 m_textureOffset{ 0.0f, 0.0f };
 		RenderMaterial* m_material{ nullptr };
-		RenderDrawCall* m_drawCall{ nullptr };
+		RenderDrawCall* m_renderDrawCall{ nullptr };
 		GLint m_colorUniformLocation{ -1 };
 		GLint m_textureOffsetUniformLocation{ -1 };
 	};

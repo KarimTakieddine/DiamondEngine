@@ -19,13 +19,11 @@ public:
 
 	void Execute();
 
-	GLFWwindow* getWindowHandle() const;
+	const std::unique_ptr<Window>& getWindow() const;
 
 	~GraphicsContext();
 
 private:
-	void OnWindowResize(const Size& windowSize);
-
 	std::unique_ptr<Window> m_window{ nullptr };
 };
 }

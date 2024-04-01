@@ -57,18 +57,14 @@ namespace diamond_engine {
 		m_window->StartUpdateLoop();
 	}
 
-	GLFWwindow* GraphicsContext::getWindowHandle() const
+	const std::unique_ptr<Window>& GraphicsContext::getWindow() const
 	{
-		return m_window ? m_window->GetHandle() : nullptr;
+		return m_window;
 	}
 
 	GraphicsContext::~GraphicsContext() {
 		m_window.reset(nullptr);
 
 		glfwTerminate();
-	}
-
-	void GraphicsContext::OnWindowResize(const Size& windowSize) {
-		glViewport(0, 0, windowSize.width, windowSize.height);
 	}
 }

@@ -26,9 +26,11 @@ namespace diamond_engine
 
 		m_instanceManager		= std::make_unique<GameInstanceManager>(m_textureLoader);
 		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>(m_shaderStore);
-		m_renderingSubsystem->registerRenderer("sprite");
+		m_renderingSubsystem->registerRenderer("sprite_2");
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
+
+		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
 	}
 
 	void GameEngine::run()
@@ -89,8 +91,6 @@ namespace diamond_engine
 		if (name == m_currentScene)
 		{
 			unloadCurrentScene();
-
-			m_currentScene.clear();
 		}
 
 		if (m_gameScenes.find(name) == m_gameScenes.cend())
@@ -128,20 +128,23 @@ namespace diamond_engine
 	{
 		m_instanceManager->unloadCurrentScene();
 		m_renderingSubsystem->freeAllocatedInstances();
+		m_currentScene.clear();
 	}
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
-		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindowHandle());
+		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
-		// TODO: Behaviours
+		// TODO: Behaviours and background color config
 
-		m_renderingSubsystem->render("sprite"); // TODO: Have this configurable i.e. do we want to also render colliders
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_renderingSubsystem->render("sprite_2"); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
 	{
-		// TODO! Change the aspect radio of the rendering subsystem shared camera
+		m_renderingSubsystem->getCamera()->SetAspectRatio(static_cast<float>(size.width) / size.height);
 
 		glViewport(0, 0, size.width, size.height);
 	}

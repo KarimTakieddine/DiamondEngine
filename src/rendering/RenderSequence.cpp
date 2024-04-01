@@ -111,9 +111,13 @@ namespace diamond_engine {
 		for (const auto& gameObject : m_gameObjects) {
 			RenderableObject* renderableObject = gameObject->GetRenderableObject();
 
+			/*
 			renderableObject->transform.computeModelMatrix();
 			const glm::mat4& objectModelMatrix = renderableObject->transform.getModel();
 			glUniformMatrix4fv(renderableObject->objectModelUniformLocation, 1, GL_FALSE, glm::value_ptr(objectModelMatrix));
+
+			OLD
+			*/
 
 			const glm::vec3& materialColor = renderableObject->material.GetColor();
 			glUniform3f(renderableObject->colorUniformLocation, materialColor.r, materialColor.g, materialColor.b);

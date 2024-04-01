@@ -21,8 +21,9 @@ namespace diamond_engine
 			return { "MaterialRenderComponent::onDrawCallRegistered failed. RendererDrawCall was null", true };
 		}
 
-		m_drawCall			= renderDrawCall;
-		m_drawCall->texture = m_texture.index;
+		m_renderDrawCall = renderDrawCall;
+		
+		setTexture(m_texture);
 
 		return { };
 	}
@@ -54,9 +55,9 @@ namespace diamond_engine
 
 	void MaterialRenderComponent::setTexture(const Texture& texture)
 	{
-		if (m_drawCall)
+		if (m_renderDrawCall)
 		{
-			m_drawCall->texture = texture.index;
+			m_renderDrawCall->texture = texture.index;
 		}
 
 		m_texture = texture;
@@ -74,6 +75,11 @@ namespace diamond_engine
 
 	void MaterialRenderComponent::setColor(const glm::vec3& color)
 	{
+		if (m_material)
+		{
+			m_material->color = color;
+		}
+
 		m_color = color;
 	}
 
@@ -89,6 +95,11 @@ namespace diamond_engine
 
 	void MaterialRenderComponent::setTextureOffset(const glm::vec2& textureOffset)
 	{
+		if (m_material)
+		{
+			m_material->textureOffset = textureOffset;
+		}
+
 		m_textureOffset = textureOffset;
 	}
 

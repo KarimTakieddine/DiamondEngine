@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Program name="sprite_2">
+	<Shader type="vertex" file="../vertex/vertex_transform_2.dmsh">
+		<Attributes>
+			<Attribute name="position"/>
+			<Attribute name="color"/>
+			<Attribute name="textureCoordinate"/>
+		</Attributes>
+		<Uniforms>
+			<Uniform name="projection"/>
+			<Uniform name="cameraLocalToWorld"/>
+			<Uniform name="cameraLocalRotation"/>
+			<Uniform name="cameraView"/>
+			<Uniform name="modelLocalToWorld"/>
+			<Uniform name="modelLocalRotation"/>
+			<Uniform name="modelLocalScale"/>
+		</Uniforms>
+	</Shader>
+	<Shader type="fragment" file="fragment_sprite.dmsh">
+		<Uniforms>
+			<Uniform name="materialColor"/>
+			<Uniform name="materialTextureOffset"/>
+		</Uniforms>
+	</Shader>
+</Program>

@@ -64,6 +64,7 @@ namespace diamond_engine
 	private:
 		static void performUpload(const RenderUpload& renderUpload);
 
+		std::vector<RenderUpload> m_cameraUploads;
 		std::vector<RenderInstruction> m_renderInstructions;
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
 		std::shared_ptr<Camera> m_camera{ nullptr };

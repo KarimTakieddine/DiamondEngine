@@ -144,6 +144,8 @@ set(SOURCES
     ${SRC_DIR}/rendering/RenderUploadObject.cpp
     ${SRC_DIR}/rendering/SpriteInstanceConfig.cpp
     ${SRC_DIR}/rendering/SpriteInstanceBuilder.cpp
+    ${SRC_DIR}/rendering/TransformConfig.cpp
+    ${SRC_DIR}/rendering/TransformRenderComponent.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp
     ${SRC_DIR}/shader/Shader.cpp

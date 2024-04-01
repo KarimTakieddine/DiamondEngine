@@ -66,6 +66,8 @@ namespace diamond_engine
 		glEnableVertexAttribArray(m_textureCoordAttributeLocation);
 		glVertexAttribPointer(m_textureCoordAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
 
+		m_renderDrawCall = renderDrawCall;
+
 		return { };
 	}
 
@@ -81,6 +83,13 @@ namespace diamond_engine
 
 	void MeshRenderComponent::setSharedMesh(const std::shared_ptr<Mesh>& sharedMesh)
 	{
+		if (m_renderDrawCall)
+		{
+			// TODO: This is going to be wasteful!
+
+			onDrawCallRegistered(m_renderDrawCall);
+		}
+
 		m_sharedMesh = sharedMesh;
 	}
 

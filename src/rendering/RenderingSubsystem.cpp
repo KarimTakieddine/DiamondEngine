@@ -100,4 +100,9 @@ namespace diamond_engine
 			render(registeredRenderer);
 		}
 	}
+
+	const std::shared_ptr<Camera>& RenderingSubsystem::getCamera() const
+	{
+		return m_camera;
+	}
 }

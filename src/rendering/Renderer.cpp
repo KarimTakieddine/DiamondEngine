@@ -61,22 +61,9 @@ namespace diamond_engine
 	{
 		glUseProgram(m_shaderProgram->GetObject());
 
-		// TODO: Find somewhere nicer to store the associated memory
-		if (m_camera)
+		for (const auto& cameraUpload : m_cameraUploads)
 		{
-			const auto& cameraProjection = m_camera->GetProjection();
-			const auto& cameraView	= m_camera->GetView();
-			const auto&cameraTransform = m_camera->GetTransform();
-
-			const glm::mat4 cameraTranslation{ 1.0f };
-			const glm::mat4 cameraRotation{ 1.0f };
-			const glm::mat4 cameraScale{ 1.0f };
-
-			performUpload({ glm::value_ptr(cameraProjection),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("projection") });
-			performUpload({ glm::value_ptr(cameraView),			RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraView") });
-			performUpload({ glm::value_ptr(cameraTranslation),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraTranslation") });
-			performUpload({ glm::value_ptr(cameraRotation),		RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraRotation") });
-			performUpload({ glm::value_ptr(cameraScale),		RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraScale") });
+			performUpload(cameraUpload);
 		}
 
 		for (const auto& renderInstruction : m_renderInstructions)
@@ -120,6 +107,16 @@ namespace diamond_engine
 
 	void Renderer::setCamera(const std::shared_ptr<Camera>& camera)
 	{
+		if (camera)
+		{
+			m_cameraUploads = {
+				{ &camera->GetProjection(),						RenderUploadType::Matrix4, m_shaderProgram->GetUniform("projection")},
+				{ &camera->GetTransform().getLocalToWorld(),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraLocalToWorld")},
+				{ &camera->GetTransform().getLocalRotation(),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraLocalRotation") },
+				{ &camera->GetView(),							RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraView") }
+			};
+		}
+
 		m_camera = camera;
 	}
 }

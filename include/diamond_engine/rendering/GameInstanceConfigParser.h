@@ -21,5 +21,6 @@ namespace diamond_engine
 	private:
 		static MaterialConfig parseMaterialConfig(const pugi::xml_node& node, EngineStatus* outStatus = nullptr);
 		static MeshRenderConfig parseMeshRenderConfig(const pugi::xml_node& node, EngineStatus* outStatus = nullptr);
+		static TransformConfig parseTransformConfig(const pugi::xml_node& node, EngineStatus* outStatus = nullptr);
 	};
 }

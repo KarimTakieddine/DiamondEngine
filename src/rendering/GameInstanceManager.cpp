@@ -57,7 +57,7 @@ namespace diamond_engine
 						renderComponent->onRenderObjectAllocated(renderObject);
 					}
 
-					allocateStatus = renderingSubsystem->registerRenderObject("sprite", renderComponents);
+					allocateStatus = renderingSubsystem->registerRenderObject("sprite_2", renderComponents);
 
 					if (!allocateStatus)
 					{

@@ -4,6 +4,7 @@
 #include "SpriteInstanceConfig.h"
 #include "SpriteInstanceBuilder.h"
 #include "TextureLoader.h"
+#include "TransformRenderComponent.h"
 
 namespace diamond_engine
 {
@@ -35,14 +36,17 @@ namespace diamond_engine
 		meshRenderComponent->setDrawMode(meshRenderConfig.GetDrawMode());
 		result.push_back(std::move(meshRenderComponent));
 
+		const TransformConfig& transformConfig = spriteInstanceConfig->getTransformConfig();
+		std::unique_ptr<TransformRenderComponent> transformRenderComponent = std::make_unique<TransformRenderComponent>();
+		transformRenderComponent->setPosition(transformConfig.getPosition());
+		result.push_back(std::move(transformRenderComponent));
+
 		const MaterialConfig& materialConfig								= spriteInstanceConfig->getMaterialConfig();
 		std::unique_ptr<MaterialRenderComponent> materialRenderComponent	= std::make_unique<MaterialRenderComponent>();
 		materialRenderComponent->setTexture(m_sharedTextureLoader->GetTexture(materialConfig.GetTextureName()));
 		materialRenderComponent->setColor(materialConfig.GetColor());
 		materialRenderComponent->setTextureOffset(materialConfig.GetTextureOffset());
 		result.push_back(std::move(materialRenderComponent));
-
-		// TODO: Transform component as well
 
 		return result;
 	}

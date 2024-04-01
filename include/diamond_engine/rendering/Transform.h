@@ -29,21 +29,16 @@ public:
 
 	glm::vec3 getPosition() const;
 
-	void computeModelMatrix();
-
 	const glm::mat4& getLocalToWorld() const;
 
 	const glm::mat4& getLocalRotation() const;
 
 	const glm::mat4& getLocalScale() const;
 
-	const glm::mat4& getModel() const;
-
 private:
 	glm::mat4 m_localToWorld{ 1.0f };
 	glm::mat4 m_localRotation{ 1.0f };
 	glm::mat4 m_localScale{ 1.0f };
-	glm::mat4 m_model{ 1.0f };
 	glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
 };
 }

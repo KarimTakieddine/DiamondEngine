@@ -57,10 +57,9 @@ namespace diamond_engine
 		{
 			case GameInstanceType::SPRITE: {
 				std::unique_ptr<SpriteInstanceConfig> result = std::make_unique<SpriteInstanceConfig>();
-				result->setMaterialConfig(parseMaterialConfig(node, outStatus));
 				result->setMeshRenderConfig(parseMeshRenderConfig(node, outStatus));
-				// TODO: Transform config
-
+				result->setTransformConfig(parseTransformConfig(node, outStatus));
+				result->setMaterialConfig(parseMaterialConfig(node, outStatus));
 				return result;
 			}
 			default: {
@@ -159,6 +158,31 @@ namespace diamond_engine
 		if (outStatus)
 			*outStatus = { };
 
+		return result;
+	}
+
+	/* static */ TransformConfig GameInstanceConfigParser::parseTransformConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	{
+		TransformConfig result;
+
+		pugi::xml_node transformNode = node.child("Transform");
+		if (!transformNode)
+		{
+			if (outStatus)
+				*outStatus = { };
+
+			return result;
+		}
+
+		pugi::xml_node positionNode = transformNode.child("Position");
+		if (positionNode)
+		{
+			result.setPosition(Vector3Parser::Parse(positionNode));
+		}
+
+		if (outStatus)
+			*outStatus = { };
+		
 		return result;
 	}
 }

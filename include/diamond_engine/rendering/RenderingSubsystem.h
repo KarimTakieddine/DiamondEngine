@@ -24,6 +24,8 @@ namespace diamond_engine
 		void render(const std::string& shaderProgramName);
 		void renderAll();
 
+		const std::shared_ptr<Camera>& getCamera() const;
+
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Renderer>> m_renderers;
 		std::vector<std::string> m_registeredRenderers;

@@ -48,11 +48,6 @@ namespace diamond_engine {
 		return glm::xyz(m_localToWorld * glm::vec4(m_position, 1.0f));
 	}
 
-	void diamond_engine::Transform::computeModelMatrix()
-	{
-		m_model = m_localToWorld * m_localRotation * m_localScale;
-	}
-
 	const glm::mat4& diamond_engine::Transform::getLocalToWorld() const
 	{
 		return m_localToWorld;
@@ -66,10 +61,5 @@ namespace diamond_engine {
 	const glm::mat4& diamond_engine::Transform::getLocalScale() const
 	{
 		return m_localScale;
-	}
-
-	const glm::mat4& diamond_engine::Transform::getModel() const
-	{
-		return m_model;
 	}
 }
