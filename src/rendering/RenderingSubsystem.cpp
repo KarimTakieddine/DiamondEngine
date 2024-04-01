@@ -27,6 +27,11 @@ namespace diamond_engine
 
 	void RenderingSubsystem::freeAllocatedInstances()
 	{
+		for (const auto& registeredRenderer : m_registeredRenderers)
+		{
+			getRenderer(registeredRenderer)->clearRenderInstructions();
+		}
+
 		m_vertexArrayAllocator->Free(m_vertexArrayAllocator->GetAllocatedObjectCount());
 	}
 

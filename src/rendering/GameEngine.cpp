@@ -121,7 +121,8 @@ namespace diamond_engine
 			throw std::runtime_error("Cannot load scene. Error was: " + loadStatus.message);
 		}
 
-		m_currentScene = name;
+		m_currentScene			= name;
+		m_sceneBackgroundColor	= sceneConfig->getBackgroundColor();
 	}
 
 	void GameEngine::unloadCurrentScene()
@@ -129,6 +130,7 @@ namespace diamond_engine
 		m_instanceManager->unloadCurrentScene();
 		m_renderingSubsystem->freeAllocatedInstances();
 		m_currentScene.clear();
+		m_sceneBackgroundColor = { };
 	}
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
@@ -137,7 +139,7 @@ namespace diamond_engine
 
 		// TODO: Behaviours and background color config
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(m_sceneBackgroundColor.x, m_sceneBackgroundColor.y, m_sceneBackgroundColor.z, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		m_renderingSubsystem->render("sprite_2"); // TODO: Have this configurable i.e. do we want to also render colliders
 	}

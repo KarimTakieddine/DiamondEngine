@@ -4,6 +4,7 @@
 #include "GameInstanceConfigParser.h"
 #include "GameSceneConfig.h"
 #include "GameSceneConfigParser.h"
+#include "Vector3Parser.h"
 
 namespace diamond_engine
 {
@@ -40,6 +41,12 @@ namespace diamond_engine
 		if (maxInstanceCountAttribute)
 		{
 			result->setMaxInstanceCount(maxInstanceCountAttribute.as_int(result->getMaxInstanceCount()));
+		}
+
+		pugi::xml_node backgroundColorNode = rootNode.child("BackgroundColor");
+		if (backgroundColorNode)
+		{
+			result->setBackgroundColor(Vector3Parser::Parse(backgroundColorNode));
 		}
 
 		pugi::xml_node instancesNode = rootNode.child("Instances");

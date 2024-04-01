@@ -41,6 +41,7 @@ namespace diamond_engine
 		std::shared_ptr<TextureLoader> m_textureLoader{ nullptr };
 		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
+		glm::vec3 m_sceneBackgroundColor{ 0.0f, 0.0f, 0.0f };
 		std::string m_currentScene;
 	};
 }

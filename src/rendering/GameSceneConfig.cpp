@@ -26,4 +26,19 @@ namespace diamond_engine
 	{
 		m_maxInstanceCount = maxInstanceCount;
 	}
+
+	const glm::vec3& GameSceneConfig::getBackgroundColor() const
+	{
+		return m_backgroundColor;
+	}
+
+	glm::vec3& GameSceneConfig::getBackgroundColor()
+	{
+		return m_backgroundColor;
+	}
+
+	void GameSceneConfig::setBackgroundColor(const glm::vec3& backgroundColor)
+	{
+		m_backgroundColor = backgroundColor;
+	}
 }

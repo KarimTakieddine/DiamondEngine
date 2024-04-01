@@ -7,7 +7,6 @@
 
 namespace diamond_engine
 {
-	class IRenderComponent;
 	class RenderObject;
 	class GameInstance
 	{

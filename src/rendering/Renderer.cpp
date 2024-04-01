@@ -17,6 +17,11 @@ namespace diamond_engine
 		}
 	}
 
+	void Renderer::clearRenderInstructions()
+	{
+		m_renderInstructions.clear();
+	}
+
 	void Renderer::registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall)
 	{
 		renderDrawCall->drawMode = m_drawMode;
