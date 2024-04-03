@@ -126,11 +126,14 @@ set(SOURCES
     ${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/physics/CollisionResolver2D.cpp
-    ${SRC_DIR}/rendering/GameEngine.cpp
+    ${SRC_DIR}/rendering/ComponentConfigParser.cpp
+    #${SRC_DIR}/rendering/GameEngine.cpp
+    ${SRC_DIR}/rendering/GameInstanceConfig.cpp
     ${SRC_DIR}/rendering/Material.cpp
+    ${SRC_DIR}/rendering/MaterialComponentConfig.cpp
     ${SRC_DIR}/rendering/MaterialRenderComponent.cpp
     ${SRC_DIR}/rendering/MeshRenderComponent.cpp
-    ${SRC_DIR}/rendering/MeshRenderConfig.cpp
+    ${SRC_DIR}/rendering/MeshRenderComponentConfig.cpp
     ${SRC_DIR}/rendering/Transform.cpp
     ${SRC_DIR}/rendering/Camera.cpp
     ${SRC_DIR}/rendering/GameInstance.cpp
@@ -142,9 +145,9 @@ set(SOURCES
     ${SRC_DIR}/rendering/RenderingSubsystem.cpp
     ${SRC_DIR}/rendering/RenderSequence.cpp
     ${SRC_DIR}/rendering/RenderUploadObject.cpp
-    ${SRC_DIR}/rendering/SpriteInstanceConfig.cpp
-    ${SRC_DIR}/rendering/SpriteInstanceBuilder.cpp
-    ${SRC_DIR}/rendering/TransformConfig.cpp
+    #${SRC_DIR}/rendering/SpriteInstanceConfig.cpp
+    #${SRC_DIR}/rendering/SpriteInstanceBuilder.cpp
+    ${SRC_DIR}/rendering/TransformComponentConfig.cpp
     ${SRC_DIR}/rendering/TransformRenderComponent.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/scene/SceneLoader.cpp

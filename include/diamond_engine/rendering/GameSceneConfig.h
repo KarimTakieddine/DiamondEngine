@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 

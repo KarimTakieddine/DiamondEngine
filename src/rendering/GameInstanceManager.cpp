@@ -45,9 +45,10 @@ namespace diamond_engine
 			return { "Failed to register game instance. No allocated instance was provided", true };
 		}
 
-		const GameInstanceType instanceType = instanceConfig->getType();
+		//const GameInstanceType instanceType = instanceConfig->getType();
 
 		std::vector<std::unique_ptr<IRenderComponent>> renderComponents;
+		/*
 		switch (instanceType)
 		{
 		case GameInstanceType::SPRITE:
@@ -56,6 +57,7 @@ namespace diamond_engine
 		default:
 			return { "Failed to register game instance of unknown type", true };
 		}
+		*/
 
 		for (auto& renderComponent : renderComponents)
 		{
@@ -69,18 +71,21 @@ namespace diamond_engine
 			instance->acquireRenderComponent(std::move(renderComponent));
 		}
 
+		/*
 		EngineStatus registerStatus = registerInstance(instanceType, instance.get());
 
 		if (!registerStatus)
 		{
 			return registerStatus;
 		}
+		*/
 
 		m_instances.push_back(std::move(instance));
 
 		return { };
 	}
 
+	/*
 	EngineStatus GameInstanceManager::registerInstance(GameInstanceType instanceType, const GameInstance* instance)
 	{
 		EngineStatus registerStatus;
@@ -97,6 +102,7 @@ namespace diamond_engine
 
 		return registerStatus;
 	}
+	*/
 
 	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
 	{

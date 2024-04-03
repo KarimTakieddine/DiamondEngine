@@ -24,7 +24,7 @@ namespace diamond_engine
 		EngineStatus loadScene(const GameSceneConfig& sceneConfig);
 		std::unique_ptr<GameInstance> createInstance();
 		EngineStatus registerInstance(const GameInstanceConfig* instanceConfig, std::unique_ptr<GameInstance> instance);
-		EngineStatus registerInstance(GameInstanceType instanceType, const GameInstance* instance);
+		/* EngineStatus registerInstance(GameInstanceType instanceType, const GameInstance* instance); */
 
 	private:
 		std::vector<std::unique_ptr<GameInstance>> m_instances;

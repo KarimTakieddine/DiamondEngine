@@ -1,188 +1,75 @@
 #include <pugixml.hpp>
+#include <string>
+#include <unordered_map>
 
-#include "EngineStatus.h"
+#include "ComponentConfigParser.h"
 #include "GameInstanceConfigParser.h"
-#include "SpriteInstanceConfig.h"
-#include "Vector2Parser.h"
-#include "Vector3Parser.h"
 
 namespace
 {
 	using diamond_engine::GameInstanceType;
-	using diamond_engine::MeshType;
-
-	const std::unordered_map<std::string, GameInstanceType> kStringToInstanceType =
-	{
+	const std::unordered_map<std::string, GameInstanceType> kStringToInstanceType = {
 		{ "sprite", GameInstanceType::SPRITE }
 	};
 
-	const std::unordered_map<std::string, MeshType> kStringToMeshType =
+	using diamond_engine::EngineStatus;
+	void setErrorStatus(EngineStatus* status, const std::string& message, bool error = true)
 	{
-		{ "quad", MeshType::QUAD }
-	};
+		if (!status)
+		{
+			return;
+		}
 
-	const std::unordered_map<std::string, GLenum> kStringToDrawMode =
-	{
-		{ "static",		GL_STATIC_DRAW },
-		{ "dynamic",	GL_DYNAMIC_DRAW }
-	};
+		*status = { message, error };
+	}
 }
 
 namespace diamond_engine
 {
-	/* static */ std::unique_ptr<GameInstanceConfig> GameInstanceConfigParser::parse(const pugi::xml_node& node, EngineStatus* outStatus)
+	std::unique_ptr<GameInstanceConfig> parseGameInstanceConfig(const pugi::xml_node& node, EngineStatus* outStatus /* = nullptr */)
 	{
+		std::unique_ptr<GameInstanceConfig> result = std::make_unique<GameInstanceConfig>();
+
 		pugi::xml_attribute typeAttribute = node.attribute("type");
-		if (!typeAttribute)
+		if (typeAttribute)
 		{
-			if (outStatus)
-				*outStatus = { "Failed to parse GameInstanceConfig. No instance \"type\" attribute was set", true };
-
-			return nullptr;
-		}
-
-		auto typeIt = ::kStringToInstanceType.find(typeAttribute.as_string());
-		if (typeIt == ::kStringToInstanceType.cend())
-		{
-			if (outStatus)
-				*outStatus = { "Failed to parse GameInstanceConfig. Invalid type found", true };
-
-			return nullptr;
-		}
-
-		if (outStatus)
-			*outStatus = { };
-
-		switch (typeIt->second)
-		{
-			case GameInstanceType::SPRITE: {
-				std::unique_ptr<SpriteInstanceConfig> result = std::make_unique<SpriteInstanceConfig>();
-				result->setMeshRenderConfig(parseMeshRenderConfig(node, outStatus));
-				result->setTransformConfig(parseTransformConfig(node, outStatus));
-				result->setMaterialConfig(parseMaterialConfig(node, outStatus));
-				return result;
-			}
-			default: {
-				if (outStatus)
-					*outStatus = { "Failed to parse GameInstanceConfig. Unknown or unsupported type found", true };
-
+			const std::string typeString(typeAttribute.as_string());
+			auto typeIt = kStringToInstanceType.find(typeString);
+			if (typeIt == kStringToInstanceType.cend())
+			{
+				setErrorStatus(outStatus, "Failed to parse game instance config. Invalid type specified: " + typeString);
 				return nullptr;
 			}
 		}
-	}
 
-	/* static */ MaterialConfig GameInstanceConfigParser::parseMaterialConfig(const pugi::xml_node& node, EngineStatus* outStatus)
-	{
-		MaterialConfig result;
-
-		pugi::xml_node materialNode = node.child("Material");
-
-		if (!materialNode)
+		pugi::xml_node renderComponentsNode = node.child("RenderComponents");
+		if (renderComponentsNode)
 		{
-			if (outStatus)
-				*outStatus = { "Failed to parse MaterialConfig. No root <Material/> node was found. Returning default", true };
-
-			return result;
-		}
-
-		pugi::xml_attribute textureAttribute = materialNode.attribute("texture");
-		if (textureAttribute)
-		{
-			result.SetTextureName(textureAttribute.as_string(result.GetTextureName().c_str()));
-		}
-
-		pugi::xml_node colorNode = materialNode.child("Color");
-		if (colorNode)
-		{
-			result.SetColor(Vector3Parser::Parse(colorNode));
-		}
-
-		pugi::xml_node textureOffsetNode = materialNode.child("TextureOffset");
-		if (textureOffsetNode)
-		{
-			result.SetTextureOffset(Vector2Parser::Parse(textureOffsetNode));
-		}
-
-		if (outStatus)
-			*outStatus = { };
-
-		return result;
-	}
-
-	/* static */ MeshRenderConfig GameInstanceConfigParser::parseMeshRenderConfig(const pugi::xml_node& node, EngineStatus* outStatus)
-	{
-		MeshRenderConfig result;
-
-		pugi::xml_node meshRenderNode = node.child("MeshRender");
-
-		if (!meshRenderNode)
-		{
-			if (outStatus)
-				*outStatus = { "Failed to parse MeshRenderConfig. No root <MeshRender/> node was found. Returning default", true };
-
-			return result;
-		}
-
-		pugi::xml_attribute typeAttribute = meshRenderNode.attribute("type");
-
-		if (!typeAttribute)
-		{
-			if (outStatus)
-				*outStatus = { "Failed to parse MeshRenderConfig. No \"type\" attribute was set", true };
-
-			return result;
-		}
-
-		auto meshTypeIt = kStringToMeshType.find(typeAttribute.as_string());
-		if (meshTypeIt == kStringToMeshType.cend())
-		{
-			if (outStatus)
-				*outStatus = { "Failed to parse MeshRenderConfig. Invalid or unknown mesh type found", true };
-
-			return result;
-		}
-
-		result.SetMeshType(meshTypeIt->second);
-
-		pugi::xml_attribute drawModeAttribute = meshRenderNode.attribute("drawMode");
-		if (drawModeAttribute)
-		{
-			auto drawModeIt = kStringToDrawMode.find(drawModeAttribute.as_string());
-			if (drawModeIt == kStringToDrawMode.cend())
+			for (const auto& renderComponentNode : renderComponentsNode.children())
 			{
-				if (outStatus)
-					*outStatus = { "Failed to parse MeshRenderConfig. Invalid or unknown draw mode found", true };
+				result->addRenderConfig(ComponentConfigParser::parseRenderComponent(renderComponentNode, outStatus));
+
+				if (outStatus && !(*outStatus))
+				{
+					return nullptr;
+				}
 			}
 		}
 
-		if (outStatus)
-			*outStatus = { };
-
-		return result;
-	}
-
-	/* static */ TransformConfig GameInstanceConfigParser::parseTransformConfig(const pugi::xml_node& node, EngineStatus* outStatus)
-	{
-		TransformConfig result;
-
-		pugi::xml_node transformNode = node.child("Transform");
-		if (!transformNode)
+		pugi::xml_node behaviourComponentsNode = node.child("BehaviourComponents");
+		if (behaviourComponentsNode)
 		{
-			if (outStatus)
-				*outStatus = { };
+			for (const auto& behaviourComponentNode : behaviourComponentsNode.children())
+			{
+				result->addBehaviourConfig(ComponentConfigParser::parseBehaviourComponent(behaviourComponentNode, outStatus));
 
-			return result;
+				if (outStatus && !(*outStatus))
+				{
+					return nullptr;
+				}
+			}
 		}
 
-		pugi::xml_node positionNode = transformNode.child("Position");
-		if (positionNode)
-		{
-			result.setPosition(Vector3Parser::Parse(positionNode));
-		}
-
-		if (outStatus)
-			*outStatus = { };
-		
 		return result;
 	}
 }

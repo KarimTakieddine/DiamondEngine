@@ -10,12 +10,14 @@ namespace diamond_engine
 	class SpriteInstanceConfig : public GameInstanceConfig
 	{
 	public:
-		~SpriteInstanceConfig() final override = default;
+		//~SpriteInstanceConfig() final override = default;
 
+		/*
 		GameInstanceType getType() const final override
 		{
 			return GameInstanceType::SPRITE;
 		}
+		*/
 
 		const MaterialConfig& getMaterialConfig() const;
 		MaterialConfig& getMaterialConfig();
