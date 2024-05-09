@@ -1,5 +1,3 @@
-#include "GLAllocator.h"
-#include "Mesh.h"
 #include "MeshRenderComponent.h"
 #include "RenderDrawCall.h"
 #include "ShaderProgram.h"
@@ -32,41 +30,9 @@ namespace diamond_engine
 			return { "MeshRenderComponent::onDrawCallRegistered failed. RendererDrawCall was null", true };
 		}
 
-		if (!m_sharedBufferAllocator)
-		{
-			return { "MeshRenderComponent::onDrawCallRegistered failed. No shared buffer allocator was set", true };
-		}
-
-		m_vertexBufferObject	= m_sharedBufferAllocator->Get();
-		m_elementBufferObject	= m_sharedBufferAllocator->Get();
-
-		if (!m_sharedMesh)
-		{
-			return { "MeshRenderComponent::onDrawCallRegistered failed. No shared Mesh was set", true };
-		}
-
-		glBindVertexArray(renderDrawCall->vertexArrayObject);
-
-		const std::vector<Vertex>& meshVertices = m_sharedMesh->GetVertices();
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject);
-		glBufferData(GL_ARRAY_BUFFER, meshVertices.size() * sizeof(Vertex), meshVertices.data(), m_drawMode);
-
-		const std::vector<GLuint>& meshTriangles = m_sharedMesh->GetTriangles();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferObject);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshTriangles.size() * sizeof(GLuint), meshTriangles.data(), m_drawMode);
-
-		renderDrawCall->elementCount = meshTriangles.size();
-
-		glEnableVertexAttribArray(m_vertexAttributeLocation);
-		glVertexAttribPointer(m_vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
-
-		glEnableVertexAttribArray(m_colorAttributeLocation);
-		glVertexAttribPointer(m_colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
-
-		glEnableVertexAttribArray(m_textureCoordAttributeLocation);
-		glVertexAttribPointer(m_textureCoordAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
-
 		m_renderDrawCall = renderDrawCall;
+
+		setMesh(m_mesh);	
 
 		return { };
 	}
@@ -76,21 +42,29 @@ namespace diamond_engine
 		return { };
 	}
 
-	void MeshRenderComponent::setSharedBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator)
+	void MeshRenderComponent::setMesh(Mesh* mesh)
 	{
-		m_sharedBufferAllocator = bufferAllocator;
-	}
+		m_mesh = mesh;
 
-	void MeshRenderComponent::setSharedMesh(const std::shared_ptr<Mesh>& sharedMesh)
-	{
-		if (m_renderDrawCall)
+		if (!m_renderDrawCall)
 		{
-			// TODO: This is going to be wasteful!
-
-			onDrawCallRegistered(m_renderDrawCall);
+			return;
 		}
 
-		m_sharedMesh = sharedMesh;
+		glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getVertexBufferObject());
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_mesh->getElementBufferObject());
+		glBufferData(GL_ARRAY_BUFFER, m_mesh->GetVertices().size() * sizeof(Vertex), m_mesh->GetVertices().data(), m_drawMode);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_mesh->GetTriangles().size() * sizeof(GLuint), m_mesh->GetTriangles().data(), m_drawMode);
+		m_renderDrawCall->elementCount = m_mesh->GetTriangles().size();
+
+		glEnableVertexAttribArray(m_vertexAttributeLocation);
+		glVertexAttribPointer(m_vertexAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+
+		glEnableVertexAttribArray(m_colorAttributeLocation);
+		glVertexAttribPointer(m_colorAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+
+		glEnableVertexAttribArray(m_textureCoordAttributeLocation);
+		glVertexAttribPointer(m_textureCoordAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
 	}
 
 	void MeshRenderComponent::setDrawMode(GLenum drawMode)

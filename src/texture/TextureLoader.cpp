@@ -14,9 +14,23 @@ namespace diamond_engine {
 		{ 4, GL_RGBA }
 	};
 
+	/* static */ std::shared_ptr<TextureLoader>& TextureLoader::getInstance()
+	{
+		static std::shared_ptr<TextureLoader> textureLoader(new TextureLoader());
+		return textureLoader;
+	}
+
+	void TextureLoader::unloadTextures()
+	{
+		m_textureMap.clear();
+		m_textureAllocator->Free(m_textureAllocator->GetAllocatedObjectCount());
+	}
+
 	TextureLoader::TextureLoader() : m_textureAllocator(std::make_unique<GLAllocator>(glGenTextures, glDeleteTextures)) { }
 
 	void TextureLoader::Load(const std::string& rootDirectory) {
+		unloadTextures();
+
 		const std::filesystem::path rootDirectoryPath(rootDirectory);
 
 		if (!std::filesystem::is_directory(rootDirectoryPath)) {

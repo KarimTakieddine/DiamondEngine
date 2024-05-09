@@ -53,7 +53,7 @@ namespace diamond_engine
 	{
 	public:
 		// The Renderer has access to one shared shader program and binds it before uploading all the uniforms
-		explicit Renderer(const std::shared_ptr<ShaderProgram>& shaderProgram);
+		Renderer(GLuint vertexArrayObject, const std::shared_ptr<ShaderProgram>& shaderProgram);
 		void clearRenderInstructions();
 		void registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall);
 		const std::vector<RenderInstruction>& getInstructions() const;
@@ -69,6 +69,7 @@ namespace diamond_engine
 		std::vector<RenderInstruction> m_renderInstructions;
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
 		std::shared_ptr<Camera> m_camera{ nullptr };
+		GLuint m_vertexArrayObject{ 0 };
 		GLenum m_drawMode{ GL_TRIANGLES };
 	};
 }

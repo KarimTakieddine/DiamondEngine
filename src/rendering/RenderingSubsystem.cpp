@@ -3,16 +3,12 @@
 #include "Camera.h"
 #include "IRenderComponent.h"
 #include "RenderingSubsystem.h"
+#include "SharedShaderStore.h"
 
 namespace diamond_engine
 {
-	RenderingSubsystem::RenderingSubsystem(const std::shared_ptr<SharedShaderStore>& sharedShaderStore) : m_sharedShaderStore(sharedShaderStore), m_camera(std::make_unique<Camera>()) // TODO: Share this?
+	RenderingSubsystem::RenderingSubsystem() : m_camera(std::make_unique<Camera>()) // TODO: Share this?
 	{
-		if (!sharedShaderStore)
-		{
-			throw std::runtime_error("Failed to instantiate rendering subsystem. No shared shader store was set");
-		}
-
 		m_vertexArrayAllocator = std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays);
 		m_vertexArrayAllocator->Reserve(256);
 
@@ -37,7 +33,7 @@ namespace diamond_engine
 
 	EngineStatus RenderingSubsystem::registerRenderer(const std::string& shaderProgramName)
 	{
-		const auto& shaderProgram = m_sharedShaderStore->FindProgram(shaderProgramName);
+		const auto& shaderProgram = SharedShaderStore::getInstance()->FindProgram(shaderProgramName);
 
 		if (!shaderProgram)
 		{
@@ -49,7 +45,7 @@ namespace diamond_engine
 			return { "Failed to register renderer. Already active: " + shaderProgramName, true };
 		}
 
-		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(shaderProgram);
+		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), shaderProgram);
 		renderer->setCamera(m_camera);
 		m_renderers.insert(
 			{ shaderProgramName, std::move(renderer) });
@@ -59,7 +55,7 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& shaderProgramName, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents)
+	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& shaderProgramName, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const
 	{
 		Renderer* renderer = getRenderer(shaderProgramName);
 
@@ -68,7 +64,7 @@ namespace diamond_engine
 			return { "Failed to register RenderObject. Active renderer not found: " + shaderProgramName, true };
 		}
 
-		RenderDrawCall renderDrawCall{ m_vertexArrayAllocator->Get() };
+		RenderDrawCall renderDrawCall{ };
 		renderer->registerRenderInstruction(renderComponents, &renderDrawCall);
 
 		return { };
@@ -86,7 +82,7 @@ namespace diamond_engine
 		return rendererIt->second.get();
 	}
 
-	void RenderingSubsystem::render(const std::string& shaderProgramName)
+	void RenderingSubsystem::render(const std::string& shaderProgramName) const
 	{
 		Renderer* registeredRenderer = getRenderer(shaderProgramName);
 
@@ -98,7 +94,7 @@ namespace diamond_engine
 		registeredRenderer->render();
 	}
 
-	void RenderingSubsystem::renderAll()
+	void RenderingSubsystem::renderAll() const
 	{
 		for (const auto& registeredRenderer : m_registeredRenderers)
 		{

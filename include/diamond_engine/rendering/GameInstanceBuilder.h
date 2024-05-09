@@ -12,15 +12,6 @@ namespace diamond_engine
 {
 	class GameInstance;
 	class GameInstanceConfig;
-	class GameInstanceBuilder
-	{
-	public:
-		GameInstanceCreator();
-
-		std::unique_ptr<GameInstance> create(EngineStatus* outStatus = nullptr);
-		std::unique_ptr<GameInstance> create(const GameInstanceConfig* instanceConfig, EngineStatus* outStatus = nullptr);
-
-	private:
-		std::unique_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectStore{ nullptr };
-	};
+	
+	EngineStatus buildGameInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig);
 }

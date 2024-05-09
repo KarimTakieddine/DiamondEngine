@@ -35,7 +35,7 @@ namespace
 
 	using diamond_engine::RenderComponentConfig;
 
-	std::unique_ptr<RenderComponentConfig> parseMaterialConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	static std::unique_ptr<RenderComponentConfig> parseMaterialConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
 		using diamond_engine::MaterialComponentConfig;
 		using diamond_engine::Vector3Parser;
@@ -64,7 +64,7 @@ namespace
 		return result;
 	}
 
-	std::unique_ptr<RenderComponentConfig> parseMeshRenderConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	static std::unique_ptr<RenderComponentConfig> parseMeshRenderConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
 		using diamond_engine::MeshRenderComponentConfig;
 
@@ -99,7 +99,7 @@ namespace
 		return result;
 	}
 
-	std::unique_ptr<RenderComponentConfig> parseTransformConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	static std::unique_ptr<RenderComponentConfig> parseTransformConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
 		using diamond_engine::TransformComponentConfig;
 		using diamond_engine::Vector3Parser;

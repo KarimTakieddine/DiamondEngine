@@ -3,10 +3,10 @@
 #include <memory>
 
 #include "IRenderComponent.h"
+#include "Mesh.h"
 
 namespace diamond_engine
 {
-	class Mesh;
 	class GLAllocator;
 	class MeshRenderComponent : public IRenderComponent
 	{
@@ -22,19 +22,15 @@ namespace diamond_engine
 		EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) final override;
 		EngineStatus onRenderObjectAllocated(RenderObject* renderObject) final override;
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
-		
-		void setSharedBufferAllocator(const std::shared_ptr<GLAllocator>& bufferAllocator);
-		void setSharedMesh(const std::shared_ptr<Mesh>& sharedMesh);
+
+		void setMesh(Mesh* mesh);
 		void setDrawMode(GLenum drawMode);
 		GLenum getDrawMode() const;
 
 	private:
-		std::shared_ptr<Mesh> m_sharedMesh{ nullptr };
-		std::shared_ptr<GLAllocator> m_sharedBufferAllocator{ nullptr };
+		Mesh* m_mesh{ nullptr };
 		RenderDrawCall* m_renderDrawCall{ nullptr };
 		GLenum m_drawMode{ GL_STATIC_DRAW };
-		GLuint m_vertexBufferObject{ 0 };
-		GLuint m_elementBufferObject{ 0 };
 		GLint m_vertexAttributeLocation{ -1 };
 		GLint m_colorAttributeLocation{ -1 };
 		GLint m_textureCoordAttributeLocation{ -1 };

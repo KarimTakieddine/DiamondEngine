@@ -8,8 +8,14 @@
 namespace diamond_engine {
 	/* static */ const std::string SharedShaderStore::kProgramMetadataFilename	= "programMetadata.xml";
 
+	/* static */ std::shared_ptr<SharedShaderStore>& SharedShaderStore::getInstance()
+	{
+		static std::shared_ptr<SharedShaderStore> sharedShaderStore(new SharedShaderStore());
+		return sharedShaderStore;
+	}
+
 	void SharedShaderStore::Load(const std::string& rootDirectory) {
-		m_store.clear();
+		unload();
 
 		const auto programDirectories = GetProgramDirectories(rootDirectory);
 
@@ -58,6 +64,11 @@ namespace diamond_engine {
 
 			m_store.emplace(programMetadata.GetName(), shaderProgram);
 		}
+	}
+
+	void SharedShaderStore::unload()
+	{
+		m_store.clear();
 	}
 
 	std::shared_ptr<ShaderProgram> SharedShaderStore::FindProgram(const std::string& name) const {

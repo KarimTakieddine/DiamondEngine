@@ -2,6 +2,16 @@
 
 namespace diamond_engine
 {
+	GameInstanceType GameInstanceConfig::getType() const
+	{
+		return m_type;
+	}
+
+	void GameInstanceConfig::setType(GameInstanceType type)
+	{
+		m_type = type;
+	}
+
 	const std::vector<std::unique_ptr<RenderComponentConfig>>& GameInstanceConfig::getRenderConfigs() const
 	{
 		return m_renderConfigs;

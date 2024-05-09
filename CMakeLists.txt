@@ -79,7 +79,7 @@ set(SOURCES
     ${SRC_DIR}/behaviour/ScrollingBackgroundBehaviour.cpp
     ${SRC_DIR}/builder/Collider2DBuilder.cpp
     ${SRC_DIR}/builder/GameObjectBuilder.cpp
-    ${SRC_DIR}/builder/MeshRendererBuilder.cpp
+    #${SRC_DIR}/builder/MeshRendererBuilder.cpp
     ${SRC_DIR}/builder/RotateBehaviourBuilder.cpp
     ${SRC_DIR}/builder/SceneBuilder.cpp
     ${SRC_DIR}/builder/ScrollingBackgroundBehaviourBuilder.cpp
@@ -126,8 +126,10 @@ set(SOURCES
     ${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/physics/CollisionResolver2D.cpp
+    ${SRC_DIR}/rendering/ComponentBuilder.cpp
     ${SRC_DIR}/rendering/ComponentConfigParser.cpp
-    #${SRC_DIR}/rendering/GameEngine.cpp
+    ${SRC_DIR}/rendering/GameEngine.cpp
+    ${SRC_DIR}/rendering/GameInstanceBuilder.cpp
     ${SRC_DIR}/rendering/GameInstanceConfig.cpp
     ${SRC_DIR}/rendering/Material.cpp
     ${SRC_DIR}/rendering/MaterialComponentConfig.cpp
@@ -145,8 +147,6 @@ set(SOURCES
     ${SRC_DIR}/rendering/RenderingSubsystem.cpp
     ${SRC_DIR}/rendering/RenderSequence.cpp
     ${SRC_DIR}/rendering/RenderUploadObject.cpp
-    #${SRC_DIR}/rendering/SpriteInstanceConfig.cpp
-    #${SRC_DIR}/rendering/SpriteInstanceBuilder.cpp
     ${SRC_DIR}/rendering/TransformComponentConfig.cpp
     ${SRC_DIR}/rendering/TransformRenderComponent.cpp
     ${SRC_DIR}/scene/Scene.cpp

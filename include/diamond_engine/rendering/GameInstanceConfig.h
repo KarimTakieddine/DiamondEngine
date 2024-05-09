@@ -8,14 +8,18 @@
 
 namespace diamond_engine
 {
-	enum class GameInstanceType
+	enum class GameInstanceType : unsigned
 	{
-		SPRITE = 0
+		UNKNOWN = 0,
+		SPRITE	= 1
 	};
 
 	class GameInstanceConfig
 	{
 	public:
+		GameInstanceType getType() const;
+		void setType(GameInstanceType type);
+
 		const std::vector<std::unique_ptr<RenderComponentConfig>>& getRenderConfigs() const;
 		std::vector<std::unique_ptr<RenderComponentConfig>>& getRenderConfigs();
 		void setRenderConfigs(std::vector<std::unique_ptr<RenderComponentConfig>> renderConfigs);
@@ -29,5 +33,6 @@ namespace diamond_engine
 	private:
 		std::vector<std::unique_ptr<RenderComponentConfig>> m_renderConfigs;
 		std::vector<std::unique_ptr<BehaviourComponentConfig>> m_behaviourConfigs;
+		GameInstanceType m_type{ GameInstanceType::SPRITE };
 	};
 }

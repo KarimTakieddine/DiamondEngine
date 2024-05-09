@@ -7,7 +7,7 @@
 namespace
 {
 	using diamond_engine::EngineStatus;
-	void setErrorStatus(EngineStatus* status, const std::string& message, bool error = true)
+	static void setErrorStatus(EngineStatus* status, const std::string& message, bool error = true)
 	{
 		if (!status)
 		{

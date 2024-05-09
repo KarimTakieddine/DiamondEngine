@@ -9,7 +9,7 @@
 
 namespace diamond_engine
 {
-	Renderer::Renderer(const std::shared_ptr<ShaderProgram>& shaderProgram) : m_shaderProgram(shaderProgram)
+	Renderer::Renderer(GLuint vertexArrayObject, const std::shared_ptr<ShaderProgram>& shaderProgram) : m_vertexArrayObject(vertexArrayObject), m_shaderProgram(shaderProgram)
 	{
 		if (!m_shaderProgram)
 		{
@@ -27,6 +27,7 @@ namespace diamond_engine
 		renderDrawCall->drawMode = m_drawMode;
 
 		glUseProgram(m_shaderProgram->GetObject());
+		glBindVertexArray(m_vertexArrayObject);
 
 		std::vector<RenderUpload> renderUploads;
 		for (const auto& renderComponent : renderComponents)
@@ -65,6 +66,7 @@ namespace diamond_engine
 	void Renderer::render()
 	{
 		glUseProgram(m_shaderProgram->GetObject());
+		glBindVertexArray(m_vertexArrayObject);
 
 		for (const auto& cameraUpload : m_cameraUploads)
 		{
@@ -81,7 +83,6 @@ namespace diamond_engine
 
 			const RenderDrawCall& drawCall = renderInstruction.drawCall;
 			glBindTexture(GL_TEXTURE_2D, drawCall.texture);
-			glBindVertexArray(drawCall.vertexArrayObject);
 			glDrawElements(drawCall.drawMode, drawCall.elementCount, GL_UNSIGNED_INT, nullptr);
 		}
 	}

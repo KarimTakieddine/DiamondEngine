@@ -4,15 +4,15 @@
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
+#include "SharedMeshStore.h"
 #include "SharedShaderStore.h"
 #include "TextureLoader.h"
 
 namespace diamond_engine
 {
 	GameEngine::GameEngine() :
-		m_graphicsContext(std::make_unique<GraphicsContext>()),
-		m_shaderStore(std::make_shared<SharedShaderStore>()),
-		m_textureLoader(std::make_shared<TextureLoader>()) { }
+		m_graphicsContext(std::make_unique<GraphicsContext>())
+		{ }
 
 	void GameEngine::initialize(const EngineConfig& engineConfig)
 	{
@@ -21,12 +21,15 @@ namespace diamond_engine
 			std::bind(&GameEngine::onWindowUpdate, this, std::placeholders::_1),
 			std::bind(&GameEngine::onWindowResize, this, std::placeholders::_1));
 
-		m_shaderStore->Load(engineConfig.getShadersDirectory());
-		m_textureLoader->Load(engineConfig.getTexturesDirectory());
+		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
+		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
+		SharedMeshStore::getInstance()->loadMeshes();
 
-		m_instanceManager		= std::make_unique<GameInstanceManager>(m_textureLoader);
-		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>(m_shaderStore);
-		m_renderingSubsystem->registerRenderer("sprite_2");
+		m_instanceManager		= std::make_unique<GameInstanceManager>();
+		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>();
+
+		m_renderingSubsystem->setMaxInstanceCount(1);
+		m_renderingSubsystem->registerRenderer("sprite");
 
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
@@ -38,6 +41,11 @@ namespace diamond_engine
 	void GameEngine::run()
 	{
 		m_graphicsContext->Execute();
+
+		unloadCurrentScene();
+		SharedMeshStore::getInstance()->unloadMeshes();
+		TextureLoader::getInstance()->unloadTextures();
+		SharedShaderStore::getInstance()->unload();
 	}
 
 	void GameEngine::initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig)
@@ -72,7 +80,7 @@ namespace diamond_engine
 		}
 
 		EngineStatus parseStatus;
-		auto sceneConfig = GameSceneConfigParser::parseFile(file, &parseStatus);
+		auto sceneConfig = parseSceneFile(file, &parseStatus);
 
 		if (!parseStatus)
 		{
@@ -143,7 +151,7 @@ namespace diamond_engine
 
 		glClearColor(m_sceneBackgroundColor.x, m_sceneBackgroundColor.y, m_sceneBackgroundColor.z, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_renderingSubsystem->render("sprite_2"); // TODO: Have this configurable i.e. do we want to also render colliders
+		m_renderingSubsystem->render("sprite"); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

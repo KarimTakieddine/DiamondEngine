@@ -9,10 +9,17 @@ namespace diamond_engine
 
 	EngineStatus GameInstance::acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent)
 	{
+		if (!renderComponent)
+		{
+			return { "Cannot acquire null component", true };
+		}
+
 		if (getRenderComponent<IRenderComponent>(renderComponent->getComponentType()))
 		{
 			return { "Cannot acquire two components of the same type", true };
 		}
+
+		renderComponent->onRenderObjectAllocated(m_renderObject);
 
 		m_renderComponents.push_back(std::move(renderComponent));
 

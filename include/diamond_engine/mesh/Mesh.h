@@ -1,17 +1,11 @@
 #pragma once
 
-#include <vector>
-
-#include <GL/glew.h>
-
-#include "Vertex.h"
+#include "MeshData.h"
 
 namespace diamond_engine {
 class Mesh {
 public:
-	Mesh(
-		const std::vector<Vertex>& vertices,
-		const std::vector<GLuint>& triangles);
+	Mesh(const MeshData& data);
 
 	void SetVertices(const std::vector<Vertex>& vertices);
 
@@ -25,8 +19,17 @@ public:
 
 	const std::vector<GLuint>& GetTriangles() const;
 
+	GLuint getVertexBufferObject() const;
+
+	void setVertexBufferObject(GLuint vertexBufferObject);
+
+	GLuint getElementBufferObject() const;
+
+	void setElementBufferObject(GLuint elementBufferObject);
+
 private:
-	std::vector<Vertex> m_vertices;
-	std::vector<GLuint> m_triangles;
+	MeshData m_data;
+	GLuint m_vertexBufferObject{ 0 };
+	GLuint m_elementBufferObject{ 0 };
 };
 }

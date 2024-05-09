@@ -13,8 +13,6 @@ namespace diamond_engine
 {
 	struct EngineStatus;
 	class GraphicsContext;
-	class TextureLoader;
-	class SharedShaderStore;
 	class GameSceneConfig;
 	class GameEngine
 	{
@@ -37,8 +35,6 @@ namespace diamond_engine
 
 		std::unordered_map<std::string, std::unique_ptr<GameSceneConfig>> m_gameScenes;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
-		std::shared_ptr<SharedShaderStore> m_shaderStore{ nullptr };
-		std::shared_ptr<TextureLoader> m_textureLoader{ nullptr };
 		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		glm::vec3 m_sceneBackgroundColor{ 0.0f, 0.0f, 0.0f };

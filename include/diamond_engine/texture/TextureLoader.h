@@ -17,7 +17,9 @@ public:
 
 	static const std::unordered_map<GLint, GLenum> kChannelCountToFormatMap;
 
-	TextureLoader();
+	static std::shared_ptr<TextureLoader>& getInstance();
+
+	void unloadTextures();
 
 	void Load(const std::string& rootDirectory);
 
@@ -32,6 +34,8 @@ public:
 	GLint GetTextureIndex(const std::string& name) const;
 
 private:
+	TextureLoader();
+
 	void loadTexture(const std::filesystem::path& texturePath, Texture& texture);
 
 	TextureMap m_textureMap;

@@ -13,7 +13,7 @@ namespace
 	};
 
 	using diamond_engine::EngineStatus;
-	void setErrorStatus(EngineStatus* status, const std::string& message, bool error = true)
+	static void setErrorStatus(EngineStatus* status, const std::string& message, bool error = true)
 	{
 		if (!status)
 		{
@@ -40,6 +40,8 @@ namespace diamond_engine
 				setErrorStatus(outStatus, "Failed to parse game instance config. Invalid type specified: " + typeString);
 				return nullptr;
 			}
+
+			result->setType(typeIt->second);
 		}
 
 		pugi::xml_node renderComponentsNode = node.child("RenderComponents");

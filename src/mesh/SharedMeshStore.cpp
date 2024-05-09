@@ -4,43 +4,66 @@
 #include "SharedMeshStore.h"
 
 namespace diamond_engine {
-	/* static */ SharedMeshStore& SharedMeshStore::GetInstance() {
-		static SharedMeshStore sharedMeshStore;
-
+	/* static */ std::shared_ptr<SharedMeshStore>& SharedMeshStore::getInstance()
+	{
+		static std::shared_ptr<SharedMeshStore> sharedMeshStore(new SharedMeshStore());
 		return sharedMeshStore;
 	}
 
-	const std::shared_ptr<Mesh>& SharedMeshStore::FindMesh(MeshType type) {
-		auto mesh = m_store.find(type);
+	void SharedMeshStore::loadMeshes()
+	{
+		m_bufferAllocator->Allocate(MESH_COUNT << 1);
 
-		if (mesh == m_store.end()) {
-			throw std::runtime_error(
-				"Invalid Mesh Shape supplied: "
-				+ std::to_string(static_cast<unsigned>(type)));
+		for (size_t i = 0; i < MESH_COUNT; ++i)
+		{
+			const MeshType meshType = availableMeshes[i];
+
+			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(m_dataStore.at(meshType));
+
+			mesh->setVertexBufferObject(m_bufferAllocator->Get());
+			mesh->setElementBufferObject(m_bufferAllocator->Get());
+
+			m_store.insert({ meshType, std::move(mesh)});
 		}
-
-		return m_store.at(type);
 	}
 
-	SharedMeshStore::SharedMeshStore() {
-		m_store.insert({
+	void SharedMeshStore::unloadMeshes()
+	{
+		m_store.clear();
+		m_bufferAllocator->Free(m_bufferAllocator->GetAllocatedObjectCount());
+	}
+
+	Mesh* SharedMeshStore::FindMesh(MeshType type) {
+		auto meshIt = m_store.find(type);
+
+		if (meshIt == m_store.cend())
+		{
+			return nullptr;
+		}
+
+		return meshIt->second.get();
+	}
+
+	SharedMeshStore::SharedMeshStore() : m_bufferAllocator(std::make_unique<GLAllocator>(glGenBuffers, glDeleteBuffers))
+	{
+		m_dataStore.insert(
 			{
-				MeshType::TRIANGLE,
-				std::shared_ptr<Mesh>(
-					new Mesh(
+				{
+					MeshType::TRIANGLE,
+					MeshData
+					{
 						{
 							Vertex({ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
 							Vertex({ { 0.0f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.5f, 0.0f } }),
 							Vertex({ { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } })
 						},
 						{ 0, 2, 1 }
-					)
-				)
-			},
-			{
-				MeshType::QUAD,
-				std::shared_ptr<Mesh>(
-					new Mesh(
+					}
+				},
+				{
+					MeshType::QUAD,
+					MeshData
+					{
 						{
 							Vertex({ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
 							Vertex({ { -0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }),
@@ -48,13 +71,12 @@ namespace diamond_engine {
 							Vertex({ { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } })
 						},
 						{ 0, 2, 1, 0, 3, 2 }
-					)
-				)
-			},
-			{
-				MeshType::CUBE,
-				std::shared_ptr<Mesh>(
-					new Mesh(
+					}
+				},
+				{
+					MeshType::CUBE,
+					MeshData
+					{
 						{
 							Vertex({ { -0.5f, -0.5f, 0.5f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
 							Vertex({ { -0.5f, 0.5f, 0.5f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }),
@@ -94,13 +116,12 @@ namespace diamond_engine {
 							16, 18, 17, 16, 19, 18,
 							20, 21, 22, 20, 22, 23
 						}
-					)
-				)
-			},
-			{
-				MeshType::COLLIDER,
-				std::shared_ptr<Mesh>(
-					new Mesh(
+					}
+				},
+				{
+					MeshType::COLLIDER,
+					MeshData
+					{
 						{
 							Vertex({ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
 							Vertex({ { -0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }),
@@ -108,9 +129,11 @@ namespace diamond_engine {
 							Vertex({ { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } })
 						},
 						{ 0, 1, 1, 2, 2, 3, 3, 0 }
-					)
-				)
+					}
+				}
 			}
-		});
+		);
+
+		m_bufferAllocator->Reserve(MESH_COUNT << 1);
 	}
 }
