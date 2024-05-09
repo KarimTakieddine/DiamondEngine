@@ -28,7 +28,7 @@ namespace diamond_engine
 		m_instanceManager		= std::make_unique<GameInstanceManager>();
 		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>();
 
-		m_renderingSubsystem->setMaxInstanceCount(1);
+		m_renderingSubsystem->setMaxRendererCount(1);
 		m_renderingSubsystem->registerRenderer("sprite");
 
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
@@ -43,6 +43,7 @@ namespace diamond_engine
 		m_graphicsContext->Execute();
 
 		unloadCurrentScene();
+		m_renderingSubsystem->freeAllocatedInstances();
 		SharedMeshStore::getInstance()->unloadMeshes();
 		TextureLoader::getInstance()->unloadTextures();
 		SharedShaderStore::getInstance()->unload();
@@ -123,7 +124,6 @@ namespace diamond_engine
 		}
 
 		const auto& sceneConfig = sceneIt->second;
-		m_renderingSubsystem->setMaxInstanceCount(sceneConfig->getMaxInstanceCount());
 		EngineStatus loadStatus = m_instanceManager->loadScene(*sceneConfig.get());
 
 		if (!loadStatus)
@@ -138,7 +138,6 @@ namespace diamond_engine
 	void GameEngine::unloadCurrentScene()
 	{
 		m_instanceManager->unloadCurrentScene();
-		m_renderingSubsystem->freeAllocatedInstances();
 		m_currentScene.clear();
 		m_sceneBackgroundColor = { };
 	}

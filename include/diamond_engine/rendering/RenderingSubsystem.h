@@ -12,7 +12,7 @@ namespace diamond_engine
 	public:
 		RenderingSubsystem();
 
-		void setMaxInstanceCount(GLsizei maxInstanceCount);
+		void setMaxRendererCount(GLsizei maxInstanceCount);
 		void freeAllocatedInstances();
 
 		// TODO: The reverse of this i.e. what happens when we want to get rid of one?

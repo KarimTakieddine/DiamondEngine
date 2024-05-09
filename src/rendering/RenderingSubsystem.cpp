@@ -16,7 +16,7 @@ namespace diamond_engine
 		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
 	}
 
-	void RenderingSubsystem::setMaxInstanceCount(GLsizei maxInstanceCount)
+	void RenderingSubsystem::setMaxRendererCount(GLsizei maxInstanceCount)
 	{
 		m_vertexArrayAllocator->Allocate(maxInstanceCount);
 	}
