@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 #include "GLAllocator.h"
+#include "VertexAttribute.h"
 
 namespace diamond_engine
 {
@@ -16,7 +17,7 @@ namespace diamond_engine
 		void freeAllocatedInstances();
 
 		// TODO: The reverse of this i.e. what happens when we want to get rid of one?
-		EngineStatus registerRenderer(const std::string& shaderProgramName);
+		EngineStatus registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode,const std::vector<VertexAttribute>& vertexAttributes, const std::string& shaderProgramName);
 		EngineStatus registerRenderObject(const std::string& shaderProgramName, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const;
 
 		Renderer* getRenderer(const std::string& shaderProgramName) const;

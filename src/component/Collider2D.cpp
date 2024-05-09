@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "Collider2D.h"
-#include "GameObject.h"
 #include "MeshRendererBuilder.h"
 
 namespace diamond_engine

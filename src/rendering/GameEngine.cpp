@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <stdexcept>
 
+#include "Camera.h"
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
@@ -28,8 +29,27 @@ namespace diamond_engine
 		m_instanceManager		= std::make_unique<GameInstanceManager>();
 		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>();
 
-		m_renderingSubsystem->setMaxRendererCount(1);
-		m_renderingSubsystem->registerRenderer("sprite");
+		m_renderingSubsystem->setMaxRendererCount(2);
+		m_renderingSubsystem->registerRenderer(
+			MeshType::QUAD,
+			GL_DYNAMIC_DRAW,
+			GL_TRIANGLES,
+			{
+				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "textureCoordinate", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
+			},
+			"sprite");
+
+		m_renderingSubsystem->registerRenderer(
+			MeshType::COLLIDER,
+			GL_DYNAMIC_DRAW,
+			GL_LINES,
+			{
+				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT }
+			},
+			"unlit_color");
 
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
@@ -151,6 +171,7 @@ namespace diamond_engine
 		glClearColor(m_sceneBackgroundColor.x, m_sceneBackgroundColor.y, m_sceneBackgroundColor.z, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		m_renderingSubsystem->render("sprite"); // TODO: Have this configurable i.e. do we want to also render colliders
+		m_renderingSubsystem->render("unlit_color");
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

@@ -1,22 +1,15 @@
+#include <GL/glew.h>
+
 #include <pugixml.hpp>
 
 #include "ComponentConfigParser.h"
 #include "MaterialComponentConfig.h"
-#include "MeshRenderComponentConfig.h"
 #include "TransformComponentConfig.h"
 #include "Vector3Parser.h"
 #include "Vector2Parser.h"
 
 namespace
 {
-	using diamond_engine::MeshType;
-	const std::unordered_map<std::string, MeshType> kStringToMeshType = {
-		{ "triangle",	MeshType::TRIANGLE },
-		{ "quad",		MeshType::QUAD },
-		{ "cube",		MeshType::CUBE },
-		{ "collider",	MeshType::COLLIDER }
-	};
-
 	const std::unordered_map<std::string, GLenum> kStringToDrawMode = {
 		{ "static",		GL_STATIC_DRAW },
 		{ "dynamic",	GL_DYNAMIC_DRAW }
@@ -59,41 +52,6 @@ namespace
 		if (textureOffsetNode)
 		{
 			result->setTextureOffset(Vector2Parser::Parse(textureOffsetNode));
-		}
-
-		return result;
-	}
-
-	static std::unique_ptr<RenderComponentConfig> parseMeshRenderConfig(const pugi::xml_node& node, EngineStatus* outStatus)
-	{
-		using diamond_engine::MeshRenderComponentConfig;
-
-		std::unique_ptr<MeshRenderComponentConfig> result = std::make_unique<MeshRenderComponentConfig>();
-
-		pugi::xml_attribute typeAttribute = node.attribute("type");
-		if (typeAttribute)
-		{
-			const std::string meshTypeString(typeAttribute.as_string());
-			auto meshTypeIt = kStringToMeshType.find(meshTypeString);
-			if (meshTypeIt == kStringToMeshType.cend())
-			{
-				setErrorStatus(outStatus, "Failed to parse mesh render component config. Invalid mesh type specified: " + meshTypeString);
-				return nullptr;
-			}
-
-			result->setMeshType(meshTypeIt->second);
-		}
-
-		pugi::xml_attribute drawModeAttribute = node.attribute("drawMode");
-		if (drawModeAttribute)
-		{
-			const std::string drawModeString(drawModeAttribute.as_string());
-			auto drawModeIt = kStringToDrawMode.find(drawModeString);
-			if (drawModeIt == kStringToDrawMode.cend())
-			{
-				setErrorStatus(outStatus, "Failed to parse mesh render component config. Invalid draw mode specified: " + drawModeString);
-				return nullptr;
-			}
 		}
 
 		return result;
@@ -158,7 +116,6 @@ namespace diamond_engine
 
 	/* static */ std::unordered_map<std::string, ComponentConfigParser::RenderParseMethod> ComponentConfigParser::renderParseMethods = {
 		{ "Material",	&parseMaterialConfig	},
-		{ "MeshRender", &parseMeshRenderConfig	},
 		{ "Transform",	&parseTransformConfig	}
 	};
 

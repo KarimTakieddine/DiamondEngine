@@ -5,7 +5,6 @@
 #include <GL/glew.h>
 
 #include "EngineConfig.h"
-#include "Scene.h"
 #include "Window.h"
 
 namespace diamond_engine {

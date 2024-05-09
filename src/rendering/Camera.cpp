@@ -1,7 +1,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Camera.h"
-#include "GameObject.h"
 #include "Transform.h"
 
 /*

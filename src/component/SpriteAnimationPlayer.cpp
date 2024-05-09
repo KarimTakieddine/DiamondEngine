@@ -1,6 +1,5 @@
 #include <stdexcept>
 
-#include "GameObject.h"
 #include "SpriteAnimationPlayer.h"
 
 #include <iostream>
@@ -50,7 +49,7 @@ namespace diamond_engine
 			return;
 		}
 
-		m_gameObject->GetRenderableObject()->material.SetTexture(m_currentSpriteSheet->frames[animationFrame].index);
+		//m_gameObject->GetRenderableObject()->material.SetTexture(m_currentSpriteSheet->frames[animationFrame].index);
 	}
 
 	void SpriteAnimationPlayer::BindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) { }

@@ -5,9 +5,10 @@
 #include <GL/glew.h>
 
 #include "Animation.h"
-#include "ComponentConfig.h"
+//#include "ComponentConfig.h"
 
 namespace diamond_engine {
+	/*
 	class SpriteAnimationPlayerConfig : public ComponentConfig {
 	public:
 		virtual ~SpriteAnimationPlayerConfig() override = default;
@@ -23,4 +24,5 @@ namespace diamond_engine {
 	private:
 		std::vector<Animation> m_animations;
 	};
+	*/
 }

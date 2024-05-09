@@ -1,8 +1,6 @@
 #include "ComponentBuilder.h"
 #include "MaterialComponentConfig.h"
 #include "MaterialRenderComponent.h"
-#include "MeshRenderComponent.h"
-#include "MeshRenderComponentConfig.h"
 #include "SharedMeshStore.h"
 #include "TextureLoader.h"
 #include "TransformComponentConfig.h"
@@ -37,44 +35,6 @@ namespace
 		result->setTexture(TextureLoader::getInstance()->GetTexture(materialComponentConfig->getTextureName()));
 		result->setColor(materialComponentConfig->getColor());
 		result->setTextureOffset(materialComponentConfig->getTextureOffset());
-
-		return result;
-	}
-
-	static std::unique_ptr<IRenderComponent> buildMeshRenderComponent(const RenderComponentConfig* config, EngineStatus* outStatus /* = nullptr */)
-	{
-		using diamond_engine::Mesh;
-		using diamond_engine::MeshRenderComponent;
-		using diamond_engine::MeshRenderComponentConfig;
-		using diamond_engine::SharedMeshStore;
-		
-		const MeshRenderComponentConfig* meshRenderComponentConfig = dynamic_cast<const MeshRenderComponentConfig*>(config);
-
-		if (!meshRenderComponentConfig)
-		{
-			if (outStatus)
-			{
-				*outStatus = { "Failed to cast supplied config to MeshRenderComponentConfig", true };
-			}
-
-			return nullptr;
-		}
-
-		std::unique_ptr<MeshRenderComponent> result = std::make_unique<MeshRenderComponent>();
-
-		Mesh* mesh = SharedMeshStore::getInstance()->FindMesh(meshRenderComponentConfig->getMeshType());
-		if (!mesh)
-		{
-			if (outStatus)
-			{
-				*outStatus = { "Failed to build MeshRenderComponent. Invalid mesh type supplied", true };
-			}
-			
-			return nullptr;
-		}
-
-		result->setDrawMode(meshRenderComponentConfig->getDrawMode());
-		result->setMesh(mesh);
 
 		return result;
 	}
@@ -142,7 +102,6 @@ namespace diamond_engine
 	/* static */ std::unordered_map<std::string, ComponentBuilder::RenderBuildMethod> ComponentBuilder::renderBuildMethods =
 	{
 		{ "Material",	::buildMaterialComponent },
-		{ "MeshRender", ::buildMeshRenderComponent },
 		{ "Transform",	::buildTransformComponent }
 	};
 }

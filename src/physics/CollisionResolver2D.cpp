@@ -5,7 +5,6 @@
 
 #include "Collider2D.h"
 #include "CollisionResolver2D.h"
-#include "GameObject.h"
 
 namespace diamond_engine
 {

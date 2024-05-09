@@ -6,5 +6,5 @@ uniform vec3 materialColor;
 out vec4 outColor;
 
 void main() {
-    outColor = vec4(vertexColor * materialColor, 1.0);
+    outColor = vec4(materialColor * vertexColor, 1.0);
 }

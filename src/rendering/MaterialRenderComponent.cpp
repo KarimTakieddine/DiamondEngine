@@ -24,6 +24,8 @@ namespace diamond_engine
 		m_renderDrawCall = renderDrawCall;
 		
 		setTexture(m_texture);
+		setColor(m_color);
+		setTextureOffset(m_textureOffset);
 
 		return { };
 	}

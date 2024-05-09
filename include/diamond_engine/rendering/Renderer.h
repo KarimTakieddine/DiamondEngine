@@ -1,7 +1,9 @@
 #pragma once
 
+#include "MeshType.h"
 #include "RenderDrawCall.h"
 #include "RenderUploadObject.h"
+#include "VertexAttribute.h"
 
 namespace diamond_engine
 {
@@ -49,11 +51,12 @@ namespace diamond_engine
 	class Camera;
 	class GLAllocator;
 	class IRenderComponent;
+	class Mesh;
 	class Renderer
 	{
 	public:
 		// The Renderer has access to one shared shader program and binds it before uploading all the uniforms
-		Renderer(GLuint vertexArrayObject, const std::shared_ptr<ShaderProgram>& shaderProgram);
+		Renderer(GLuint vertexArrayObject, MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
 		void clearRenderInstructions();
 		void registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall);
 		const std::vector<RenderInstruction>& getInstructions() const;
@@ -61,6 +64,7 @@ namespace diamond_engine
 		const std::shared_ptr<ShaderProgram>& getShaderProgram() const;
 		void setCamera(const std::shared_ptr<Camera>& camera);
 		void render();
+		void uploadMeshData(const std::vector<VertexAttribute>& vertexAttributes, GLenum drawType);
 
 	private:
 		static void performUpload(const RenderUpload& renderUpload);
@@ -69,6 +73,7 @@ namespace diamond_engine
 		std::vector<RenderInstruction> m_renderInstructions;
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
 		std::shared_ptr<Camera> m_camera{ nullptr };
+		Mesh* m_sharedMesh{ nullptr };
 		GLuint m_vertexArrayObject{ 0 };
 		GLenum m_drawMode{ GL_TRIANGLES };
 	};

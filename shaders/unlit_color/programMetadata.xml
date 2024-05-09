@@ -7,11 +7,12 @@
 		</Attributes>
 		<Uniforms>
 			<Uniform name="projection"/>
-			<Uniform name="cameraTranslation"/>
-			<Uniform name="cameraRotation"/>
-			<Uniform name="cameraScale"/>
+			<Uniform name="cameraLocalToWorld"/>
+			<Uniform name="cameraLocalRotation"/>
 			<Uniform name="cameraView"/>
-			<Uniform name="model"/>
+			<Uniform name="modelLocalToWorld"/>
+			<Uniform name="modelLocalRotation"/>
+			<Uniform name="modelLocalScale"/>
 		</Uniforms>
 	</Shader>
 	<Shader type="fragment" file="unlit_color.dmsh">

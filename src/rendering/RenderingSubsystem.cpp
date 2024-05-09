@@ -16,9 +16,9 @@ namespace diamond_engine
 		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
 	}
 
-	void RenderingSubsystem::setMaxRendererCount(GLsizei maxInstanceCount)
+	void RenderingSubsystem::setMaxRendererCount(GLsizei maxRendererCount)
 	{
-		m_vertexArrayAllocator->Allocate(maxInstanceCount);
+		m_vertexArrayAllocator->Allocate(maxRendererCount);
 	}
 
 	void RenderingSubsystem::freeAllocatedInstances()
@@ -31,9 +31,9 @@ namespace diamond_engine
 		m_vertexArrayAllocator->Free(m_vertexArrayAllocator->GetAllocatedObjectCount());
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderer(const std::string& shaderProgramName)
+	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode, const std::vector<VertexAttribute>& vertexAttributes, const std::string& shaderProgramName)
 	{
-		const auto& shaderProgram = SharedShaderStore::getInstance()->FindProgram(shaderProgramName);
+		const auto shaderProgram = SharedShaderStore::getInstance()->FindProgram(shaderProgramName);
 
 		if (!shaderProgram)
 		{
@@ -45,7 +45,8 @@ namespace diamond_engine
 			return { "Failed to register renderer. Already active: " + shaderProgramName, true };
 		}
 
-		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), shaderProgram);
+		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), meshType, drawMode, shaderProgram);
+		renderer->uploadMeshData(vertexAttributes, drawType);
 		renderer->setCamera(m_camera);
 		m_renderers.insert(
 			{ shaderProgramName, std::move(renderer) });
