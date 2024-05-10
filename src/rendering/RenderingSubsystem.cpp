@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Camera.h"
 #include "IRenderComponent.h"
 #include "RenderingSubsystem.h"
@@ -7,8 +5,10 @@
 
 namespace diamond_engine
 {
-	RenderingSubsystem::RenderingSubsystem() : m_camera(std::make_unique<Camera>()) // TODO: Share this?
+	RenderingSubsystem::RenderingSubsystem() : m_camera(std::make_unique<Camera>()), m_uniformBufferAgent(std::make_unique<UniformBufferAgent>()) // TODO: Share this?
 	{
+		m_uniformBufferAgent->reserveCapacity(256);
+
 		m_vertexArrayAllocator = std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays);
 		m_vertexArrayAllocator->Reserve(256);
 
@@ -18,7 +18,10 @@ namespace diamond_engine
 
 	void RenderingSubsystem::setMaxRendererCount(GLsizei maxRendererCount)
 	{
+		m_uniformBufferAgent->allocateBuffers(maxRendererCount);
 		m_vertexArrayAllocator->Allocate(maxRendererCount);
+
+		m_cameraUniformBuffer = m_uniformBufferAgent->allocateBuffer(0, GL_DYNAMIC_DRAW);
 	}
 
 	void RenderingSubsystem::freeAllocatedInstances()
@@ -28,7 +31,10 @@ namespace diamond_engine
 			getRenderer(registeredRenderer)->clearRenderInstructions();
 		}
 
+		// TODO: Need to add teardown logic. This is a mix between subsystem teardown and rendered instance teardown
+
 		m_vertexArrayAllocator->Free(m_vertexArrayAllocator->GetAllocatedObjectCount());
+		m_uniformBufferAgent->freeAllBuffers();
 	}
 
 	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode, const std::vector<VertexAttribute>& vertexAttributes, const std::string& shaderProgramName)
@@ -45,9 +51,22 @@ namespace diamond_engine
 			return { "Failed to register renderer. Already active: " + shaderProgramName, true };
 		}
 
+		EngineStatus uniformBufferStatus = m_uniformBufferAgent->buildUniformBuffer(
+			shaderProgram,
+			"CameraMatrices",
+			{ "cameraProjection", "cameraLocalToWorld", "cameraLocalRotation", "cameraView" },
+			&m_cameraUniformBuffer);
+
+		if (!uniformBufferStatus)
+		{
+			return uniformBufferStatus;
+		}
+
+		m_uniformBufferAgent->bindUniformBuffer(m_cameraUniformBuffer);
+
 		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), meshType, drawMode, shaderProgram);
 		renderer->uploadMeshData(vertexAttributes, drawType);
-		renderer->setCamera(m_camera);
+
 		m_renderers.insert(
 			{ shaderProgramName, std::move(renderer) });
 
@@ -83,23 +102,28 @@ namespace diamond_engine
 		return rendererIt->second.get();
 	}
 
-	void RenderingSubsystem::render(const std::string& shaderProgramName) const
-	{
-		Renderer* registeredRenderer = getRenderer(shaderProgramName);
-
-		if (!registeredRenderer)
-		{
-			throw std::runtime_error("Attempt to access invalid renderer. Name: " + shaderProgramName);
-		}
-
-		registeredRenderer->render();
-	}
-
 	void RenderingSubsystem::renderAll() const
 	{
-		for (const auto& registeredRenderer : m_registeredRenderers)
+		m_uniformBufferAgent->uploadBufferData(
+			m_cameraUniformBuffer,
+			{
+				&m_camera->GetProjection(),
+				&m_camera->GetTransform().getLocalToWorld(),
+				&m_camera->GetTransform().getLocalRotation(),
+				&m_camera->GetView()
+			}
+		);
+
+		for (size_t i = 0; i < m_registeredRenderers.size(); ++i)
 		{
-			render(registeredRenderer);
+			Renderer* registeredRenderer = getRenderer(m_registeredRenderers[i]);
+
+			if (!registeredRenderer)
+			{
+				throw std::runtime_error("Attempt to access invalid renderer. Name: " + m_registeredRenderers[i]);
+			}
+
+			registeredRenderer->render();
 		}
 	}
 

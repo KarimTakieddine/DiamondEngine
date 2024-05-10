@@ -147,6 +147,7 @@ set(SOURCES
     ${SRC_DIR}/rendering/RenderUploadObject.cpp
     ${SRC_DIR}/rendering/TransformComponentConfig.cpp
     ${SRC_DIR}/rendering/TransformRenderComponent.cpp
+    ${SRC_DIR}/rendering/UniformBufferAgent.cpp
     #${SRC_DIR}/scene/Scene.cpp
     #${SRC_DIR}/scene/SceneLoader.cpp
     ${SRC_DIR}/shader/Shader.cpp

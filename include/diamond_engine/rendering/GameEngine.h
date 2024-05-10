@@ -35,8 +35,8 @@ namespace diamond_engine
 
 		std::unordered_map<std::string, std::unique_ptr<GameSceneConfig>> m_gameScenes;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
-		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
+		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		glm::vec3 m_sceneBackgroundColor{ 0.0f, 0.0f, 0.0f };
 		std::string m_currentScene;
 	};

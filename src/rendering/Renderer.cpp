@@ -71,14 +71,8 @@ namespace diamond_engine
 
 	void Renderer::render()
 	{
-		glBindVertexArray(m_vertexArrayObject);
-
 		glUseProgram(m_shaderProgram->GetObject());
-
-		for (const auto& cameraUpload : m_cameraUploads)
-		{
-			performUpload(cameraUpload);
-		}
+		glBindVertexArray(m_vertexArrayObject);
 
 		for (const auto& renderInstruction : m_renderInstructions)
 		{
@@ -139,20 +133,5 @@ namespace diamond_engine
 	const std::shared_ptr<ShaderProgram>& Renderer::getShaderProgram() const
 	{
 		return m_shaderProgram;
-	}
-
-	void Renderer::setCamera(const std::shared_ptr<Camera>& camera)
-	{
-		if (camera)
-		{
-			m_cameraUploads = {
-				{ &camera->GetProjection(),						RenderUploadType::Matrix4, m_shaderProgram->GetUniform("projection")},
-				{ &camera->GetTransform().getLocalToWorld(),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraLocalToWorld")},
-				{ &camera->GetTransform().getLocalRotation(),	RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraLocalRotation") },
-				{ &camera->GetView(),							RenderUploadType::Matrix4, m_shaderProgram->GetUniform("cameraView") }
-			};
-		}
-
-		m_camera = camera;
 	}
 }

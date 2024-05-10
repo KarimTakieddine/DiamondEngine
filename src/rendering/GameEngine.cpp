@@ -26,9 +26,7 @@ namespace diamond_engine
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
 		SharedMeshStore::getInstance()->loadMeshes();
 
-		m_instanceManager		= std::make_unique<GameInstanceManager>();
-		m_renderingSubsystem	= std::make_unique<RenderingSubsystem>();
-
+		m_renderingSubsystem = std::make_unique<RenderingSubsystem>();
 		m_renderingSubsystem->setMaxRendererCount(2);
 		m_renderingSubsystem->registerRenderer(
 			MeshType::QUAD,
@@ -41,6 +39,7 @@ namespace diamond_engine
 			},
 			"sprite");
 
+		/*
 		m_renderingSubsystem->registerRenderer(
 			MeshType::COLLIDER,
 			GL_DYNAMIC_DRAW,
@@ -50,7 +49,9 @@ namespace diamond_engine
 				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT }
 			},
 			"unlit_color");
+		*/
 
+		m_instanceManager = std::make_unique<GameInstanceManager>();
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
@@ -170,8 +171,7 @@ namespace diamond_engine
 
 		glClearColor(m_sceneBackgroundColor.x, m_sceneBackgroundColor.y, m_sceneBackgroundColor.z, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_renderingSubsystem->render("sprite"); // TODO: Have this configurable i.e. do we want to also render colliders
-		m_renderingSubsystem->render("unlit_color");
+		m_renderingSubsystem->renderAll(); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

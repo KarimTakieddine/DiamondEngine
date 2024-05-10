@@ -4,13 +4,17 @@ in vec3 position;
 in vec3 color;
 in vec2 textureCoordinate;
 
-layout (location=0) uniform mat4 projection;
-layout (location=1) uniform mat4 cameraLocalToWorld;
-layout (location=2) uniform mat4 cameraLocalRotation;
-layout (location=3) uniform mat4 cameraView;
-layout (location=4) uniform mat4 modelLocalToWorld;
-layout (location=5) uniform mat4 modelLocalRotation;
-layout (location=6) uniform mat4 modelLocalScale;
+uniform CameraMatrices
+{
+    mat4 cameraProjection;
+    mat4 cameraLocalToWorld;
+    mat4 cameraLocalRotation;
+    mat4 cameraView;
+};
+
+uniform mat4 modelLocalToWorld;
+uniform mat4 modelLocalRotation;
+uniform mat4 modelLocalScale;
 
 out vec3 vertexColor;
 out vec2 vertexTextureCoordinate;
@@ -20,7 +24,7 @@ void main() {
 	mat4 cameraViewTransform	= inverse(cameraTransform) * cameraView;
     mat4 model                  = modelLocalToWorld * modelLocalRotation * modelLocalScale;
 
-    gl_Position = projection * cameraViewTransform * model * vec4(position, 1.0);
+    gl_Position = cameraProjection * cameraViewTransform * model * vec4(position, 1.0);
 
     vertexColor             = color;
     vertexTextureCoordinate = textureCoordinate;

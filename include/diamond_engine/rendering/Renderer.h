@@ -62,7 +62,6 @@ namespace diamond_engine
 		const std::vector<RenderInstruction>& getInstructions() const;
 		std::vector<RenderInstruction>& getInstructions();
 		const std::shared_ptr<ShaderProgram>& getShaderProgram() const;
-		void setCamera(const std::shared_ptr<Camera>& camera);
 		void render();
 		void uploadMeshData(const std::vector<VertexAttribute>& vertexAttributes, GLenum drawType);
 
@@ -72,7 +71,6 @@ namespace diamond_engine
 		std::vector<RenderUpload> m_cameraUploads;
 		std::vector<RenderInstruction> m_renderInstructions;
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
-		std::shared_ptr<Camera> m_camera{ nullptr };
 		Mesh* m_sharedMesh{ nullptr };
 		GLuint m_vertexArrayObject{ 0 };
 		GLenum m_drawMode{ GL_TRIANGLES };

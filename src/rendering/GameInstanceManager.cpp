@@ -54,9 +54,11 @@ namespace diamond_engine
 		case GameInstanceType::SPRITE:
 			registerStatus = m_renderingSubsystem->registerRenderObject("sprite", instance->getRenderComponents());
 			break;
+		/*
 		case GameInstanceType::COLLIDER:
 			registerStatus = m_renderingSubsystem->registerRenderObject("unlit_color", instance->getRenderComponents());
 			break;
+		*/
 		default:
 			registerStatus = { "Failed to register game instance of unknown type", true };
 			break;
