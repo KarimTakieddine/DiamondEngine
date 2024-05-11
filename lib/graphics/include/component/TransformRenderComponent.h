@@ -12,10 +12,7 @@ namespace diamond_engine
 	public:
 		~TransformRenderComponent() final override = default;
 
-		RenderComponentType getComponentType() const final override
-		{
-			return RenderComponentType::TRANSFORM;
-		}
+		const char* getName() const final override { return "Transform"; }
 
 		std::vector<RenderUpload> getUploads() const final override;
 		EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) final override;

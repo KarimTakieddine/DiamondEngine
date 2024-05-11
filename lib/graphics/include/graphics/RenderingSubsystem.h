@@ -27,6 +27,8 @@ namespace diamond_engine
 
 		const std::shared_ptr<Camera>& getCamera() const;
 
+		void setBackgroundColor(const glm::vec4& backgroundColor);
+
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Renderer>> m_renderers;
 		std::vector<std::string> m_registeredRenderers;
@@ -34,5 +36,6 @@ namespace diamond_engine
 		std::shared_ptr<Camera> m_camera{ nullptr };
 		std::unique_ptr<UniformBufferAgent> m_uniformBufferAgent{ nullptr };
 		std::unique_ptr<GLAllocator> m_vertexArrayAllocator{ nullptr };
+		glm::vec4 m_backgroundColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 	};
 }

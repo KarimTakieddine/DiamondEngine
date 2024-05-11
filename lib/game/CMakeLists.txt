@@ -31,5 +31,6 @@ target_include_directories(libDiamondEngineGame PRIVATE
     "${GRAPHICS_DIR}/include/graphics"
     "${GRAPHICS_DIR}/include/shader"
     "${INCLUDE_DIR}/allocator"
+    "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/game"
 )

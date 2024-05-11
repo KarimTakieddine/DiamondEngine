@@ -93,6 +93,7 @@ target_include_directories(DiamondEngine PUBLIC
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"
     "${GAME_DIR}/include/allocator"
+    "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"
     "${GRAPHICS_DIR}/include/allocator"
     "${GRAPHICS_DIR}/include/component"

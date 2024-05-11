@@ -35,6 +35,7 @@ set(SOURCES
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/parser/Vector2Parser.cpp
     ${SRC_DIR}/parser/Vector3Parser.cpp
+    ${SRC_DIR}/parser/Vector4Parser.cpp
     ${SRC_DIR}/parser/WindowConfigParser.cpp)
 
 add_library(libDiamondEngineConfig STATIC ${SOURCES})

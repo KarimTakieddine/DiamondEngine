@@ -23,12 +23,11 @@ namespace diamond_engine
 		EngineStatus loadScene(const GameSceneConfig& sceneConfig);
 		std::unique_ptr<GameInstance> createInstance();
 		EngineStatus registerInstance(std::unique_ptr<GameInstance> instance, const GameInstanceConfig* instanceConfig);
-		/* EngineStatus registerInstance(GameInstanceType instanceType, const GameInstance* instance); */
+		void updateInstances(GLfloat deltaTime);
 
 	private:
 		std::vector<std::unique_ptr<GameInstance>> m_instances;
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectAllocator{ nullptr };
-		//std::shared_ptr<GLAllocator> m_bufferAllocator{ nullptr };
 	};
 }

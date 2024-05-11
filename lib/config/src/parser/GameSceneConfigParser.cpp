@@ -2,7 +2,7 @@
 
 #include "GameInstanceConfigParser.h"
 #include "GameSceneConfigParser.h"
-#include "Vector3Parser.h"
+#include "Vector4Parser.h"
 
 namespace
 {
@@ -59,7 +59,7 @@ namespace diamond_engine
 		pugi::xml_node backgroundColorNode = node.child("BackgroundColor");
 		if (backgroundColorNode)
 		{
-			result->setBackgroundColor(Vector3Parser::Parse(backgroundColorNode));
+			result->setBackgroundColor(Vector4Parser::Parse(backgroundColorNode));
 		}
 
 		pugi::xml_node instancesNode = node.child("Instances");

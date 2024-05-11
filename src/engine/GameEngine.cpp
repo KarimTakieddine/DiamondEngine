@@ -168,10 +168,7 @@ namespace diamond_engine
 	{
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
-		// TODO: Behaviours and background color config
-
-		glClearColor(m_sceneBackgroundColor.x, m_sceneBackgroundColor.y, m_sceneBackgroundColor.z, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_instanceManager->updateInstances(deltaTime);
 		m_renderingSubsystem->renderAll(); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 

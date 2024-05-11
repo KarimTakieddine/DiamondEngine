@@ -126,6 +126,9 @@ namespace diamond_engine
 
 	void RenderingSubsystem::renderAll() const
 	{
+		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		m_uniformBufferAgent->uploadBufferData(m_cameraUniformBuffer);
 
 		for (size_t i = 0; i < m_registeredRenderers.size(); ++i)
@@ -144,5 +147,10 @@ namespace diamond_engine
 	const std::shared_ptr<Camera>& RenderingSubsystem::getCamera() const
 	{
 		return m_camera;
+	}
+
+	void RenderingSubsystem::setBackgroundColor(const glm::vec4& backgroundColor)
+	{
+		m_backgroundColor = backgroundColor;
 	}
 }

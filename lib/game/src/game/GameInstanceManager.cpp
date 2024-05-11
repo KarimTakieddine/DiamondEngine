@@ -79,15 +79,7 @@ namespace diamond_engine
 
 		m_renderObjectAllocator->Expand(maxObjects);
 
-		/*
-		* Here we need to allocate the render object
-		* Build the render components
-		* Pass them to the render instance manager
-		* Then comes out a draw call
-		* We call onDrawCallRegistered for all components
-		* Assign them to a game instance
-		* Voila! -- DONE YO!
-		*/
+		m_renderingSubsystem->setBackgroundColor(sceneConfig.getBackgroundColor());
 
 		for (const auto& instanceConfig : sceneConfig.getInstanceConfigs())
 		{
@@ -107,5 +99,16 @@ namespace diamond_engine
 		}
 
 		return { };
+	}
+
+	void GameInstanceManager::updateInstances(GLfloat deltaTime)
+	{
+		for (const auto& instance : m_instances)
+		{
+			for (const auto& behaviourComponent : instance->getBehaviourComponents())
+			{
+				behaviourComponent->update(deltaTime);
+			}
+		}
 	}
 }

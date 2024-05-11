@@ -21,14 +21,6 @@
 
 namespace diamond_engine
 {
-	enum class RenderComponentType
-	{
-		UNKNOWN		= 0,
-		MESH		= 1,
-		MATERIAL	= 2,
-		TRANSFORM	= 3
-	};
-
 	struct RenderDrawCall;
 	struct RenderObject;
 	class ShaderProgram;
@@ -36,7 +28,7 @@ namespace diamond_engine
 	{
 	public:
 		virtual ~IRenderComponent() = default;
-		virtual RenderComponentType getComponentType() const = 0;
+		virtual const char* getName() const = 0;
 		virtual std::vector<RenderUpload> getUploads() const = 0;
 		virtual EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) = 0;
 		virtual EngineStatus onRenderObjectAllocated(RenderObject* renderObject) = 0;
