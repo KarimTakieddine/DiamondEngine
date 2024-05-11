@@ -12,15 +12,19 @@
 
 namespace diamond_engine
 {
+	struct UniformSegment
+	{
+		const void* data;
+		GLsizeiptr stride;
+		GLintptr offset;
+	};
+
 	struct UniformBuffer
 	{
-		std::vector<GLint> offsets;
-		std::vector<GLint> sizes;
-		std::vector<GLint> types;
+		std::vector<UniformSegment> segments;
 
 		GLuint buffer	{ 0 };
 		GLuint binding	{ 0 }; // GL_MAX_UNIFORM_BUFFER_BINDINGS
-		GLuint count	{ 0 };
 		GLenum usage	{ GL_STATIC_DRAW };
 	};
 
@@ -46,9 +50,9 @@ namespace diamond_engine
 		void freeBuffers(GLsizei count);
 		void freeAllBuffers();
 		UniformBuffer allocateBuffer(GLuint binding, GLenum usage);
-		EngineStatus buildUniformBuffer(const std::shared_ptr<ShaderProgram>& shaderProgram, const std::string& name, const std::vector<const char*>& names, UniformBuffer* uniformBuffer);
-		void bindUniformBuffer(const UniformBuffer& uniformBuffer);
-		EngineStatus uploadBufferData(const UniformBuffer& uniformBuffer, const std::vector<const void*>&data);
+		void registerUniformBuffer(const UniformBuffer& uniformBuffer);
+		EngineStatus bindUniformBuffer(const UniformBuffer& uniformBuffer, const std::shared_ptr<ShaderProgram>& shaderProgram, const std::string& name, const std::vector<const char*>& names);
+		EngineStatus uploadBufferData(const UniformBuffer& uniformBuffer);
 
 	private:
 		std::unique_ptr<GLAllocator> m_bufferAllocator{ nullptr };

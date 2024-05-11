@@ -42,15 +42,13 @@ namespace diamond_engine
 		return result;
 	}
 
-	void UniformBufferAgent::bindUniformBuffer(const UniformBuffer& uniformBuffer)
+	void UniformBufferAgent::registerUniformBuffer(const UniformBuffer& uniformBuffer)
 	{
 		GLsizeiptr bufferSize = 0;
-		const std::vector<GLint>& sizes = uniformBuffer.sizes;
-		const std::vector<GLint>& types = uniformBuffer.types;
 
-		for (GLuint i = 0; i < uniformBuffer.count; ++i)
+		for (const auto& segment : uniformBuffer.segments)
 		{
-			bufferSize += sizes[i] * getSizeInBytes(types[i]);
+			bufferSize += segment.stride;
 		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer.buffer);
@@ -60,7 +58,7 @@ namespace diamond_engine
 		glBindBufferRange(GL_UNIFORM_BUFFER, uniformBuffer.binding, uniformBuffer.buffer, 0, bufferSize);
 	}
 
-	EngineStatus UniformBufferAgent::buildUniformBuffer(const std::shared_ptr<ShaderProgram>& shaderProgram, const std::string& name, const std::vector<const char*>& names, UniformBuffer* uniformBuffer)
+	EngineStatus UniformBufferAgent::bindUniformBuffer(const UniformBuffer& uniformBuffer, const std::shared_ptr<ShaderProgram>& shaderProgram, const std::string& name, const std::vector<const char*>& names)
 	{
 		if (!shaderProgram)
 		{
@@ -71,12 +69,7 @@ namespace diamond_engine
 
 		if (uniformBlockIndex == GL_INVALID_INDEX)
 		{
-			return { "Failed to build uniform buffer. Could not find block named: " + name, true };
-		}
-
-		if (!uniformBuffer)
-		{
-			return { "Failed to build uniform buffer. Cannot operate on null buffer", true };
+			return { "Failed to bind uniform buffer. Could not find block named: " + name, true };
 		}
 
 		GLint uniformCount = 0;
@@ -84,39 +77,52 @@ namespace diamond_engine
 
 		if (uniformCount <= 0)
 		{
-			return { "Failed to build uniform buffer. Uniform count was zero or negative", true };
+			return { "Failed to bind uniform buffer. Uniform count was zero or negative", true };
 		}
 
-		uniformBuffer->count = static_cast<GLuint>(uniformCount);
-		uniformBuffer->offsets.resize(uniformCount, 0);
-		uniformBuffer->sizes.resize(uniformCount, 0);
-		uniformBuffer->types.resize(uniformCount, 0);
+		const size_t segmentCount = uniformBuffer.segments.size();
+		if (uniformCount != static_cast<GLsizei>(segmentCount))
+		{
+			return { "Failed to bind uniform buffer. Segment count differs from shader uniform count", true };
+		}
+
+		std::vector<GLint> offsets(segmentCount, 0);
+		std::vector<GLint> sizes(segmentCount, 0);
+		std::vector<GLint> types(segmentCount, 0);
 
 		std::vector<GLuint> uniformIndices(uniformCount, 0);
 		glGetUniformIndices(shaderProgram->GetObject(), uniformCount, names.data(), uniformIndices.data());
-		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_OFFSET, uniformBuffer->offsets.data());
-		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_SIZE, uniformBuffer->sizes.data());
-		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_TYPE, uniformBuffer->types.data());
-		glUniformBlockBinding(shaderProgram->GetObject(), uniformBlockIndex, uniformBuffer->binding);
+		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_OFFSET, offsets.data());
+		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_SIZE, sizes.data());
+		glGetActiveUniformsiv(shaderProgram->GetObject(), uniformCount, uniformIndices.data(), GL_UNIFORM_TYPE, types.data());
+
+		const std::vector<UniformSegment>& segments = uniformBuffer.segments;
+		for (size_t i = 0; i < segmentCount; ++i)
+		{
+			const UniformSegment& segment = segments[i];
+
+			if (offsets[i] != segment.offset)
+			{
+				return { "Failed to bind uniform buffer. Segment offset differs from shader uniform", true };
+			}
+
+			if (sizes[i] * getSizeInBytes(types[i]) != segment.stride)
+			{
+				return { "Failed to bind uniform buffer. Segment stride differs from shader uniform", true };
+			}
+		}
+
+		glUniformBlockBinding(shaderProgram->GetObject(), uniformBlockIndex, uniformBuffer.binding);
 
 		return { };
 	}
 
-	EngineStatus UniformBufferAgent::uploadBufferData(const UniformBuffer& uniformBuffer, const std::vector<const void*>& data)
+	EngineStatus UniformBufferAgent::uploadBufferData(const UniformBuffer& uniformBuffer)
 	{
-		if (uniformBuffer.count != data.size())
-		{
-			return { "Uniform buffer upload failed. Number of uniforms differs from data set count", true };
-		}
-
-		const std::vector<GLint>& offsets	= uniformBuffer.offsets;
-		const std::vector<GLint>& sizes		= uniformBuffer.sizes;
-		const std::vector<GLint>& types		= uniformBuffer.types;
-
-		for (GLuint i = 0; i < uniformBuffer.count; ++i)
+		for (const auto& segment : uniformBuffer.segments)
 		{
 			glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer.buffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, offsets[i], sizes[i] * getSizeInBytes(types[i]), data[i]);
+			glBufferSubData(GL_UNIFORM_BUFFER, segment.offset, segment.stride, segment.data);
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 

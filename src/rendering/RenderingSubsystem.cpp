@@ -21,7 +21,30 @@ namespace diamond_engine
 		m_uniformBufferAgent->allocateBuffers(maxRendererCount);
 		m_vertexArrayAllocator->Allocate(maxRendererCount);
 
-		m_cameraUniformBuffer = m_uniformBufferAgent->allocateBuffer(0, GL_DYNAMIC_DRAW);
+		m_cameraUniformBuffer			= m_uniformBufferAgent->allocateBuffer(0, GL_DYNAMIC_DRAW);
+		m_cameraUniformBuffer.segments	= {
+			{
+				&m_camera->GetProjection(),
+				sizeof(glm::mat4),
+				0
+			},
+			{
+				&m_camera->GetTransform().getLocalToWorld(),
+				sizeof(glm::mat4),
+				sizeof(glm::mat4)
+			},
+			{
+				&m_camera->GetTransform().getLocalRotation(),
+				sizeof(glm::mat4),
+				2 * sizeof(glm::mat4)
+			},
+			{
+				&m_camera->GetView(),
+				sizeof(glm::mat4),
+				3 * sizeof(glm::mat4)
+			}
+		};
+		m_uniformBufferAgent->registerUniformBuffer(m_cameraUniformBuffer);
 	}
 
 	void RenderingSubsystem::freeAllocatedInstances()
@@ -51,18 +74,16 @@ namespace diamond_engine
 			return { "Failed to register renderer. Already active: " + shaderProgramName, true };
 		}
 
-		EngineStatus uniformBufferStatus = m_uniformBufferAgent->buildUniformBuffer(
+		EngineStatus uniformBufferStatus = m_uniformBufferAgent->bindUniformBuffer(
+			m_cameraUniformBuffer,
 			shaderProgram,
 			"CameraMatrices",
-			{ "cameraProjection", "cameraLocalToWorld", "cameraLocalRotation", "cameraView" },
-			&m_cameraUniformBuffer);
+			{ "cameraProjection", "cameraLocalToWorld", "cameraLocalRotation", "cameraView" });
 
 		if (!uniformBufferStatus)
 		{
 			return uniformBufferStatus;
 		}
-
-		m_uniformBufferAgent->bindUniformBuffer(m_cameraUniformBuffer);
 
 		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), meshType, drawMode, shaderProgram);
 		renderer->uploadMeshData(vertexAttributes, drawType);
@@ -104,15 +125,7 @@ namespace diamond_engine
 
 	void RenderingSubsystem::renderAll() const
 	{
-		m_uniformBufferAgent->uploadBufferData(
-			m_cameraUniformBuffer,
-			{
-				&m_camera->GetProjection(),
-				&m_camera->GetTransform().getLocalToWorld(),
-				&m_camera->GetTransform().getLocalRotation(),
-				&m_camera->GetView()
-			}
-		);
+		m_uniformBufferAgent->uploadBufferData(m_cameraUniformBuffer);
 
 		for (size_t i = 0; i < m_registeredRenderers.size(); ++i)
 		{
