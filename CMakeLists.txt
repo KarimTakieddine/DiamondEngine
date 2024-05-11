@@ -111,7 +111,7 @@ set(SOURCES
     #${SRC_DIR}/parser/SpriteAnimationPlayerConfigParser.cpp
     #${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
     #${SRC_DIR}/parser/TextureMetadataParser.cpp
-    ${SRC_DIR}/rendering/GameEngine.cpp
+    ${SRC_DIR}/engine/GameEngine.cpp
     #${SRC_DIR}/rendering/GameInstanceBuilder.cpp
     #${SRC_DIR}/rendering/GameInstanceConfig.cpp
     #${SRC_DIR}/rendering/GameInstance.cpp
