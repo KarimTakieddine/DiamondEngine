@@ -15,7 +15,8 @@ namespace diamond_engine
 		RenderingSubsystem();
 
 		void setMaxRendererCount(GLsizei maxInstanceCount);
-		void freeAllocatedInstances();
+		void freeAllocatedRenderers();
+		void freeRegisteredInstructions();
 
 		// TODO: The reverse of this i.e. what happens when we want to get rid of one?
 		EngineStatus registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode,const std::vector<VertexAttribute>& vertexAttributes, const std::string& shaderProgramName);

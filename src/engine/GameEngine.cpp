@@ -64,7 +64,7 @@ namespace diamond_engine
 		m_graphicsContext->Execute();
 
 		unloadCurrentScene();
-		m_renderingSubsystem->freeAllocatedInstances();
+		m_renderingSubsystem->freeAllocatedRenderers();
 		SharedMeshStore::getInstance()->unloadMeshes();
 		TextureLoader::getInstance()->unloadTextures();
 		SharedShaderStore::getInstance()->unload();
@@ -158,6 +158,7 @@ namespace diamond_engine
 
 	void GameEngine::unloadCurrentScene()
 	{
+		m_renderingSubsystem->freeRegisteredInstructions();
 		m_instanceManager->unloadCurrentScene();
 		m_currentScene.clear();
 		m_sceneBackgroundColor = { };

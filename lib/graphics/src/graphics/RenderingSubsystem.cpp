@@ -47,15 +47,16 @@ namespace diamond_engine
 		m_uniformBufferAgent->registerUniformBuffer(m_cameraUniformBuffer);
 	}
 
-	void RenderingSubsystem::freeAllocatedInstances()
+	void RenderingSubsystem::freeRegisteredInstructions()
 	{
 		for (const auto& registeredRenderer : m_registeredRenderers)
 		{
 			getRenderer(registeredRenderer)->clearRenderInstructions();
 		}
+	}
 
-		// TODO: Need to add teardown logic. This is a mix between subsystem teardown and rendered instance teardown
-
+	void RenderingSubsystem::freeAllocatedRenderers()
+	{
 		m_vertexArrayAllocator->Free(m_vertexArrayAllocator->GetAllocatedObjectCount());
 		m_uniformBufferAgent->freeAllBuffers();
 	}
