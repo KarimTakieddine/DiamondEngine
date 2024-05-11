@@ -4,6 +4,11 @@ namespace diamond_engine
 {
 	void GameInstance::setRenderObject(RenderObject* renderObject)
 	{
+		for (const auto& behaviourComponent : m_behaviourComponents)
+		{
+			behaviourComponent->setRenderObject(renderObject);
+		}
+
 		for (const auto& renderComponent : m_renderComponents)
 		{
 			renderComponent->onRenderObjectAllocated(renderObject);

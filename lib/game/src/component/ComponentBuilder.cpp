@@ -1,4 +1,4 @@
-#include "RenderComponentBuilder.h"
+#include "ComponentBuilder.h"
 #include "MaterialComponentConfig.h"
 #include "MaterialRenderComponent.h"
 #include "SharedMeshStore.h"
@@ -66,12 +66,12 @@ namespace
 
 namespace diamond_engine
 {
-	/* static */ void RenderComponentBuilder::registerRenderComponent(const std::string& name, RenderBuildMethod buildMethod)
+	/* static */ void ComponentBuilder::registerRenderComponent(const std::string& name, RenderBuildMethod buildMethod)
 	{
 		renderBuildMethods.insert({ name, buildMethod });
 	}
 
-	/* static */ std::unique_ptr<IRenderComponent> RenderComponentBuilder::buildRenderComponent(const RenderComponentConfig* config, EngineStatus* outStatus /* = nullptr */)
+	/* static */ std::unique_ptr<IRenderComponent> ComponentBuilder::buildRenderComponent(const RenderComponentConfig* config, EngineStatus* outStatus /* = nullptr */)
 	{
 		if (!config)
 		{
@@ -99,7 +99,7 @@ namespace diamond_engine
 		return buildMethodIt->second(config, outStatus);
 	}
 
-	/* static */ std::unordered_map<std::string, RenderComponentBuilder::RenderBuildMethod> RenderComponentBuilder::renderBuildMethods =
+	/* static */ std::unordered_map<std::string, ComponentBuilder::RenderBuildMethod> ComponentBuilder::renderBuildMethods =
 	{
 		{ "Material",	::buildMaterialComponent },
 		{ "Transform",	::buildTransformComponent }

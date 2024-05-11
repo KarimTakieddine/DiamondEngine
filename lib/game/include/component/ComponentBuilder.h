@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+
 #include "EngineStatus.h"
 #include "IRenderComponent.h"
 
@@ -12,7 +13,7 @@ namespace diamond_engine
 {
 	class RenderComponentConfig;
 
-	class RenderComponentBuilder
+	class ComponentBuilder
 	{
 	public:
 		using RenderBuildMethod = std::function<std::unique_ptr<IRenderComponent>(const RenderComponentConfig*, EngineStatus*)>;

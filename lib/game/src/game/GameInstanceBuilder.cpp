@@ -1,4 +1,4 @@
-#include "RenderComponentBuilder.h"
+#include "ComponentBuilder.h"
 #include "GameInstance.h"
 #include "GameInstanceBuilder.h"
 #include "GameInstanceConfig.h"
@@ -15,7 +15,7 @@ namespace diamond_engine
 		EngineStatus status;
 		for (const auto& renderComponentConfig : instanceConfig->getRenderConfigs())
 		{
-			auto renderComponent = RenderComponentBuilder::buildRenderComponent(renderComponentConfig.get(), &status);
+			auto renderComponent = ComponentBuilder::buildRenderComponent(renderComponentConfig.get(), &status);
 			
 			if (!status)
 			{

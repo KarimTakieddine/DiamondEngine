@@ -14,6 +14,7 @@ set(SRC_DIR src)
 set(GLM_DIR ../../glm)
 
 set(SOURCES
+    ${SRC_DIR}/component/ComponentBuilder.cpp
     ${SRC_DIR}/game/GameInstance.cpp
     ${SRC_DIR}/game/GameInstanceBuilder.cpp
     ${SRC_DIR}/game/GameInstanceManager.cpp)
@@ -29,7 +30,9 @@ target_include_directories(libDiamondEngineGame PRIVATE
     "${GRAPHICS_DIR}/include/allocator"
     "${GRAPHICS_DIR}/include/component"
     "${GRAPHICS_DIR}/include/graphics"
+    "${GRAPHICS_DIR}/include/mesh"
     "${GRAPHICS_DIR}/include/shader"
+    "${GRAPHICS_DIR}/include/texture"
     "${INCLUDE_DIR}/allocator"
     "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/game"

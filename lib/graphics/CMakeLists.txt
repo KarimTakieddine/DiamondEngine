@@ -18,7 +18,6 @@ set(SRC_DIR src)
 set(SOURCES
     ${SRC_DIR}/allocator/GLAllocator.cpp
     ${SRC_DIR}/component/MaterialRenderComponent.cpp
-    ${SRC_DIR}/component/RenderComponentBuilder.cpp
     ${SRC_DIR}/component/TransformRenderComponent.cpp
     ${SRC_DIR}/mesh/Mesh.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
