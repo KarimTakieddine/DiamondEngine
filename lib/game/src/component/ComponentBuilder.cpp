@@ -5,6 +5,7 @@
 #include "TextureLoader.h"
 #include "TransformComponentConfig.h"
 #include "TransformRenderComponent.h"
+#include "BehaviourComponentConfig.h"
 
 namespace
 {
@@ -71,6 +72,11 @@ namespace diamond_engine
 		renderBuildMethods.insert({ name, buildMethod });
 	}
 
+	/* static */ void ComponentBuilder::registerBehaviourComponent(const std::string& name, BehaviourBuildMethod buildMethod)
+	{
+		behaviourBuildMethods.insert({ name, buildMethod });
+	}
+
 	/* static */ std::unique_ptr<IRenderComponent> ComponentBuilder::buildRenderComponent(const RenderComponentConfig* config, EngineStatus* outStatus /* = nullptr */)
 	{
 		if (!config)
@@ -99,9 +105,39 @@ namespace diamond_engine
 		return buildMethodIt->second(config, outStatus);
 	}
 
+	/* static */ std::unique_ptr<BehaviourComponent> ComponentBuilder::buildBehaviourComponent(const BehaviourComponentConfig* config, EngineStatus* outStatus /* = nullptr */)
+	{
+		if (!config)
+		{
+			if (outStatus)
+			{
+				*outStatus = { "Failed to build BehaviourComponent from null component config", true };
+			}
+
+			return nullptr;
+		}
+
+		const std::string componentName(config->getName());
+
+		auto buildMethodIt = behaviourBuildMethods.find(componentName);
+		if (buildMethodIt == behaviourBuildMethods.cend())
+		{
+			if (outStatus)
+			{
+				*outStatus = { "Failed to build BehaviourComponent of unknown name: " + componentName, true };
+			}
+
+			return nullptr;
+		}
+
+		return buildMethodIt->second(config, outStatus);
+	}
+
 	/* static */ std::unordered_map<std::string, ComponentBuilder::RenderBuildMethod> ComponentBuilder::renderBuildMethods =
 	{
 		{ "Material",	::buildMaterialComponent },
 		{ "Transform",	::buildTransformComponent }
 	};
+
+	/* static */ std::unordered_map<std::string, ComponentBuilder::BehaviourBuildMethod> ComponentBuilder::behaviourBuildMethods = { };
 }

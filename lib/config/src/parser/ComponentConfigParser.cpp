@@ -119,7 +119,5 @@ namespace diamond_engine
 		{ "Transform",	&parseTransformConfig	}
 	};
 
-	/* static */ std::unordered_map<std::string, ComponentConfigParser::BehaviourParseMethod> ComponentConfigParser::behaviourParseMethods = {
-		// TODO: Colliders and the like...
-	};
+	/* static */ std::unordered_map<std::string, ComponentConfigParser::BehaviourParseMethod> ComponentConfigParser::behaviourParseMethods = { };
 }
