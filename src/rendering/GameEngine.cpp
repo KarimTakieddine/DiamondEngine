@@ -54,7 +54,7 @@ namespace diamond_engine
 		m_instanceManager = std::make_unique<GameInstanceManager>();
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
-		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
+		//initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
 		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
 	}
@@ -70,6 +70,7 @@ namespace diamond_engine
 		SharedShaderStore::getInstance()->unload();
 	}
 
+	/*
 	void GameEngine::initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig)
 	{
 		auto& stateMonitor = input::StateMonitor::GetInstance();
@@ -90,6 +91,7 @@ namespace diamond_engine
 
 		stateMonitor.setJoystickDeadzone(controllerConfig.getJoystickDeadzone());
 	}
+	*/
 
 	void GameEngine::addScene(const std::string& name, const std::string& file)
 	{
@@ -165,7 +167,7 @@ namespace diamond_engine
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
-		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
+		//input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
 		// TODO: Behaviours and background color config
 

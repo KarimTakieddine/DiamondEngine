@@ -5,20 +5,12 @@
 #include <vector>
 
 #include "Key.h"
+#include "KeyboardConfig.h"
 
 struct GLFWwindow;
 
 namespace diamond_engine {
 namespace input {
-enum class GLFWKeyCode : int {
-	KEYCODE_SPACE,
-	KEYCODE_LEFT,
-	KEYCODE_RIGHT,
-	KEYCODE_UP,
-	KEYCODE_DOWN,
-	KEYCODE_ESCAPE
-};
-
 class Keyboard {
 public:
 	static constexpr size_t kMaxKeyCount = 0x68;

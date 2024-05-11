@@ -6,6 +6,7 @@
 
 #include "EngineConfig.h"
 #include "GraphicsContext.h"
+#include "KeyboardConfig.h"
 #include "GameInstanceManager.h"
 #include "RenderingSubsystem.h"
 
@@ -29,7 +30,7 @@ namespace diamond_engine
 		void unloadCurrentScene();
 
 	private:
-		void initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig);
+		//void initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig);
 		void onWindowUpdate(GLfloat deltaTime);
 		void onWindowResize(const Size& size);
 

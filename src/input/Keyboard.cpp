@@ -5,6 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Key.h"
 #include "Keyboard.h"
 
 namespace diamond_engine {
