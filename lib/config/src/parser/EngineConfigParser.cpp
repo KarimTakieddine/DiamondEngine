@@ -11,8 +11,8 @@
 namespace diamond_engine {
 	/* static */ EngineConfig EngineConfigParser::Parse(const pugi::xml_node& engineConfigNode) {
 		EngineConfig result{
-			//KeyboardConfigParser::Parse(engineConfigNode.child("Keyboard")),
-			//ControllerConfigParser::Parse(engineConfigNode.child("Controller")),
+			KeyboardConfigParser::Parse(engineConfigNode.child("Keyboard")),
+			ControllerConfigParser::Parse(engineConfigNode.child("Controller")),
 			WindowConfigParser::Parse(engineConfigNode.child("Window"))
 		};
 

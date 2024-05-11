@@ -2,11 +2,11 @@
 
 namespace diamond_engine {
 	EngineConfig::EngineConfig(
-		//const KeyboardConfig& keyboardConfig,
-		//const ControllerConfig& controllerConfig,
+		const KeyboardConfig& keyboardConfig,
+		const ControllerConfig& controllerConfig,
 		const WindowConfig& windowConfig) :
-		//m_keyboardConfig(keyboardConfig),
-		//m_controllerConfig(controllerConfig),
+		m_keyboardConfig(keyboardConfig),
+		m_controllerConfig(controllerConfig),
 		m_windowConfig(windowConfig),
 		m_shadersDirectory(),
 		m_texturesDirectory() { }
@@ -19,23 +19,23 @@ namespace diamond_engine {
 		return m_windowConfig;
 	}
 
-	/*void EngineConfig::SetKeyboardConfig(const KeyboardConfig& keyboardConfig) {
+	void EngineConfig::SetKeyboardConfig(const KeyboardConfig& keyboardConfig) {
 		m_keyboardConfig = keyboardConfig;
-	}*/
+	}
 
-	/*const KeyboardConfig& EngineConfig::GetKeyboardConfig() const {
+	const KeyboardConfig& EngineConfig::GetKeyboardConfig() const {
 		return m_keyboardConfig;
-	}*/
+	}
 
-	/*void EngineConfig::setControllerConfig(const ControllerConfig& controllerConfig)
+	void EngineConfig::setControllerConfig(const ControllerConfig& controllerConfig)
 	{
 		m_controllerConfig = controllerConfig;
-	}*/
+	}
 
-	/*const ControllerConfig& EngineConfig::getControllerConfig() const
+	const ControllerConfig& EngineConfig::getControllerConfig() const
 	{
 		return m_controllerConfig;
-	}*/
+	}
 
 	void EngineConfig::setShadersDirectory(const std::string& shadersDirectory)
 	{

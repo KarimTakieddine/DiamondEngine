@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Key.h"
-#include "KeyboardConfig.h"
+#include "KeyCode.h"
 
 struct GLFWwindow;
 
@@ -15,13 +15,13 @@ class Keyboard {
 public:
 	static constexpr size_t kMaxKeyCount = 0x68;
 
-	static const std::unordered_map<GLFWKeyCode, int> kGLFWKeyCodeMap;
+	static const std::unordered_map<KeyCode, int> kGLFWKeyCodeMap;
 
 	using KeyMap = std::unordered_map<std::string, Key>;
 
 	Keyboard();
 
-	void RegisterKey(const std::string& name, GLFWKeyCode code);
+	void RegisterKey(const std::string& name, KeyCode code);
 
 	void UnregisterKey(const std::string& name);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-/*
+
 #include <unordered_map>
 
 #include "ControllerConfig.h"
@@ -19,4 +19,3 @@ namespace diamond_engine
 		static ControllerConfig Parse(const pugi::xml_node& controllerConfigNode);
 	};
 }
-*/

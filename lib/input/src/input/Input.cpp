@@ -34,7 +34,7 @@ namespace input {
 		}
 	}
 
-	void StateMonitor::RegisterKeyboardKey(const std::string& name, GLFWKeyCode code) {
+	void StateMonitor::RegisterKeyboardKey(const std::string& name, KeyCode code) {
 		m_keyboard.RegisterKey(name, code);
 	}
 

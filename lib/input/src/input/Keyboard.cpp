@@ -10,13 +10,13 @@
 
 namespace diamond_engine {
 namespace input {
-	/* static */ const std::unordered_map<GLFWKeyCode, int> Keyboard::kGLFWKeyCodeMap = {
-		{ GLFWKeyCode::KEYCODE_ESCAPE,	GLFW_KEY_ESCAPE },
-		{ GLFWKeyCode::KEYCODE_SPACE,	GLFW_KEY_SPACE },
-		{ GLFWKeyCode::KEYCODE_UP,		GLFW_KEY_UP },
-		{ GLFWKeyCode::KEYCODE_DOWN,	GLFW_KEY_DOWN },
-		{ GLFWKeyCode::KEYCODE_LEFT,	GLFW_KEY_LEFT },
-		{ GLFWKeyCode::KEYCODE_RIGHT,	GLFW_KEY_RIGHT }
+	/* static */ const std::unordered_map<KeyCode, int> Keyboard::kGLFWKeyCodeMap = {
+		{ KeyCode::KEYCODE_ESCAPE,	GLFW_KEY_ESCAPE },
+		{ KeyCode::KEYCODE_SPACE,	GLFW_KEY_SPACE },
+		{ KeyCode::KEYCODE_UP,		GLFW_KEY_UP },
+		{ KeyCode::KEYCODE_DOWN,	GLFW_KEY_DOWN },
+		{ KeyCode::KEYCODE_LEFT,	GLFW_KEY_LEFT },
+		{ KeyCode::KEYCODE_RIGHT,	GLFW_KEY_RIGHT }
 	};
 
 	Keyboard::Keyboard() : m_keyMap() {
@@ -24,11 +24,11 @@ namespace input {
 		m_keyNames.reserve(kMaxKeyCount);
 	}
 
-	void Keyboard::RegisterKey(const std::string& name, GLFWKeyCode code) {
+	void Keyboard::RegisterKey(const std::string& name, KeyCode code) {
 		auto glfwKeyCodeIt = kGLFWKeyCodeMap.find(code);
 
 		if (glfwKeyCodeIt == kGLFWKeyCodeMap.cend()) {
-			throw std::runtime_error("Invalid GLFWKeyCode specified: " + std::to_string(static_cast<std::underlying_type_t<GLFWKeyCode>>(code)));
+			throw std::runtime_error("Invalid GLFWKeyCode specified: " + std::to_string(static_cast<std::underlying_type_t<KeyCode>>(code)));
 		}
 
 		auto keyIt = m_keyMap.find(name);

@@ -2,7 +2,6 @@
 
 #include <vector>
 
-/*
 #include "Controller.h"
 
 namespace diamond_engine
@@ -37,4 +36,3 @@ namespace diamond_engine
 		float m_joystickDeadzone{ 0.0f };
 	};
 }
-*/

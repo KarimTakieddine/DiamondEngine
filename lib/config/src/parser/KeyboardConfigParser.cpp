@@ -5,13 +5,13 @@
 #include "KeyboardConfigParser.h"
 
 namespace diamond_engine {
-	/* static */ const std::unordered_map<std::string, input::GLFWKeyCode> KeyboardConfigParser::kStringToKeyCodeMap = {
-		{ "SPACE",	input::GLFWKeyCode::KEYCODE_SPACE },
-		{ "ESCAPE", input::GLFWKeyCode::KEYCODE_ESCAPE },
-		{ "UP",		input::GLFWKeyCode::KEYCODE_UP },
-		{ "DOWN",	input::GLFWKeyCode::KEYCODE_DOWN },
-		{ "LEFT",	input::GLFWKeyCode::KEYCODE_LEFT },
-		{ "RIGHT",	input::GLFWKeyCode::KEYCODE_RIGHT }
+	/* static */ const std::unordered_map<std::string, KeyCode> KeyboardConfigParser::kStringToKeyCodeMap = {
+		{ "SPACE",	KeyCode::KEYCODE_SPACE },
+		{ "ESCAPE", KeyCode::KEYCODE_ESCAPE },
+		{ "UP",		KeyCode::KEYCODE_UP },
+		{ "DOWN",	KeyCode::KEYCODE_DOWN },
+		{ "LEFT",	KeyCode::KEYCODE_LEFT },
+		{ "RIGHT",	KeyCode::KEYCODE_RIGHT }
 	};
 
 

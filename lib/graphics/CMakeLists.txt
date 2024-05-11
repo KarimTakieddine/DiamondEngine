@@ -22,12 +22,12 @@ set(SOURCES
     ${SRC_DIR}/component/TransformRenderComponent.cpp
     ${SRC_DIR}/mesh/Mesh.cpp
     ${SRC_DIR}/mesh/SharedMeshStore.cpp
-    ${SRC_DIR}/rendering/Camera.cpp
-    ${SRC_DIR}/rendering/Transform.cpp
-    ${SRC_DIR}/rendering/Renderer.cpp
-    ${SRC_DIR}/rendering/RenderingSubsystem.cpp
-    ${SRC_DIR}/rendering/RenderUploadObject.cpp
-    ${SRC_DIR}/rendering/UniformBufferAgent.cpp
+    ${SRC_DIR}/graphics/Camera.cpp
+    ${SRC_DIR}/graphics/Transform.cpp
+    ${SRC_DIR}/graphics/Renderer.cpp
+    ${SRC_DIR}/graphics/RenderingSubsystem.cpp
+    ${SRC_DIR}/graphics/RenderUploadObject.cpp
+    ${SRC_DIR}/graphics/UniformBufferAgent.cpp
     ${SRC_DIR}/shader/Shader.cpp
     ${SRC_DIR}/shader/ShaderProgram.cpp
     ${SRC_DIR}/shader/SharedShaderStore.cpp
@@ -45,7 +45,7 @@ target_include_directories(libDiamondEngineGraphics PRIVATE
     "${INCLUDE_DIR}/allocator"
     "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/mesh"
-    "${INCLUDE_DIR}/rendering"
+    "${INCLUDE_DIR}/graphics"
     "${INCLUDE_DIR}/shader"
     "${INCLUDE_DIR}/texture"
 )

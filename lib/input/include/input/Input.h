@@ -17,7 +17,7 @@ public:
 
 	void MonitorStates(GLFWwindow* window);
 
-	void RegisterKeyboardKey(const std::string& name, GLFWKeyCode code);
+	void RegisterKeyboardKey(const std::string& name, KeyCode code);
 
 	void RegisterControllerButton(const std::string& name, Button button);
 
