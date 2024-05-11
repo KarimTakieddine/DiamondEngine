@@ -13,6 +13,7 @@ namespace diamond_engine
 		}
 
 		EngineStatus status;
+
 		for (const auto& renderComponentConfig : instanceConfig->getRenderConfigs())
 		{
 			auto renderComponent = ComponentBuilder::buildRenderComponent(renderComponentConfig.get(), &status);
@@ -23,6 +24,23 @@ namespace diamond_engine
 			}
 
 			status = instance->acquireRenderComponent(std::move(renderComponent));
+
+			if (!status)
+			{
+				return status;
+			}
+		}
+
+		for (const auto& behaviourComponentConfig : instanceConfig->getBehaviourConfigs())
+		{
+			auto behaviourComponent = ComponentBuilder::buildBehaviourComponent(behaviourComponentConfig.get(), &status);
+
+			if (!status)
+			{
+				return status;
+			}
+
+			status = instance->acquireBehaviourComponent(std::move(behaviourComponent));
 
 			if (!status)
 			{
