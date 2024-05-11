@@ -18,26 +18,11 @@ set(IRR_KLANG_DIR irrKlang-64bit-1.6.0)
 
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
-set(ANIMATION_DIR animation)
-set(AUDIO_DIR audio)
 set(SHADERS_DIR shaders)
-set(SCENES_DIR scenes)
-set(TEXTURES_DIR textures)
-set(CONFIG_DIR config)
-
-set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
-set(SRC_DIR ${SRC_DIR} PARENT_SCOPE)
-set(ANIMATION_DIR ${ANIMATION_DIR} PARENT_SCOPE)
-set(AUDIO_DIR ${AUDIO_DIR} PARENT_SCOPE)
-set(SHADERS_DIR ${SHADERS_DIR} PARENT_SCOPE)
-set(SCENES_DIR ${SCENES_DIR} PARENT_SCOPE)
-set(TEXTURES_DIR ${TEXTURES_DIR} PARENT_SCOPE)
-set(CONFIG_DIR ${CONFIG_DIR} PARENT_SCOPE)
 
 # GLEW:
 
-set(GLEW_BINARY_DIR     "${GLEW_DIR}/${BIN_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
-#set(GLEW_LIBRARY_DIR    "${GLEW_DIR}/${LIB_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
+set(GLEW_BINARY_DIR "${GLEW_DIR}/${BIN_DIR_PREFIX}/${PREBUILT_CONFIG}/${BIN_TARGET_ARCH}")
 
 set(GLEW_BINARY_DIR ${GLEW_BINARY_DIR} PARENT_SCOPE)
 
@@ -61,14 +46,16 @@ add_subdirectory(${GLFW_DIR})
 
 set(CONFIG_DIR "${LIB_DIR_PREFIX}/config")
 set(GRAPHICS_DIR "${LIB_DIR_PREFIX}/graphics")
+set(GAME_DIR "${LIB_DIR_PREFIX}/game")
 add_subdirectory(${CONFIG_DIR})
 add_subdirectory(${GRAPHICS_DIR})
+add_subdirectory(${GAME_DIR})
 
 # DiamondEngine:
 
 set(SOURCES
     #${SRC_DIR}/allocator/GLAllocator.cpp
-    ${SRC_DIR}/${ANIMATION_DIR}/SpriteSheetLoader.cpp
+    ${SRC_DIR}/animation/SpriteSheetLoader.cpp
     #${SRC_DIR}/${AUDIO_DIR}/AudioDevice.cpp
     #${SRC_DIR}/${AUDIO_DIR}/AudioEngine.cpp
     #${SRC_DIR}/${AUDIO_DIR}/AudioLoader.cpp
@@ -125,11 +112,11 @@ set(SOURCES
     #${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
     #${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/rendering/GameEngine.cpp
-    ${SRC_DIR}/rendering/GameInstanceBuilder.cpp
+    #${SRC_DIR}/rendering/GameInstanceBuilder.cpp
     #${SRC_DIR}/rendering/GameInstanceConfig.cpp
-    ${SRC_DIR}/rendering/GameInstance.cpp
+    #${SRC_DIR}/rendering/GameInstance.cpp
     #${SRC_DIR}/rendering/GameInstanceConfigParser.cpp
-    ${SRC_DIR}/rendering/GameInstanceManager.cpp
+    #${SRC_DIR}/rendering/GameInstanceManager.cpp
     #${SRC_DIR}/rendering/GameSceneConfig.cpp
     #${SRC_DIR}/rendering/GameSceneConfigParser.cpp
     #${SRC_DIR}/shader/SharedShaderStore.cpp
@@ -142,18 +129,19 @@ if (WIN32)
     list(APPEND SOURCES ${SRC_DIR}/input/XInputController.cpp)
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(DiamondEngine STATIC ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(DiamondEngine PUBLIC
     "${GLEW_DIR}/include"
     "${GLFW_DIR}/include"
     ${GLM_DIR}
-    #"pugixml/src"
     ${STB_DIR}
+    "./lib/common/${INCLUDE_DIR}"
     "${IRR_KLANG_DIR}/include"
-    "./lib/common/include" # TODO
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"
+    "${GAME_DIR}/include/allocator"
+    "${GAME_DIR}/include/game"
     "${GRAPHICS_DIR}/include/allocator"
     "${GRAPHICS_DIR}/include/component"
     "${GRAPHICS_DIR}/include/mesh"
@@ -161,19 +149,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${GRAPHICS_DIR}/include/shader"
     "${GRAPHICS_DIR}/include/texture"
     "${INCLUDE_DIR}/diamond_engine"
-    "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/allocator"
-    "${INCLUDE_DIR}/diamond_engine/${ANIMATION_DIR}"
-    "${INCLUDE_DIR}/diamond_engine/${AUDIO_DIR}"
+    "${INCLUDE_DIR}/diamond_engine/animation"
+    "${INCLUDE_DIR}/diamond_engine/audio"
     "${INCLUDE_DIR}/diamond_engine/behaviour"
-    "${INCLUDE_DIR}/diamond_engine/builder"
-    "${INCLUDE_DIR}/diamond_engine/common"
     "${INCLUDE_DIR}/diamond_engine/component"
     "${INCLUDE_DIR}/diamond_engine/config"
     "${INCLUDE_DIR}/diamond_engine/engine"
-    "${INCLUDE_DIR}/diamond_engine/gameobject"
     "${INCLUDE_DIR}/diamond_engine/input"
-    #"${INCLUDE_DIR}/diamond_engine/mesh"
     "${INCLUDE_DIR}/diamond_engine/metadata"
     "${INCLUDE_DIR}/diamond_engine/parser"
     "${INCLUDE_DIR}/diamond_engine/physics"
@@ -188,5 +171,5 @@ find_library(IRR_KLANG
     HINTS ${IRR_KLANG_LIBRARY_DIR}
 )
 
-add_dependencies(${PROJECT_NAME} ${GLFW_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE libDiamondEngineGraphics libDiamondEngineConfig glfw Xinput ${IRR_KLANG})
+add_dependencies(DiamondEngine ${GLFW_DIR})
+target_link_libraries(DiamondEngine PRIVATE libDiamondEngineGraphics libDiamondEngineConfig libDiamondEngineGame glfw Xinput ${IRR_KLANG})
