@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 
 #include "AlignedAllocator.hpp"
@@ -17,6 +18,7 @@ namespace diamond_engine
 	class GameInstanceManager
 	{
 	public:
+
 		GameInstanceManager();
 
 		void setRenderingSubsystem(const std::shared_ptr<RenderingSubsystem>& renderingSubsystem);
@@ -27,9 +29,11 @@ namespace diamond_engine
 		void updateInstances(GLfloat deltaTime);
 
 	private:
+		std::map<std::string, std::string> m_registeredInstances;
 		std::vector<std::unique_ptr<GameInstance>> m_instances;
 		std::vector<std::unique_ptr<GameInstance>> m_colliders;
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
+		std::unique_ptr<CollisionResolver2D> m_collisionResolver2D{ nullptr };
 		std::unique_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectAllocator{ nullptr };
 	};
 }

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Collider2DComponent.h"
 #include "GameInstanceBuilder.h"
 #include "GameInstanceManager.h"
@@ -8,6 +10,7 @@
 namespace diamond_engine
 {
 	GameInstanceManager::GameInstanceManager() :
+		m_collisionResolver2D(std::make_unique<CollisionResolver2D>()),
 		m_renderObjectAllocator(std::make_unique<AlignedAllocator<RenderObject, 4>>())
 	{
 		m_renderObjectAllocator->Allocate(256);
@@ -22,7 +25,9 @@ namespace diamond_engine
 	{
 		m_colliders.clear();
 		m_instances.clear();
+		m_registeredInstances.clear();
 		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAssignedObjectCount());
+		m_collisionResolver2D->clear();
 	}
 
 	std::unique_ptr<GameInstance> GameInstanceManager::createInstance()
@@ -51,6 +56,14 @@ namespace diamond_engine
 			return buildStatus;
 		}
 
+		const std::string& instanceName = instance->getName();
+		int instanceCount = std::count_if(
+			m_registeredInstances.cbegin(),
+			m_registeredInstances.cend(),
+			[instanceName](const auto& pair) { return pair.second == instanceName; });
+
+		instance->setInternalName(instanceName + "_" + std::to_string(instanceCount));
+
 		EngineStatus registerStatus;
 		switch (instanceConfig->getType())
 		{
@@ -62,7 +75,8 @@ namespace diamond_engine
 			{
 				auto collider2DInstance = createInstance();
 
-				dynamic_cast<Collider2DComponent*>(collider2DBehaviour.get())->setTarget(instance->getRenderObject());
+				Collider2DComponent * const collider2DComponent = dynamic_cast<Collider2DComponent*>(collider2DBehaviour.get());
+				collider2DComponent->setTarget(instance->getRenderObject());
 				collider2DInstance->acquireBehaviourComponent(std::move(collider2DBehaviour));
 
 				std::unique_ptr<MaterialRenderComponent> colliderMaterial = std::make_unique<MaterialRenderComponent>();
@@ -79,6 +93,23 @@ namespace diamond_engine
 					return registerStatus;
 				}
 
+				switch (collider2DComponent->getType())
+				{
+				case ColliderType::OBSTACLE:
+					m_collisionResolver2D->addObstacleSprite(collider2DInstance.get());
+					break;
+				case ColliderType::CHARACTER:
+					m_collisionResolver2D->addCharacterSprite(collider2DInstance.get());
+					break;
+				default:
+					break;
+				}
+
+				const std::string& colliderInstanceName = instance->getInternalName() + "_collider2D";
+				collider2DInstance->setName(colliderInstanceName);
+				collider2DInstance->setInternalName(colliderInstanceName);
+				m_registeredInstances.insert({ colliderInstanceName, colliderInstanceName });
+
 				m_colliders.push_back(std::move(collider2DInstance));
 			}
 
@@ -93,6 +124,8 @@ namespace diamond_engine
 		{
 			return registerStatus;
 		}
+
+		m_registeredInstances.insert({ instance->getInternalName(), instance->getName() });
 
 		m_instances.push_back(std::move(instance));
 
@@ -136,6 +169,8 @@ namespace diamond_engine
 				behaviourComponent->update(deltaTime);
 			}
 		}
+
+		m_collisionResolver2D->ResolveCollisions();
 
 		for (const auto& colliderInstance : m_colliders)
 		{

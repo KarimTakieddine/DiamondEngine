@@ -29,6 +29,8 @@ namespace diamond_engine
 
 		void ResolveCollisions();
 
+		void clear();
+
 	private:
 		std::unordered_map<std::string, std::string> m_collisionResolutionMap;
 		std::vector<GameInstance*> m_characterSprites;

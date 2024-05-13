@@ -98,4 +98,24 @@ namespace diamond_engine
 	{
 		return m_renderObject;
 	}
+
+	const std::string& GameInstance::getName() const
+	{
+		return m_name;
+	}
+
+	void GameInstance::setName(const std::string& name)
+	{
+		m_name = name;
+	}
+
+	const std::string& GameInstance::getInternalName() const
+	{
+		return m_internalName;
+	}
+
+	void GameInstance::setInternalName(const std::string& name)
+	{
+		m_internalName = name;
+	}
 }

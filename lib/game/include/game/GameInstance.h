@@ -61,10 +61,16 @@ namespace diamond_engine
 		std::unique_ptr<BehaviourComponent> extractBehaviourComponent(const std::string& name);
 
 		RenderObject* getRenderObject() const;
+		const std::string& getName() const;
+		void setName(const std::string& name);
+		const std::string& getInternalName() const;
+		void setInternalName(const std::string& name);
 
 	private:
 		std::vector<std::unique_ptr<IRenderComponent>> m_renderComponents;
 		std::vector<std::unique_ptr<BehaviourComponent>> m_behaviourComponents;
+		std::string m_name{ "Unnamed" };
+		std::string m_internalName{ "Unnamed" };
 		RenderObject* m_renderObject{ nullptr };
 	};
 }
