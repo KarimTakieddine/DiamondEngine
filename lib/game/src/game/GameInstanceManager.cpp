@@ -1,5 +1,8 @@
+#include "Collider2DComponent.h"
 #include "GameInstanceBuilder.h"
 #include "GameInstanceManager.h"
+#include "MaterialRenderComponent.h"
+#include "TransformRenderComponent.h"
 #include "RenderingSubsystem.h"
 
 namespace diamond_engine
@@ -17,8 +20,9 @@ namespace diamond_engine
 
 	void GameInstanceManager::unloadCurrentScene()
 	{
+		m_colliders.clear();
 		m_instances.clear();
-		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAllocatedObjectCount());
+		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAssignedObjectCount());
 	}
 
 	std::unique_ptr<GameInstance> GameInstanceManager::createInstance()
@@ -50,14 +54,36 @@ namespace diamond_engine
 		EngineStatus registerStatus;
 		switch (instanceConfig->getType())
 		{
-		case GameInstanceType::SPRITE:
-			registerStatus = m_renderingSubsystem->registerRenderObject("sprite", instance->getRenderComponents());
+		case GameInstanceType::SPRITE: {
+			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", instance->getRenderComponents());
+
+			auto collider2DBehaviour = instance->extractBehaviourComponent("Collider2D");
+			if (collider2DBehaviour)
+			{
+				auto collider2DInstance = createInstance();
+
+				dynamic_cast<Collider2DComponent*>(collider2DBehaviour.get())->setTarget(instance->getRenderObject());
+				collider2DInstance->acquireBehaviourComponent(std::move(collider2DBehaviour));
+
+				std::unique_ptr<MaterialRenderComponent> colliderMaterial = std::make_unique<MaterialRenderComponent>();
+				colliderMaterial->setColor({ 0.0f, 1.0f, 0.0f });
+				collider2DInstance->acquireRenderComponent(std::move(colliderMaterial));
+
+				std::unique_ptr<TransformRenderComponent> colliderTransform = std::make_unique<TransformRenderComponent>();
+				collider2DInstance->acquireRenderComponent(std::move(colliderTransform));
+
+				registerStatus = m_renderingSubsystem->registerRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
+
+				if (!registerStatus)
+				{
+					return registerStatus;
+				}
+
+				m_colliders.push_back(std::move(collider2DInstance));
+			}
+
 			break;
-		/*
-		case GameInstanceType::COLLIDER:
-			registerStatus = m_renderingSubsystem->registerRenderObject("unlit_color", instance->getRenderComponents());
-			break;
-		*/
+		}
 		default:
 			registerStatus = { "Failed to register game instance of unknown type", true };
 			break;
@@ -75,9 +101,9 @@ namespace diamond_engine
 
 	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
 	{
-		const size_t maxObjects = static_cast<size_t>(sceneConfig.getMaxInstanceCount());
+		const size_t gameInstanceCount = static_cast<size_t>(sceneConfig.getInstanceConfigs().size());
 
-		m_renderObjectAllocator->Expand(maxObjects);
+		m_renderObjectAllocator->Expand(gameInstanceCount << 1);
 
 		m_renderingSubsystem->setBackgroundColor(sceneConfig.getBackgroundColor());
 
@@ -106,6 +132,14 @@ namespace diamond_engine
 		for (const auto& instance : m_instances)
 		{
 			for (const auto& behaviourComponent : instance->getBehaviourComponents())
+			{
+				behaviourComponent->update(deltaTime);
+			}
+		}
+
+		for (const auto& colliderInstance : m_colliders)
+		{
+			for (const auto& behaviourComponent : colliderInstance->getBehaviourComponents())
 			{
 				behaviourComponent->update(deltaTime);
 			}

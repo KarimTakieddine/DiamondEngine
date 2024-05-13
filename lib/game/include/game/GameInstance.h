@@ -30,22 +30,37 @@ namespace diamond_engine
 			return componentIt == m_renderComponents.cend() ? nullptr : dynamic_cast<T*>(componentIt->get());
 		}
 
-		template<typename T>
-		T* getBehaviourComponent(const std::string& name) const
+		std::vector<std::unique_ptr<BehaviourComponent>>::const_iterator getBehaviourComponentIt(const std::string& name) const
 		{
-			auto componentIt = std::find_if(
+			return std::find_if(
 				m_behaviourComponents.begin(),
 				m_behaviourComponents.end(),
 				[name](const std::unique_ptr<BehaviourComponent>& behaviourComponent)
 				{
 					return std::string(behaviourComponent->getName()) == name;
 				});
-
-			return componentIt == m_behaviourComponents.cend() ? nullptr : dynamic_cast<T*>(componentIt->get());
 		}
 
+		template<typename T>
+		T* getBehaviourComponent(const std::string& name) const
+		{
+			auto componentIt = getBehaviourComponentIt(name);
+
+			if (componentIt == m_behaviourComponents.cend())
+			{
+				return nullptr;
+			}
+
+			return dynamic_cast<T*>(componentIt->get());
+		}
+
+		std::vector<std::unique_ptr<IRenderComponent>>& getRenderComponents();
 		const std::vector<std::unique_ptr<IRenderComponent>>& getRenderComponents() const;
+		std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents();
 		const std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents() const;
+		std::unique_ptr<BehaviourComponent> extractBehaviourComponent(const std::string& name);
+
+		RenderObject* getRenderObject() const;
 
 	private:
 		std::vector<std::unique_ptr<IRenderComponent>> m_renderComponents;

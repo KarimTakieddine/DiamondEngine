@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(GLEW_DIR ../../glew-2.1.0-win32/glew-2.1.0)
 set(COMMON_DIR ../common)
+set(GAME_DIR ../game)
 set(INPUT_DIR ../input)
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
@@ -17,6 +18,7 @@ set(GLM_DIR ../../glm)
 set(PUGI_XML_DIR ../../pugixml)
 
 set(SOURCES
+    ${SRC_DIR}/config/Collider2DComponentConfig.cpp
     ${SRC_DIR}/config/ControllerConfig.cpp
     ${SRC_DIR}/config/EngineConfig.cpp
     ${SRC_DIR}/config/KeyboardConfig.cpp
@@ -46,8 +48,10 @@ target_include_directories(libDiamondEngineConfig PRIVATE
     "${PUGI_XML_DIR}/${SRC_DIR}"
     "${COMMON_DIR}/${INCLUDE_DIR}"
     "${INPUT_DIR}/include/input"
+    "${GAME_DIR}/include/physics"
     "${INCLUDE_DIR}/config"
     "${INCLUDE_DIR}/parser"
+
 )
 
 target_link_libraries(libDiamondEngineConfig PRIVATE pugixml)

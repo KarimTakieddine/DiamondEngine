@@ -60,10 +60,8 @@ set(SOURCES
     #${SRC_DIR}/${AUDIO_DIR}/AudioDevice.cpp
     #${SRC_DIR}/${AUDIO_DIR}/AudioEngine.cpp
     #${SRC_DIR}/${AUDIO_DIR}/AudioLoader.cpp
-    ${SRC_DIR}/behaviour/Collider2DBehaviour.cpp
     #${SRC_DIR}/builder/SpriteAnimationPlayerBuilder.cpp
     ${SRC_DIR}/component/AnimationPlayer.cpp
-    ${SRC_DIR}/component/Collider2D.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     #${SRC_DIR}/config/Collider2DConfig.cpp
     #${SRC_DIR}/config/SpriteAnimationPlayerConfig.cpp
@@ -95,6 +93,7 @@ target_include_directories(DiamondEngine PUBLIC
     "${GAME_DIR}/include/allocator"
     "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"
+    "${GAME_DIR}/include/physics"
     "${GRAPHICS_DIR}/include/allocator"
     "${GRAPHICS_DIR}/include/component"
     "${GRAPHICS_DIR}/include/mesh"
@@ -105,7 +104,6 @@ target_include_directories(DiamondEngine PUBLIC
     "${INCLUDE_DIR}/diamond_engine"
     "${INCLUDE_DIR}/diamond_engine/animation"
     "${INCLUDE_DIR}/diamond_engine/audio"
-    "${INCLUDE_DIR}/diamond_engine/behaviour"
     "${INCLUDE_DIR}/diamond_engine/component"
     "${INCLUDE_DIR}/diamond_engine/config"
     "${INCLUDE_DIR}/diamond_engine/engine"

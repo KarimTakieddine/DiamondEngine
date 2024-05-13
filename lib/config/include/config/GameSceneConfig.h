@@ -14,9 +14,6 @@ namespace diamond_engine
 		const std::vector<std::unique_ptr<GameInstanceConfig>>& getInstanceConfigs() const;
 		void setInstanceConfigs(std::vector<std::unique_ptr<GameInstanceConfig>> instanceConfigs);
 
-		GLsizei getMaxInstanceCount() const;
-		void setMaxInstanceCount(GLsizei maxInstanceCount);
-
 		const glm::vec4& getBackgroundColor() const;
 		glm::vec4& getBackgroundColor();
 		void setBackgroundColor(const glm::vec4& backgroundColor);

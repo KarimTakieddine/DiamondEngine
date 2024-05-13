@@ -2,6 +2,7 @@
 
 #include <pugixml.hpp>
 
+#include "Collider2DComponentConfig.h"
 #include "ComponentConfigParser.h"
 #include "MaterialComponentConfig.h"
 #include "TransformComponentConfig.h"
@@ -72,6 +73,43 @@ namespace
 
 		return result;
 	}
+
+	using diamond_engine::BehaviourComponentConfig;
+	using diamond_engine::ColliderType;
+
+	const std::unordered_map<std::string, ColliderType> kStringToColliderType = {
+		{ "obstacle", ColliderType::OBSTACLE },
+		{ "character", ColliderType::CHARACTER }
+	};
+
+	static std::unique_ptr<BehaviourComponentConfig> parseCollider2DConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	{
+		using diamond_engine::Collider2DComponentConfig;
+		using diamond_engine::Size;
+
+		std::unique_ptr<Collider2DComponentConfig> result = std::make_unique<Collider2DComponentConfig>();
+
+		pugi::xml_attribute widthAttribute	= node.attribute("width");
+		pugi::xml_attribute heightAttribute = node.attribute("height");
+
+		const Size& defaultSize = result->getSize();
+		result->setSize({ widthAttribute.as_int(defaultSize.width), heightAttribute.as_int(defaultSize.height) });
+
+		pugi::xml_attribute typeAttribute = node.attribute("type");
+		if (typeAttribute)
+		{
+			const std::string typeString(typeAttribute.as_string());
+			auto typeIt = kStringToColliderType.find(typeString);
+			if (typeIt == kStringToColliderType.cend())
+			{
+				setErrorStatus(outStatus, "Invalid collider type specified: " + typeString);
+			}
+
+			result->setType(typeIt->second);
+		}
+
+		return result;
+	}
 }
 
 namespace diamond_engine
@@ -119,5 +157,7 @@ namespace diamond_engine
 		{ "Transform",	&parseTransformConfig	}
 	};
 
-	/* static */ std::unordered_map<std::string, ComponentConfigParser::BehaviourParseMethod> ComponentConfigParser::behaviourParseMethods = { };
+	/* static */ std::unordered_map<std::string, ComponentConfigParser::BehaviourParseMethod> ComponentConfigParser::behaviourParseMethods = {
+		{ "Collider2D", &parseCollider2DConfig }
+	};
 }

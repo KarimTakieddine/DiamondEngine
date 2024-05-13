@@ -5,7 +5,8 @@
 #include "TextureLoader.h"
 #include "TransformComponentConfig.h"
 #include "TransformRenderComponent.h"
-#include "BehaviourComponentConfig.h"
+#include "Collider2DComponent.h"
+#include "Collider2DComponentConfig.h"
 
 namespace
 {
@@ -60,6 +61,33 @@ namespace
 		std::unique_ptr<TransformRenderComponent> result = std::make_unique<TransformRenderComponent>();
 
 		result->setPosition(transformConfig->getPosition());
+
+		return result;
+	}
+
+	using diamond_engine::BehaviourComponent;
+	using diamond_engine::BehaviourComponentConfig;
+
+	static std::unique_ptr<BehaviourComponent> buildCollider2DComponent(const BehaviourComponentConfig* config, EngineStatus* outStatus)
+	{
+		using diamond_engine::Collider2DComponent;
+		using diamond_engine::Collider2DComponentConfig;
+
+		const Collider2DComponentConfig* colliderConfig = dynamic_cast<const Collider2DComponentConfig*>(config);
+
+		if (!colliderConfig)
+		{
+			if (outStatus)
+			{
+				*outStatus = { "Failed to cast supplied config to Collider2DComponentConfig", true };
+			}
+
+			return nullptr;
+		}
+
+		std::unique_ptr<Collider2DComponent> result = std::make_unique<Collider2DComponent>();
+		result->setSize(colliderConfig->getSize());
+		result->setType(colliderConfig->getType());
 
 		return result;
 	}
@@ -139,5 +167,8 @@ namespace diamond_engine
 		{ "Transform",	::buildTransformComponent }
 	};
 
-	/* static */ std::unordered_map<std::string, ComponentBuilder::BehaviourBuildMethod> ComponentBuilder::behaviourBuildMethods = { };
+	/* static */ std::unordered_map<std::string, ComponentBuilder::BehaviourBuildMethod> ComponentBuilder::behaviourBuildMethods =
+	{
+		{ "Collider2D", ::buildCollider2DComponent }
+	};
 }

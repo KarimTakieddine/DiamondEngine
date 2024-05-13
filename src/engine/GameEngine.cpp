@@ -37,9 +37,9 @@ namespace diamond_engine
 				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT },
 				VertexAttribute{ "textureCoordinate", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
 			},
+			"sprite_renderer",
 			"sprite");
 
-		/*
 		m_renderingSubsystem->registerRenderer(
 			MeshType::COLLIDER,
 			GL_DYNAMIC_DRAW,
@@ -48,8 +48,8 @@ namespace diamond_engine
 				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
 				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT }
 			},
+			"collider_2d_renderer",
 			"unlit_color");
-		*/
 
 		m_instanceManager = std::make_unique<GameInstanceManager>();
 		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);

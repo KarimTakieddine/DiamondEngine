@@ -17,16 +17,6 @@ namespace diamond_engine
 		m_instanceConfigs = std::move(instanceConfigs);
 	}
 
-	GLsizei GameSceneConfig::getMaxInstanceCount() const
-	{
-		return m_maxInstanceCount;
-	}
-
-	void GameSceneConfig::setMaxInstanceCount(GLsizei maxInstanceCount)
-	{
-		m_maxInstanceCount = maxInstanceCount;
-	}
-
 	const glm::vec4& GameSceneConfig::getBackgroundColor() const
 	{
 		return m_backgroundColor;

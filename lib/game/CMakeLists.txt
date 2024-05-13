@@ -14,10 +14,12 @@ set(SRC_DIR src)
 set(GLM_DIR ../../glm)
 
 set(SOURCES
+    ${SRC_DIR}/component/Collider2DComponent.cpp
     ${SRC_DIR}/component/ComponentBuilder.cpp
     ${SRC_DIR}/game/GameInstance.cpp
     ${SRC_DIR}/game/GameInstanceBuilder.cpp
-    ${SRC_DIR}/game/GameInstanceManager.cpp)
+    ${SRC_DIR}/game/GameInstanceManager.cpp
+    ${SRC_DIR}/physics/CollisionResolver2D.cpp)
 
 add_library(libDiamondEngineGame STATIC ${SOURCES})
 
@@ -36,4 +38,5 @@ target_include_directories(libDiamondEngineGame PRIVATE
     "${INCLUDE_DIR}/allocator"
     "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/game"
+    "${INCLUDE_DIR}/physics"
 )

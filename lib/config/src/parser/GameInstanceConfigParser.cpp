@@ -9,8 +9,7 @@ namespace
 {
 	using diamond_engine::GameInstanceType;
 	const std::unordered_map<std::string, GameInstanceType> kStringToInstanceType = {
-		{ "sprite",		GameInstanceType::SPRITE },
-		{ "collider",	GameInstanceType::COLLIDER }
+		{ "sprite",		GameInstanceType::SPRITE }
 	};
 
 	using diamond_engine::EngineStatus;

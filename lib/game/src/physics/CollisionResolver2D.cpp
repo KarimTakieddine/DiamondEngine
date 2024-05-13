@@ -3,17 +3,18 @@
 
 #include <glm/gtx/vec_swizzle.hpp>
 
-#include "Collider2D.h"
+#include "Collider2DComponent.h"
 #include "CollisionResolver2D.h"
+#include "GameInstance.h"
 
 namespace diamond_engine
 {
-	void CollisionResolver2D::addCharacterSprite(GameObject* characterSprite)
+	void CollisionResolver2D::addCharacterSprite(GameInstance* characterSprite)
 	{
 		m_characterSprites.push_back(characterSprite);
 	}
 
-	void CollisionResolver2D::addObstacleSprite(GameObject* obstacleSprite)
+	void CollisionResolver2D::addObstacleSprite(GameInstance* obstacleSprite)
 	{
 		m_obstacleSprites.push_back(obstacleSprite);
 	}
@@ -22,12 +23,14 @@ namespace diamond_engine
 	{
 		for (auto const characterSprite : m_characterSprites)
 		{
-			Collider2D* characterCollider = characterSprite->GetComponent<Collider2D>("Collider2D");
+			Collider2DComponent* characterCollider = characterSprite->getBehaviourComponent<Collider2DComponent>("Collider2D");
 
-			const GLfloat characterHalfWidth	= characterCollider->getWidth() * 0.5f;
-			const GLfloat characterHalfHeight	= characterCollider->getHeight() * 0.5f;
+			const glm::mat4& characterLocalScale	= characterCollider->getRenderObject()->transform.getLocalScale();
+			const glm::vec2 characterColliderSize	= { characterLocalScale[0].x, characterLocalScale[1].y };
+			const GLfloat characterHalfWidth		= characterColliderSize.x * 0.5f;
+			const GLfloat characterHalfHeight		= characterColliderSize.y * 0.5f;
 
-			const Transform& characterTransform = characterSprite->GetRenderableObject()->transform;
+			const Transform& characterTransform = characterCollider->getTarget()->transform;
 			const glm::vec2 characterPosition	= glm::xy(characterTransform.getPosition());
 
 			AxisAlignedBoundingBox characterAABB{
@@ -39,12 +42,14 @@ namespace diamond_engine
 
 			for (auto const obstacleSprite : m_obstacleSprites)
 			{
-				Collider2D* obstacleCollider = obstacleSprite->GetComponent<Collider2D>("Collider2D");
+				Collider2DComponent* obstacleCollider = obstacleSprite->getBehaviourComponent<Collider2DComponent>("Collider2D");
 
-				const GLfloat obstacleHalfWidth		= obstacleCollider->getWidth() * 0.5f;
-				const GLfloat obstacleHalfHeight	= obstacleCollider->getHeight() * 0.5f;
+				const glm::mat4& obstacleLocalScale		= obstacleCollider->getRenderObject()->transform.getLocalScale();
+				const glm::vec2 obstacleColliderSize	= { obstacleLocalScale[0].x, obstacleLocalScale[1].y };
+				const GLfloat obstacleHalfWidth			= obstacleColliderSize.x * 0.5f;
+				const GLfloat obstacleHalfHeight		= obstacleColliderSize.y * 0.5f;
 
-				const Transform& obstacleTransform	= obstacleSprite->GetRenderableObject()->transform;
+				const Transform& obstacleTransform	= obstacleCollider->getTarget()->transform;
 				const glm::vec2 obstaclePosition	= glm::xy(obstacleTransform.getPosition());
 
 				AxisAlignedBoundingBox obstacleAABB{
@@ -86,11 +91,11 @@ namespace diamond_engine
 
 					if (obstacleMinimum > characterMaximum || characterMinimum > obstacleMaximum)
 					{
-						if (m_collisionResolutionMap.find(obstacleSprite->getName()) != m_collisionResolutionMap.cend())
+						/*if (m_collisionResolutionMap.find(obstacleSprite->getName()) != m_collisionResolutionMap.cend())
 						{
 							m_collisionResolutionMap.erase(obstacleSprite->getName());
 							characterSprite->OnCollisionExit(obstacleSprite->getName());
-						}
+						}*/
 
 						colliding = false;
 						break;
@@ -129,13 +134,13 @@ namespace diamond_engine
 						resolutionVector = axes[1] * penetrations[3];
 					}
 
-					characterSprite->GetRenderableObject()->transform.Translate(resolutionVector);
+					characterSprite->getRenderObject()->transform.Translate(resolutionVector);
 
-					if (m_collisionResolutionMap.find(obstacleSprite->getName()) == m_collisionResolutionMap.cend())
+					/*if (m_collisionResolutionMap.find(obstacleSprite->getName()) == m_collisionResolutionMap.cend())
 					{
 						m_collisionResolutionMap.insert({ obstacleSprite->getName(), characterSprite->getName() });
 						characterSprite->OnCollisionEnter(glm::normalize(resolutionVector), obstacleSprite->getName());
-					}
+					}*/
 				}
 			}
 		}

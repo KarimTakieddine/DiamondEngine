@@ -60,8 +60,42 @@ namespace diamond_engine
 		return m_renderComponents;
 	}
 
+	std::vector<std::unique_ptr<IRenderComponent>>& GameInstance::getRenderComponents()
+	{
+		return m_renderComponents;
+	}
+
+	std::vector<std::unique_ptr<BehaviourComponent>>& GameInstance::getBehaviourComponents()
+	{
+		return m_behaviourComponents;
+	}
+
 	const std::vector<std::unique_ptr<BehaviourComponent>>& GameInstance::getBehaviourComponents() const
 	{
 		return m_behaviourComponents;
+	}
+
+	std::unique_ptr<BehaviourComponent> GameInstance::extractBehaviourComponent(const std::string& name)
+	{
+		auto componentIt = getBehaviourComponentIt(name);
+
+		if (componentIt == m_behaviourComponents.cend())
+		{
+			return nullptr;
+		}
+
+		const auto offset = std::distance(m_behaviourComponents.cbegin(), componentIt);
+		auto resultIt = std::next(m_behaviourComponents.begin(), offset);
+
+		std::unique_ptr<BehaviourComponent> result = std::move(*resultIt);
+
+		m_behaviourComponents.erase(resultIt);
+
+		return result;
+	}
+
+	RenderObject* GameInstance::getRenderObject() const
+	{
+		return m_renderObject;
 	}
 }

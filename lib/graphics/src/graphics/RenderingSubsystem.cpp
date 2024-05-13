@@ -61,7 +61,7 @@ namespace diamond_engine
 		m_uniformBufferAgent->freeAllBuffers();
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode, const std::vector<VertexAttribute>& vertexAttributes, const std::string& shaderProgramName)
+	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode, const std::vector<VertexAttribute>& vertexAttributes, const std::string& name, const std::string& shaderProgramName)
 	{
 		const auto shaderProgram = SharedShaderStore::getInstance()->FindProgram(shaderProgramName);
 
@@ -70,9 +70,9 @@ namespace diamond_engine
 			return { "Failed to register renderer. Shader program not found: " + shaderProgramName, true };
 		}
 
-		if (m_renderers.find(shaderProgramName) != m_renderers.cend())
+		if (m_renderers.find(name) != m_renderers.cend())
 		{
-			return { "Failed to register renderer. Already active: " + shaderProgramName, true };
+			return { "Failed to register renderer. Already active: " + name, true };
 		}
 
 		EngineStatus uniformBufferStatus = m_uniformBufferAgent->bindUniformBuffer(
@@ -90,20 +90,20 @@ namespace diamond_engine
 		renderer->uploadMeshData(vertexAttributes, drawType);
 
 		m_renderers.insert(
-			{ shaderProgramName, std::move(renderer) });
+			{ name, std::move(renderer) });
 
-		m_registeredRenderers.push_back(shaderProgramName);
+		m_registeredRenderers.push_back(name);
 
 		return { };
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& shaderProgramName, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const
+	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& name, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const
 	{
-		Renderer* renderer = getRenderer(shaderProgramName);
+		Renderer* renderer = getRenderer(name);
 
 		if (!renderer)
 		{
-			return { "Failed to register RenderObject. Active renderer not found: " + shaderProgramName, true };
+			return { "Failed to register RenderObject. Active renderer not found: " + name, true };
 		}
 
 		RenderDrawCall renderDrawCall{ };
@@ -112,9 +112,9 @@ namespace diamond_engine
 		return { };
 	}
 
-	Renderer* RenderingSubsystem::getRenderer(const std::string& shaderProgramName) const
+	Renderer* RenderingSubsystem::getRenderer(const std::string& name) const
 	{
-		auto rendererIt = m_renderers.find(shaderProgramName);
+		auto rendererIt = m_renderers.find(name);
 
 		if (rendererIt == m_renderers.cend())
 		{

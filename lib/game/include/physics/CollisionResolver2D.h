@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <unordered_map>
 
 #include <GL/glew.h>
@@ -18,19 +19,19 @@ namespace diamond_engine
 		glm::vec2 bottomLeft{ 0.0f, 0.0f };
 	};
 
-	class GameObject;
+	class GameInstance;
 	class CollisionResolver2D
 	{
 	public:
-		void addCharacterSprite(GameObject* characterSprite);
+		void addCharacterSprite(GameInstance* characterSprite);
 
-		void addObstacleSprite(GameObject* obstacleSprite);
+		void addObstacleSprite(GameInstance* obstacleSprite);
 
 		void ResolveCollisions();
 
 	private:
 		std::unordered_map<std::string, std::string> m_collisionResolutionMap;
-		std::vector<GameObject*> m_characterSprites;
-		std::vector<GameObject*> m_obstacleSprites;
+		std::vector<GameInstance*> m_characterSprites;
+		std::vector<GameInstance*> m_obstacleSprites;
 	};
 }

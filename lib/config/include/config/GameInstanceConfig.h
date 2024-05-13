@@ -10,9 +10,8 @@ namespace diamond_engine
 {
 	enum class GameInstanceType : unsigned
 	{
-		UNKNOWN		= 0,
-		SPRITE		= 1,
-		COLLIDER	= 2
+		UNKNOWN	= 0,
+		SPRITE	= 1
 	};
 
 	class GameInstanceConfig

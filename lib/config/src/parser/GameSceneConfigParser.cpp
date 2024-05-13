@@ -50,12 +50,6 @@ namespace diamond_engine
 	{
 		std::unique_ptr<GameSceneConfig> result = std::make_unique<GameSceneConfig>();
 
-		pugi::xml_attribute maxInstanceCountAttribute = node.attribute("maxInstanceCount");
-		if (maxInstanceCountAttribute)
-		{
-			result->setMaxInstanceCount(maxInstanceCountAttribute.as_int(result->getMaxInstanceCount()));
-		}
-
 		pugi::xml_node backgroundColorNode = node.child("BackgroundColor");
 		if (backgroundColorNode)
 		{

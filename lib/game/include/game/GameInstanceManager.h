@@ -7,6 +7,7 @@
 #include "GameInstance.h"
 #include "GameSceneConfig.h"
 #include "RenderObject.h"
+#include "CollisionResolver2D.h"
 
 namespace diamond_engine
 {
@@ -27,6 +28,7 @@ namespace diamond_engine
 
 	private:
 		std::vector<std::unique_ptr<GameInstance>> m_instances;
+		std::vector<std::unique_ptr<GameInstance>> m_colliders;
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectAllocator{ nullptr };
 	};
