@@ -25,6 +25,8 @@ namespace diamond_engine
 			return { "MaterialRenderComponent::uploadGraphicsMemory failed. Graphics memory pool was NULL", true };
 		}
 
+		// TODO: Error handling
+
 		uploadUniformMemory(m_colorMemory);
 		memoryPool->advanceSeek(sizeof(UniformVec3));
 
