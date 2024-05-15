@@ -5,6 +5,7 @@
 
 #include "IRenderComponent.h"
 #include "Texture.h"
+#include "UniformMemory.hpp"
 
 namespace diamond_engine
 {
@@ -18,7 +19,7 @@ namespace diamond_engine
 
 		std::vector<RenderUpload> getUploads() const final override;
 		EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) final override;
-		EngineStatus onRenderObjectAllocated(RenderObject* renderObject) final override;
+		EngineStatus onRenderObjectAllocated(RenderObject* renderObject) final override { return {  }; };
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
 
 		void setTexture(const Texture& texture);
@@ -33,13 +34,14 @@ namespace diamond_engine
 		const glm::vec2& getTextureOffset() const;
 		glm::vec2& getTextureOffset();
 
+		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
+		EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
+		EngineStatus formatDrawCall(DrawCall* drawCall) final override;
+		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
+
 	private:
-		Texture m_texture;
-		glm::vec3 m_color{ 1.0f, 1.0f, 1.0f };
-		glm::vec2 m_textureOffset{ 0.0f, 0.0f };
-		RenderMaterial* m_material{ nullptr };
-		RenderDrawCall* m_renderDrawCall{ nullptr };
-		GLint m_colorUniformLocation{ -1 };
-		GLint m_textureOffsetUniformLocation{ -1 };
+		UniformVec3* m_colorMemory{ nullptr };
+		UniformVec2* m_textureOffsetMemory{ nullptr };
+		DrawCall* m_drawCall{ nullptr };
 	};
 }

@@ -25,7 +25,8 @@ namespace diamond_engine
 		void unloadCurrentScene();
 		EngineStatus loadScene(const GameSceneConfig& sceneConfig);
 		std::unique_ptr<GameInstance> createInstance();
-		EngineStatus registerInstance(std::unique_ptr<GameInstance> instance, const GameInstanceConfig* instanceConfig);
+		EngineStatus registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig);
+		EngineStatus unregisterInstance(const std::string& name);
 		void updateInstances(GLfloat deltaTime);
 
 	private:

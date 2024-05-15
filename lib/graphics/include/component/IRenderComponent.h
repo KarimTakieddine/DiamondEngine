@@ -18,9 +18,11 @@
 
 #include "EngineStatus.h"
 #include "RenderUpload.h"
+#include "MemoryPoolAllocator.hpp"
 
 namespace diamond_engine
 {
+	struct DrawCall;
 	struct RenderDrawCall;
 	struct RenderObject;
 	class ShaderProgram;
@@ -33,5 +35,10 @@ namespace diamond_engine
 		virtual EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) = 0;
 		virtual EngineStatus onRenderObjectAllocated(RenderObject* renderObject) = 0;
 		virtual EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) = 0;
+		
+		virtual EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
+		virtual EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
+		virtual EngineStatus formatDrawCall(DrawCall* drawCall) = 0;
+		virtual EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
 	};
 }

@@ -3,6 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Camera.h"
+#include "DrawCall.h"
 #include "GLAllocator.h"
 #include "IRenderComponent.h"
 #include "SharedMeshStore.h"
@@ -30,7 +31,7 @@ namespace diamond_engine
 		m_renderInstructions.clear();
 	}
 
-	void Renderer::registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall)
+	void Renderer::registerRenderInstruction(const RenderComponentList& renderComponents, RenderDrawCall* renderDrawCall)
 	{
 		renderDrawCall->drawMode		= m_drawMode;
 		renderDrawCall->elementCount	= m_sharedMesh->GetTriangles().size();
@@ -69,12 +70,12 @@ namespace diamond_engine
 		return m_renderInstructions;
 	}
 
-	void Renderer::render()
+	void Renderer::render(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
 		glUseProgram(m_shaderProgram->GetObject());
 		glBindVertexArray(m_vertexArrayObject);
 
-		for (const auto& renderInstruction : m_renderInstructions)
+		/*for (const auto& renderInstruction : m_renderInstructions)
 		{
 			const RenderUploadObject& uploadObject = renderInstruction.uploadObject;
 			for (const auto& renderUpload : uploadObject.getUploads())
@@ -85,7 +86,14 @@ namespace diamond_engine
 			const RenderDrawCall& drawCall = renderInstruction.drawCall;
 			glBindTexture(GL_TEXTURE_2D, drawCall.texture);
 			glDrawElements(drawCall.drawMode, drawCall.elementCount, GL_UNSIGNED_INT, nullptr);
+		}*/
+
+		for (const auto& renderComponent : renderComponents)
+		{
+			renderComponent->uploadGraphicsMemory(memoryPool);
 		}
+
+		// TODO: Find draw call following render instance
 	}
 
 	void Renderer::uploadMeshData(const std::vector<VertexAttribute>& vertexAttributes, GLenum drawType)
@@ -133,5 +141,68 @@ namespace diamond_engine
 	const std::shared_ptr<ShaderProgram>& Renderer::getShaderProgram() const
 	{
 		return m_shaderProgram;
+	}
+
+	EngineStatus Renderer::allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
+	{
+		for (const auto& renderComponent : renderComponents)
+		{
+			const EngineStatus requestStatus = renderComponent->requestGraphicsMemory(memoryPool);
+		
+			if (!requestStatus)
+			{
+				return requestStatus;
+			}
+		}
+
+		DrawCall* drawCall = memoryPool->requestMemory<DrawCall>();
+
+		if (!drawCall)
+		{
+			return { "Failed to allocate draw call from memory pool", true };
+		}
+
+		for (const auto& renderComponent : renderComponents)
+		{
+			const EngineStatus formatStatus = renderComponent->formatDrawCall(drawCall);
+
+			if (!formatStatus)
+			{
+				return formatStatus;
+			}
+		}
+
+		drawCall->elementCount = m_sharedMesh->GetTriangles().size();
+
+		return { };
+	}
+
+	EngineStatus Renderer::bindToShaderProgram(const RenderComponentList& renderComponents)
+	{
+		for (const auto& renderComponent : renderComponents)
+		{
+			renderComponent->bindToShaderProgram(m_shaderProgram);
+		}
+
+		return { };
+	}
+
+	EngineStatus Renderer::releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
+	{
+		// TODO: Release draw call here
+
+		memoryPool->freeMemory(sizeof(DrawCall));
+
+		for (auto renderComponentIt = renderComponents.rbegin(); renderComponentIt != renderComponents.rend(); ++renderComponentIt)
+		{
+			const EngineStatus releaseStatus = (*renderComponentIt)->releaseGraphicsMemory(memoryPool);
+
+			if (!releaseStatus)
+			{
+				return releaseStatus;
+			}
+		}
+
+		return { };
 	}
 }

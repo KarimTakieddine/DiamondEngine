@@ -37,7 +37,7 @@ namespace diamond_engine
 		return result;
 	}
 
-	EngineStatus GameInstanceManager::registerInstance(std::unique_ptr<GameInstance> instance, const GameInstanceConfig* instanceConfig)
+	EngineStatus GameInstanceManager::registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig)
 	{
 		if (!instance)
 		{
@@ -64,7 +64,7 @@ namespace diamond_engine
 
 		instance->setInternalName(instanceName + "_" + std::to_string(instanceCount));
 
-		EngineStatus registerStatus;
+		/*EngineStatus registerStatus;
 		switch (instanceConfig->getType())
 		{
 		case GameInstanceType::SPRITE: {
@@ -123,11 +123,25 @@ namespace diamond_engine
 		if (!registerStatus)
 		{
 			return registerStatus;
-		}
+		}*/
 
 		m_registeredInstances.insert({ instance->getInternalName(), instance->getName() });
 
-		m_instances.push_back(std::move(instance));
+		// m_instances.push_back(std::move(instance));
+
+		return { };
+	}
+
+	EngineStatus GameInstanceManager::unregisterInstance(const std::string& name)
+	{
+		auto instanceIt = m_registeredInstances.find(name);
+
+		if (instanceIt == m_registeredInstances.cend())
+		{
+			return { "Failed to unregister instance. Not found: " + name, true };
+		}
+
+		m_registeredInstances.erase(instanceIt);
 
 		return { };
 	}

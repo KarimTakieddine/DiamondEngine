@@ -135,8 +135,6 @@ namespace diamond_engine
 
 	void GameEngine::loadScene(const std::string& name)
 	{
-		unloadCurrentScene();
-
 		auto sceneIt = m_gameScenes.find(name);
 
 		if (sceneIt == m_gameScenes.cend())
@@ -144,32 +142,110 @@ namespace diamond_engine
 			throw std::runtime_error("Cannot load scene. Scene not found: " + name);
 		}
 
+		unloadCurrentScene();
+
 		const auto& sceneConfig = sceneIt->second;
-		EngineStatus loadStatus = m_instanceManager->loadScene(*sceneConfig.get());
+
+		m_renderingSubsystem->setBackgroundColor(sceneConfig->getBackgroundColor());
+
+		for (const auto& gameInstanceConfig : sceneConfig->getInstanceConfigs())
+		{
+			std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
+
+			EngineStatus registerStatus = m_instanceManager->registerInstance(gameInstance, gameInstanceConfig.get());
+
+			if (!registerStatus)
+				throw std::runtime_error("Failed to load scene: " + name + " error was: " + registerStatus.message);
+
+			switch (gameInstanceConfig->getType())
+			{
+				case (GameInstanceType::SPRITE):
+				{
+					m_spriteInstances.push_back(std::move(gameInstance));
+					break;
+				}
+			}
+		}
+
+		for (const auto& spriteInstance : m_spriteInstances)
+		{
+			m_renderingSubsystem->registerRenderObject("sprite_renderer", spriteInstance->getRenderComponents());
+		}
+
+		for (const auto& collider2DInstance : m_collider2DInstances)
+		{
+			m_renderingSubsystem->registerRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
+		}
+
+		/*EngineStatus loadStatus = m_instanceManager->loadScene(*sceneConfig.get());
 
 		if (!loadStatus)
 		{
 			throw std::runtime_error("Cannot load scene. Error was: " + loadStatus.message);
-		}
+		}*/
 
-		m_currentScene			= name;
-		m_sceneBackgroundColor	= sceneConfig->getBackgroundColor();
+		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		m_renderingSubsystem->freeRegisteredInstructions();
-		m_instanceManager->unloadCurrentScene();
+		for (const auto& collider2DInstance : m_collider2DInstances)
+		{
+			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
+			m_instanceManager->unregisterInstance(collider2DInstance->getInternalName());
+		}
+
+		m_collider2DInstances.clear();
+
+		for (const auto& spriteInstance : m_spriteInstances)
+		{
+			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", spriteInstance->getRenderComponents());
+			m_instanceManager->unregisterInstance(spriteInstance->getInternalName());
+		}
+
+		m_spriteInstances.clear();
+
+		//m_renderingSubsystem->freeRegisteredInstructions(); // TODO: Remove
+		//m_instanceManager->unloadCurrentScene();
 		m_currentScene.clear();
-		m_sceneBackgroundColor = { };
 	}
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
-		m_instanceManager->updateInstances(deltaTime);
-		m_renderingSubsystem->renderAll(); // TODO: Have this configurable i.e. do we want to also render colliders
+		for (const auto& spriteInstance : m_spriteInstances)
+		{
+			for (const auto& behaviourComponent : spriteInstance->getBehaviourComponents())
+			{
+				behaviourComponent->update(deltaTime);
+			}
+		}
+
+		// m_collisionResolver2D->ResolveCollisions();
+
+		for (const auto& collider2DInstance : m_collider2DInstances)
+		{
+			for (const auto& behaviourComponent : collider2DInstance->getBehaviourComponents())
+			{
+				behaviourComponent->update(deltaTime);
+			}
+		}
+
+		m_renderingSubsystem->preRender();
+		
+		for (const auto& spriteInstance : m_spriteInstances)
+		{
+			m_renderingSubsystem->render("sprite_renderer", spriteInstance->getRenderComponents());
+		}
+
+		for (const auto& collider2DInstance : m_collider2DInstances)
+		{
+			m_renderingSubsystem->render("collider2DRenderer", collider2DInstance->getRenderComponents());
+		}
+
+		//m_instanceManager->updateInstances(deltaTime);
+		//m_renderingSubsystem->renderAll(); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

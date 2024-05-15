@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../mesh/MeshType.h"
+#include "DrawCall.h"
+#include "MemoryPoolAllocator.hpp"
+#include "MeshType.h"
 #include "RenderDrawCall.h"
 #include "RenderUploadObject.h"
 #include "VertexAttribute.h"
@@ -48,6 +50,8 @@ namespace diamond_engine
 		RenderDrawCall drawCall;
 	};
 
+	using RenderComponentList = const std::vector<std::unique_ptr<IRenderComponent>>;
+
 	class Camera;
 	class GLAllocator;
 	class IRenderComponent;
@@ -58,12 +62,16 @@ namespace diamond_engine
 		// The Renderer has access to one shared shader program and binds it before uploading all the uniforms
 		Renderer(GLuint vertexArrayObject, MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
 		void clearRenderInstructions();
-		void registerRenderInstruction(const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents, RenderDrawCall* renderDrawCall);
+		void registerRenderInstruction(const RenderComponentList& renderComponents, RenderDrawCall* renderDrawCall);
 		const std::vector<RenderInstruction>& getInstructions() const;
 		std::vector<RenderInstruction>& getInstructions();
 		const std::shared_ptr<ShaderProgram>& getShaderProgram() const;
-		void render();
+		void render(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 		void uploadMeshData(const std::vector<VertexAttribute>& vertexAttributes, GLenum drawType);
+
+		EngineStatus allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
+		EngineStatus bindToShaderProgram(const RenderComponentList& renderComponents);
+		EngineStatus releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 
 	private:
 		static void performUpload(const RenderUpload& renderUpload);

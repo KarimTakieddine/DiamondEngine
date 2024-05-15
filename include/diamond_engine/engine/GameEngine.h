@@ -35,10 +35,11 @@ namespace diamond_engine
 		void onWindowResize(const Size& size);
 
 		std::unordered_map<std::string, std::unique_ptr<GameSceneConfig>> m_gameScenes;
+		std::vector<std::unique_ptr<GameInstance>> m_spriteInstances;
+		std::vector<std::unique_ptr<GameInstance>> m_collider2DInstances;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
-		glm::vec3 m_sceneBackgroundColor{ 0.0f, 0.0f, 0.0f };
 		std::string m_currentScene;
 	};
 }

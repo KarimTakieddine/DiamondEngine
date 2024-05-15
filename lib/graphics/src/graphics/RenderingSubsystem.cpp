@@ -5,9 +5,15 @@
 
 namespace diamond_engine
 {
-	RenderingSubsystem::RenderingSubsystem() : m_camera(std::make_unique<Camera>()), m_uniformBufferAgent(std::make_unique<UniformBufferAgent>()) // TODO: Share this?
+	RenderingSubsystem::RenderingSubsystem() :
+		m_camera(std::make_unique<Camera>()),
+		m_uniformBufferAgent(std::make_unique<UniformBufferAgent>()),
+		m_graphicsMemoryPool(std::make_unique< GraphicsMemoryPool>())
 	{
-		m_uniformBufferAgent->reserveCapacity(256);
+		m_graphicsMemoryPool->allocate(4096);
+
+		m_uniformBufferAgent->reserveCapacity(1);
+		m_uniformBufferAgent->allocateBuffers(1); // Camera buffer. Common to all renderers / shader programs
 
 		m_vertexArrayAllocator = std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays);
 		m_vertexArrayAllocator->Reserve(256);
@@ -18,7 +24,6 @@ namespace diamond_engine
 
 	void RenderingSubsystem::setMaxRendererCount(GLsizei maxRendererCount)
 	{
-		m_uniformBufferAgent->allocateBuffers(maxRendererCount);
 		m_vertexArrayAllocator->Allocate(maxRendererCount);
 
 		m_cameraUniformBuffer			= m_uniformBufferAgent->allocateBuffer(0, GL_DYNAMIC_DRAW);
@@ -97,7 +102,7 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& name, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const
+	EngineStatus RenderingSubsystem::registerRenderObject(const std::string& name, const RenderComponentList& renderComponents) const
 	{
 		Renderer* renderer = getRenderer(name);
 
@@ -106,8 +111,25 @@ namespace diamond_engine
 			return { "Failed to register RenderObject. Active renderer not found: " + name, true };
 		}
 
+		renderer->allocateGraphicsMemory(renderComponents, m_graphicsMemoryPool);
+		renderer->bindToShaderProgram(renderComponents);
+
 		RenderDrawCall renderDrawCall{ };
 		renderer->registerRenderInstruction(renderComponents, &renderDrawCall);
+
+		return { };
+	}
+
+	EngineStatus RenderingSubsystem::unregisterRenderObject(const std::string& name, const std::vector<std::unique_ptr<IRenderComponent>>& renderComponents) const
+	{
+		Renderer* renderer = getRenderer(name);
+
+		if (!renderer)
+		{
+			return { "Failed to unregister RenderObject. Active renderer not found: " + name, true };
+		}
+
+		renderer->releaseGraphicsMemory(renderComponents, m_graphicsMemoryPool);
 
 		return { };
 	}
@@ -124,13 +146,28 @@ namespace diamond_engine
 		return rendererIt->second.get();
 	}
 
-	void RenderingSubsystem::renderAll() const
+	void RenderingSubsystem::preRender()
 	{
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		m_uniformBufferAgent->uploadBufferData(m_cameraUniformBuffer);
+	}
 
+	void RenderingSubsystem::render(const std::string& name, const RenderComponentList& renderComponents) const
+	{
+		Renderer* registeredRenderer = getRenderer(name);
+
+		if (!registeredRenderer)
+		{
+			throw std::runtime_error("Attempt to access invalid renderer. Name: " + name);
+		}
+
+		registeredRenderer->render(renderComponents, m_graphicsMemoryPool);
+	}
+
+	void RenderingSubsystem::renderAll() const
+	{
 		for (size_t i = 0; i < m_registeredRenderers.size(); ++i)
 		{
 			Renderer* registeredRenderer = getRenderer(m_registeredRenderers[i]);
@@ -140,7 +177,7 @@ namespace diamond_engine
 				throw std::runtime_error("Attempt to access invalid renderer. Name: " + m_registeredRenderers[i]);
 			}
 
-			registeredRenderer->render();
+			// registeredRenderer->render();
 		}
 	}
 
