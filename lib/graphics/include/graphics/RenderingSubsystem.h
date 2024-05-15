@@ -10,6 +10,7 @@
 namespace diamond_engine
 {
 	class Camera;
+	class GameInstance;
 	class IRenderComponent;
 	class RenderingSubsystem
 	{
@@ -27,12 +28,13 @@ namespace diamond_engine
 
 		Renderer* getRenderer(const std::string& name) const;
 		void preRender();
-		void render(const std::string& name, const RenderComponentList& renderComponents) const;
+		void render(const std::string& name, const std::vector<std::unique_ptr<GameInstance>>& gameInstances) const;
 		void renderAll() const;
 
 		const std::shared_ptr<Camera>& getCamera() const;
 
 		void setBackgroundColor(const glm::vec4& backgroundColor);
+		GLuint getVertexArrayObject(const std::string& name) const;
 
 		// TODO: void render(const std::string& name) const;
 

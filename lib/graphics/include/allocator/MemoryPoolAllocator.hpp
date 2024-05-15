@@ -135,6 +135,11 @@ namespace diamond_engine
 			return m_seek;
 		}
 
+		void seekToStart()
+		{
+			m_seek = m_memoryPool;
+		}
+
 		~MemoryPoolAllocator()
 		{
 			release();

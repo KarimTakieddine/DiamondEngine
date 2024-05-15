@@ -33,18 +33,21 @@ namespace diamond_engine
 		UniformMemory<glm::mat4> memory;
 	};
 
-	inline void uploadUniformMemory(UniformVec2* memory)
+	inline void uploadUniformMemory(UniformVec2* uniform)
 	{
-
+		const auto& memory = uniform->memory;
+		glUniform2fv(memory.location, memory.count, glm::value_ptr(memory.value));
 	}
 
-	inline void uploadUniformMemory(UniformVec3* memory)
+	inline void uploadUniformMemory(UniformVec3* uniform)
 	{
-
+		const auto& memory = uniform->memory;
+		glUniform3fv(memory.location, memory.count, glm::value_ptr(memory.value));
 	}
 
-	inline void uploadUniformMemory(UniformMat4* memory)
+	inline void uploadUniformMemory(UniformMat4* uniform)
 	{
-
+		const auto& memory = uniform->memory;
+		glUniformMatrix4fv(memory.location, memory.count, GL_FALSE, glm::value_ptr(memory.value));
 	}
 }

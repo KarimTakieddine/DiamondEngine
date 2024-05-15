@@ -26,6 +26,7 @@ namespace diamond_engine
 	struct RenderDrawCall;
 	struct RenderObject;
 	class ShaderProgram;
+	class RenderComponentConfig;
 	class IRenderComponent
 	{
 	public:
@@ -38,7 +39,8 @@ namespace diamond_engine
 		
 		virtual EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
 		virtual EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
-		virtual EngineStatus formatDrawCall(DrawCall* drawCall) = 0;
+		virtual EngineStatus onDrawCallAllocated(DrawCall* drawCall) = 0;
 		virtual EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
+		virtual EngineStatus initialize(const RenderComponentConfig* config) = 0;
 	};
 }

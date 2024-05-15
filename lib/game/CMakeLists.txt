@@ -16,6 +16,7 @@ set(GLM_DIR ../../glm)
 set(SOURCES
     ${SRC_DIR}/component/Collider2DComponent.cpp
     ${SRC_DIR}/component/ComponentBuilder.cpp
+    ${SRC_DIR}/component/ComponentFactory.cpp
     ${SRC_DIR}/game/GameInstance.cpp
     ${SRC_DIR}/game/GameInstanceBuilder.cpp
     ${SRC_DIR}/game/GameInstanceManager.cpp

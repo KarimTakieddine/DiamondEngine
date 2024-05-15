@@ -1,6 +1,7 @@
 #include "RenderObject.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
+#include "TransformComponentConfig.h"
 #include "TransformRenderComponent.h"
 
 namespace diamond_engine
@@ -82,19 +83,10 @@ namespace diamond_engine
 
 	EngineStatus TransformRenderComponent::requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
-		m_localToWorld = memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		
-
-
-		m_localRotation = memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		
-
-
-		m_localScale = memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		
-
-
-		m_positionUniform = memoryPool->requestMemory<UniformVec3>({ { {1.0f, 1.0f, 1.0f }, 1 } });
+		m_localToWorld		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
+		m_localRotation		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
+		m_localScale		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
+		m_positionUniform	= memoryPool->requestMemory<UniformVec3>({ { { 0.0f, 0.0f, 0.0f }, 1 } });
 
 		return { };
 	}
@@ -116,25 +108,40 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus TransformRenderComponent::formatDrawCall(DrawCall* drawCall) { return { }; }
+	EngineStatus TransformRenderComponent::onDrawCallAllocated(DrawCall* drawCall) { return { }; }
 
 	EngineStatus TransformRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
-		// TODO: Upload color
+		// TODO: Upload m_localToWorld
 
+		uploadUniformMemory(m_localToWorld);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
 
-		// TODO: Upload texture offset
+		// TODO: Upload m_localRotation
 
+		uploadUniformMemory(m_localRotation);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
 
-		// TODO: Upload texture offset
+		// TODO: Upload m_localScale
 
+		uploadUniformMemory(m_localScale);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
 
-		// TODO: Upload texture offset
+		// Skip position upload (no position)
 
 		memoryPool->advanceSeek(sizeof(UniformVec3));
+
+		return { };
+	}
+
+	EngineStatus TransformRenderComponent::initialize(const RenderComponentConfig* config)
+	{
+		const TransformComponentConfig* transformConfig = dynamic_cast<const TransformComponentConfig*>(config);
+
+		if (!transformConfig)
+			return { "TransformRenderComponent::initialize failed. Could not convert config parameter to target type" ,true};
+
+		setPosition(transformConfig->getPosition());
 
 		return { };
 	}

@@ -10,5 +10,5 @@ uniform vec3 materialColor;
 uniform vec2 materialTextureOffset;
 
 void main() {
-    outColor = texture(textureSampler, vertexTextureCoordinate + materialTextureOffset) * vec4(1.0, 1.0, 1.0, 1.0);
+    outColor = texture(textureSampler, vertexTextureCoordinate + materialTextureOffset) * vec4(materialColor, 1.0);
 }

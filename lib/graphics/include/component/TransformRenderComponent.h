@@ -24,8 +24,9 @@ namespace diamond_engine
 
 		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
-		EngineStatus formatDrawCall(DrawCall* drawCall) final override;
+		EngineStatus onDrawCallAllocated(DrawCall* drawCall) final override;
 		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
+		EngineStatus initialize(const RenderComponentConfig* config) final override;
 
 	private:
 		// glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };

@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "GameInstance.h"
 #include "IRenderComponent.h"
 #include "RenderingSubsystem.h"
 #include "SharedShaderStore.h"
@@ -114,8 +115,8 @@ namespace diamond_engine
 		renderer->allocateGraphicsMemory(renderComponents, m_graphicsMemoryPool);
 		renderer->bindToShaderProgram(renderComponents);
 
-		RenderDrawCall renderDrawCall{ };
-		renderer->registerRenderInstruction(renderComponents, &renderDrawCall);
+		/*RenderDrawCall renderDrawCall{ };
+		renderer->registerRenderInstruction(renderComponents, &renderDrawCall);*/
 
 		return { };
 	}
@@ -151,10 +152,11 @@ namespace diamond_engine
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, m_backgroundColor.a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		m_graphicsMemoryPool->seekToStart();
 		m_uniformBufferAgent->uploadBufferData(m_cameraUniformBuffer);
 	}
 
-	void RenderingSubsystem::render(const std::string& name, const RenderComponentList& renderComponents) const
+	void RenderingSubsystem::render(const std::string& name, const std::vector<std::unique_ptr<GameInstance>>& gameInstances) const
 	{
 		Renderer* registeredRenderer = getRenderer(name);
 
@@ -163,7 +165,12 @@ namespace diamond_engine
 			throw std::runtime_error("Attempt to access invalid renderer. Name: " + name);
 		}
 
-		registeredRenderer->render(renderComponents, m_graphicsMemoryPool);
+		glUseProgram(registeredRenderer->getShaderProgram()->GetObject());
+		glBindVertexArray(registeredRenderer->getVertexArrayObject());
+		for (const auto& gameInstance : gameInstances)
+		{
+			registeredRenderer->render(gameInstance->getRenderComponents(), m_graphicsMemoryPool);
+		}
 	}
 
 	void RenderingSubsystem::renderAll() const
@@ -189,5 +196,11 @@ namespace diamond_engine
 	void RenderingSubsystem::setBackgroundColor(const glm::vec4& backgroundColor)
 	{
 		m_backgroundColor = backgroundColor;
+	}
+
+	GLuint RenderingSubsystem::getVertexArrayObject(const std::string& name) const
+	{
+		auto rendererIt = m_renderers.find(name);
+		return m_renderers.find(name) == m_renderers.cend() ? 0 : rendererIt->second->getVertexArrayObject();
 	}
 }

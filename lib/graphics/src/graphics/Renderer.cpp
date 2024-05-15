@@ -72,8 +72,8 @@ namespace diamond_engine
 
 	void Renderer::render(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
-		glUseProgram(m_shaderProgram->GetObject());
-		glBindVertexArray(m_vertexArrayObject);
+		// glUseProgram(m_shaderProgram->GetObject());
+		// glBindVertexArray(m_vertexArrayObject);
 
 		/*for (const auto& renderInstruction : m_renderInstructions)
 		{
@@ -92,6 +92,12 @@ namespace diamond_engine
 		{
 			renderComponent->uploadGraphicsMemory(memoryPool);
 		}
+
+		const DrawCall* drawCall = reinterpret_cast<const DrawCall*>(memoryPool->peek());
+		glBindTexture(GL_TEXTURE_2D, drawCall->texture);
+		glDrawElements(drawCall->drawMode, drawCall->elementCount, GL_UNSIGNED_INT, nullptr);
+
+		memoryPool->advanceSeek(sizeof(DrawCall));
 
 		// TODO: Find draw call following render instance
 	}
@@ -164,15 +170,16 @@ namespace diamond_engine
 
 		for (const auto& renderComponent : renderComponents)
 		{
-			const EngineStatus formatStatus = renderComponent->formatDrawCall(drawCall);
+			const EngineStatus handleStatus = renderComponent->onDrawCallAllocated(drawCall);
 
-			if (!formatStatus)
+			if (!handleStatus)
 			{
-				return formatStatus;
+				return handleStatus;
 			}
 		}
 
-		drawCall->elementCount = m_sharedMesh->GetTriangles().size();
+		drawCall->drawMode		= m_drawMode;
+		drawCall->elementCount	= m_sharedMesh->GetTriangles().size();
 
 		return { };
 	}
@@ -181,7 +188,10 @@ namespace diamond_engine
 	{
 		for (const auto& renderComponent : renderComponents)
 		{
-			renderComponent->bindToShaderProgram(m_shaderProgram);
+			const EngineStatus bindStatus = renderComponent->bindToShaderProgram(m_shaderProgram);
+		
+			if (!bindStatus)
+				return bindStatus;
 		}
 
 		return { };
@@ -204,5 +214,10 @@ namespace diamond_engine
 		}
 
 		return { };
+	}
+
+	GLuint Renderer::getVertexArrayObject() const
+	{
+		return m_vertexArrayObject;
 	}
 }

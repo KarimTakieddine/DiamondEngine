@@ -1,9 +1,11 @@
 #include "DrawCall.h"
 #include "RenderDrawCall.h"
 #include "RenderMaterial.h"
+#include "MaterialComponentConfig.h"
 #include "MaterialRenderComponent.h"
 #include "RenderObject.h"
 #include "ShaderProgram.h"
+#include "TextureLoader.h"
 
 namespace diamond_engine
 {
@@ -31,7 +33,7 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus MaterialRenderComponent::formatDrawCall(DrawCall* drawCall)
+	EngineStatus MaterialRenderComponent::onDrawCallAllocated(DrawCall* drawCall)
 	{
 		if (!drawCall)
 		{
@@ -57,11 +59,11 @@ namespace diamond_engine
 		}
 
 		// TODO: Upload color
-
+		uploadUniformMemory(m_colorMemory);
 		memoryPool->advanceSeek(sizeof(UniformVec3));
 		
 		// TODO: Upload texture offset
-
+		uploadUniformMemory(m_textureOffsetMemory);
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
 		return { };
@@ -187,6 +189,20 @@ namespace diamond_engine
 
 		memoryPool->freeMemory(sizeof(UniformVec3));
 		m_colorMemory = nullptr;
+
+		return { };
+	}
+
+	EngineStatus MaterialRenderComponent::initialize(const RenderComponentConfig* config)
+	{
+		const MaterialComponentConfig* materialConfig = dynamic_cast<const MaterialComponentConfig*>(config);
+
+		if (!materialConfig)
+			return { "MaterialRenderComponent::initialize failed. Could not convert config parameter to target type", true };
+
+		setTexture(TextureLoader::getInstance()->GetTexture(materialConfig->getTextureName()));
+		setColor(materialConfig->getColor());
+		setTextureOffset(materialConfig->getTextureOffset());
 
 		return { };
 	}

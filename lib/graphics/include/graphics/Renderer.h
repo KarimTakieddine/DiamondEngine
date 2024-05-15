@@ -50,7 +50,7 @@ namespace diamond_engine
 		RenderDrawCall drawCall;
 	};
 
-	using RenderComponentList = const std::vector<std::unique_ptr<IRenderComponent>>;
+	using RenderComponentList = std::vector<std::unique_ptr<IRenderComponent>>;
 
 	class Camera;
 	class GLAllocator;
@@ -72,6 +72,7 @@ namespace diamond_engine
 		EngineStatus allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 		EngineStatus bindToShaderProgram(const RenderComponentList& renderComponents);
 		EngineStatus releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
+		GLuint getVertexArrayObject() const;
 
 	private:
 		static void performUpload(const RenderUpload& renderUpload);
