@@ -1,4 +1,3 @@
-#include "RenderObject.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
 #include "TransformComponentConfig.h"
@@ -6,33 +5,6 @@
 
 namespace diamond_engine
 {
-	std::vector<RenderUpload> TransformRenderComponent::getUploads() const
-	{
-		return {
-			/*
-			{ &m_transform->getLocalToWorld(),	RenderUploadType::Matrix4, m_localToWorldLocation },
-			{ &m_transform->getLocalRotation(), RenderUploadType::Matrix4, m_localRotationLocation },
-			{ &m_transform->getLocalScale(),	RenderUploadType::Matrix4, m_localScaleLocation }
-			*/
-		};
-	}
-
-	EngineStatus TransformRenderComponent::onDrawCallRegistered(RenderDrawCall* renderDrawCall) { return { }; }
-
-	EngineStatus TransformRenderComponent::onRenderObjectAllocated(RenderObject* renderObject)
-	{
-		if (!renderObject)
-		{
-			return { "TransformRenderComponent::onRenderObjectAllocated - No RenderObject instance was provided", true };
-		}
-
-		//m_transform = &renderObject->transform;
-
-		// setPosition(m_position);
-
-		return { };
-	}
-
 	EngineStatus TransformRenderComponent::bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
 	{
 		if (!shaderProgram)
@@ -61,19 +33,19 @@ namespace diamond_engine
 
 		m_localScale->memory.location = shaderProgram->GetUniform("modelLocalScale");
 
-		/*m_localToWorldLocation	= shaderProgram->GetUniform("modelLocalToWorld");
-		m_localRotationLocation = shaderProgram->GetUniform("modelLocalRotation");
-		m_localScaleLocation	= shaderProgram->GetUniform("modelLocalScale");*/
-
 		return { };
 	}
 
 	void TransformRenderComponent::setPosition(const glm::vec3& position)
 	{
-		/*if (m_transform)
+		if (m_localToWorld)
 		{
-			m_transform->SetPosition(position);
-		}*/
+			glm::vec4& currentPosition = m_localToWorld->memory.value[3];
+
+			currentPosition.x = position.x;
+			currentPosition.y = position.y;
+			currentPosition.z = position.z;
+		}
 
 		if (m_positionUniform)
 		{

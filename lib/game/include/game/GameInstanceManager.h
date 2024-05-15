@@ -1,40 +1,21 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include <memory>
 
-#include "AlignedAllocator.hpp"
-#include "EngineStatus.h"
 #include "GameInstance.h"
-#include "GameSceneConfig.h"
-#include "RenderObject.h"
-#include "CollisionResolver2D.h"
 
 namespace diamond_engine
 {
-	class GLAllocator;
-	class RenderingSubsystem;
-	class TextureLoader;
+	class GameInstanceConfig;
 	class GameInstanceManager
 	{
 	public:
-
-		// GameInstanceManager();
-
-		// void setRenderingSubsystem(const std::shared_ptr<RenderingSubsystem>& renderingSubsystem);
-		void unloadCurrentScene();
-		// EngineStatus loadScene(const GameSceneConfig& sceneConfig);
-		//std::unique_ptr<GameInstance> createInstance();
 		EngineStatus registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig);
 		EngineStatus unregisterInstance(const std::string& name);
-		//void updateInstances(GLfloat deltaTime);
 
 	private:
 		std::map<std::string, std::string> m_registeredInstances;
-		//std::vector<std::unique_ptr<GameInstance>> m_instances;
-		//std::vector<std::unique_ptr<GameInstance>> m_colliders;
-		//std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
-		//std::unique_ptr<CollisionResolver2D> m_collisionResolver2D{ nullptr };
-		//std::unique_ptr<AlignedAllocator<RenderObject, 4>> m_renderObjectAllocator{ nullptr };
 	};
 }

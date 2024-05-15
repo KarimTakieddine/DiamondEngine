@@ -3,8 +3,6 @@
 #include "DrawCall.h"
 #include "MemoryPoolAllocator.hpp"
 #include "MeshType.h"
-#include "RenderDrawCall.h"
-#include "RenderUploadObject.h"
 #include "VertexAttribute.h"
 
 namespace diamond_engine
@@ -44,44 +42,29 @@ namespace diamond_engine
 	* That's it!
 	*/
 
-	struct RenderInstruction
-	{
-		RenderUploadObject uploadObject;
-		RenderDrawCall drawCall;
-	};
-
 	using RenderComponentList = std::vector<std::unique_ptr<IRenderComponent>>;
 
 	class Camera;
 	class GLAllocator;
 	class IRenderComponent;
 	class Mesh;
+	struct VertexState;
 	class Renderer
 	{
 	public:
 		// The Renderer has access to one shared shader program and binds it before uploading all the uniforms
-		Renderer(GLuint vertexArrayObject, MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
-		void clearRenderInstructions();
-		void registerRenderInstruction(const RenderComponentList& renderComponents, RenderDrawCall* renderDrawCall);
-		const std::vector<RenderInstruction>& getInstructions() const;
-		std::vector<RenderInstruction>& getInstructions();
+		Renderer(MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
 		const std::shared_ptr<ShaderProgram>& getShaderProgram() const;
 		void render(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
-		void uploadMeshData(const std::vector<VertexAttribute>& vertexAttributes, GLenum drawType);
+		void uploadMeshData(GLenum drawType, const VertexState* vertexState, const std::vector<VertexAttribute>& vertexAttributes);
 
 		EngineStatus allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 		EngineStatus bindToShaderProgram(const RenderComponentList& renderComponents);
 		EngineStatus releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
-		GLuint getVertexArrayObject() const;
 
 	private:
-		static void performUpload(const RenderUpload& renderUpload);
-
-		std::vector<RenderUpload> m_cameraUploads;
-		std::vector<RenderInstruction> m_renderInstructions;
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
 		Mesh* m_sharedMesh{ nullptr };
-		GLuint m_vertexArrayObject{ 0 };
 		GLenum m_drawMode{ GL_TRIANGLES };
 	};
 }

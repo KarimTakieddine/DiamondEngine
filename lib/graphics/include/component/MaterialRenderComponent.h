@@ -17,9 +17,6 @@ namespace diamond_engine
 
 		const char* getName() const final override { return "Material"; }
 
-		std::vector<RenderUpload> getUploads() const final override;
-		EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) final override;
-		EngineStatus onRenderObjectAllocated(RenderObject* renderObject) final override { return {  }; };
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
 
 		void setTexture(const Texture& texture);

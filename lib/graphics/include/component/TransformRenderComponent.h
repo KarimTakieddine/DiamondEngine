@@ -15,9 +15,6 @@ namespace diamond_engine
 
 		const char* getName() const final override { return "Transform"; }
 
-		std::vector<RenderUpload> getUploads() const final override;
-		EngineStatus onDrawCallRegistered(RenderDrawCall* renderDrawCall) final override;
-		EngineStatus onRenderObjectAllocated(RenderObject* renderObject) final override;
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
 
 		void setPosition(const glm::vec3& position);
@@ -29,13 +26,6 @@ namespace diamond_engine
 		EngineStatus initialize(const RenderComponentConfig* config) final override;
 
 	private:
-		// glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
-		/*
-		Transform* m_transform{ nullptr };
-		GLint m_localToWorldLocation{ -1 };
-		GLint m_localRotationLocation{ -1 };
-		GLint m_localScaleLocation{ -1 };
-		*/
 		UniformMat4* m_localToWorld{ nullptr };
 		UniformMat4* m_localRotation{ nullptr };
 		UniformMat4* m_localScale{ nullptr };

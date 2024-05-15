@@ -2,10 +2,8 @@
 #include <stdexcept>
 
 #include "Camera.h"
-#include "ComponentBuilder.h"
 #include "ComponentFactory.h"
 #include "GameEngine.h"
-#include "GameInstanceBuilder.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
 #include "SharedMeshStore.h"
@@ -33,13 +31,7 @@ namespace diamond_engine
 		m_renderingSubsystem->setMaxRendererCount(2);
 		m_renderingSubsystem->registerRenderer(
 			MeshType::QUAD,
-			GL_DYNAMIC_DRAW,
 			GL_TRIANGLES,
-			{
-				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
-				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT },
-				VertexAttribute{ "textureCoordinate", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
-			},
 			"sprite_renderer",
 			"sprite");
 
@@ -55,7 +47,6 @@ namespace diamond_engine
 			"unlit_color");*/
 
 		m_instanceManager = std::make_unique<GameInstanceManager>();
-		//m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
@@ -166,6 +157,15 @@ namespace diamond_engine
 			}
 		}
 
+		m_renderingSubsystem->allocateVertexState(
+			"sprite_renderer",
+			GL_DYNAMIC_DRAW,
+			{
+				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "textureCoordinate", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
+			});
+
 		for (const auto* spriteConfig : spriteConfigs)
 		{
 			std::unique_ptr<GameInstance> spriteInstance = std::make_unique<GameInstance>();
@@ -198,30 +198,18 @@ namespace diamond_engine
 
 		// TODO: Collider 2D instances as well...
 
-		/*for (const auto& collider2DInstance : m_collider2DInstances)
-		{
-			m_renderingSubsystem->registerRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
-		}*/
-
-		/*EngineStatus loadStatus = m_instanceManager->loadScene(*sceneConfig.get());
-
-		if (!loadStatus)
-		{
-			throw std::runtime_error("Cannot load scene. Error was: " + loadStatus.message);
-		}*/
-
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		for (const auto& collider2DInstance : m_collider2DInstances)
+		/*for (const auto& collider2DInstance : m_collider2DInstances)
 		{
 			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
 			m_instanceManager->unregisterInstance(collider2DInstance->getInternalName());
 		}
 
-		m_collider2DInstances.clear();
+		m_collider2DInstances.clear();*/
 
 		for (const auto& spriteInstance : m_spriteInstances)
 		{
@@ -229,10 +217,10 @@ namespace diamond_engine
 			m_instanceManager->unregisterInstance(spriteInstance->getInternalName());
 		}
 
+		m_renderingSubsystem->releaseVertexState();
+
 		m_spriteInstances.clear();
 
-		//m_renderingSubsystem->freeRegisteredInstructions(); // TODO: Remove
-		//m_instanceManager->unloadCurrentScene();
 		m_currentScene.clear();
 	}
 
@@ -267,7 +255,6 @@ namespace diamond_engine
 		}*/
 
 		//m_instanceManager->updateInstances(deltaTime);
-		//m_renderingSubsystem->renderAll(); // TODO: Have this configurable i.e. do we want to also render colliders
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

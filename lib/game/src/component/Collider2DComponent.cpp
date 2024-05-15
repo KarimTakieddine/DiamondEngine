@@ -8,7 +8,7 @@ namespace diamond_engine
 	}
 
 	void Collider2DComponent::update(GLfloat deltaTime)
-	{
+	{/*
 		if (!m_target)
 		{
 			return;
@@ -25,10 +25,10 @@ namespace diamond_engine
 				1.0f
 			});
 
-		m_renderObject->transform.SetPosition(targetTransform.getPosition());
+		m_renderObject->transform.SetPosition(targetTransform.getPosition());*/
 	}
 
-	RenderObject* Collider2DComponent::getTarget() const
+	/*RenderObject* Collider2DComponent::getTarget() const
 	{
 		return m_target;
 	}
@@ -36,7 +36,7 @@ namespace diamond_engine
 	void Collider2DComponent::setTarget(RenderObject* target)
 	{
 		m_target = target;
-	}
+	}*/
 
 	const Size& Collider2DComponent::getSize() const
 	{

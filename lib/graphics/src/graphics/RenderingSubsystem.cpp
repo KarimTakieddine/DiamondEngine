@@ -3,6 +3,7 @@
 #include "IRenderComponent.h"
 #include "RenderingSubsystem.h"
 #include "SharedShaderStore.h"
+#include "VertexState.h"
 
 namespace diamond_engine
 {
@@ -53,21 +54,13 @@ namespace diamond_engine
 		m_uniformBufferAgent->registerUniformBuffer(m_cameraUniformBuffer);
 	}
 
-	void RenderingSubsystem::freeRegisteredInstructions()
-	{
-		for (const auto& registeredRenderer : m_registeredRenderers)
-		{
-			getRenderer(registeredRenderer)->clearRenderInstructions();
-		}
-	}
-
 	void RenderingSubsystem::freeAllocatedRenderers()
 	{
 		m_vertexArrayAllocator->Free(m_vertexArrayAllocator->GetAllocatedObjectCount());
 		m_uniformBufferAgent->freeAllBuffers();
 	}
 
-	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawType, GLenum drawMode, const std::vector<VertexAttribute>& vertexAttributes, const std::string& name, const std::string& shaderProgramName)
+	EngineStatus RenderingSubsystem::registerRenderer(MeshType meshType, GLenum drawMode, const std::string& name, const std::string& shaderProgramName)
 	{
 		const auto shaderProgram = SharedShaderStore::getInstance()->FindProgram(shaderProgramName);
 
@@ -92,13 +85,10 @@ namespace diamond_engine
 			return uniformBufferStatus;
 		}
 
-		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), meshType, drawMode, shaderProgram);
-		renderer->uploadMeshData(vertexAttributes, drawType);
+		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(meshType, drawMode, shaderProgram);
 
 		m_renderers.insert(
 			{ name, std::move(renderer) });
-
-		m_registeredRenderers.push_back(name);
 
 		return { };
 	}
@@ -115,9 +105,6 @@ namespace diamond_engine
 		renderer->allocateGraphicsMemory(renderComponents, m_graphicsMemoryPool);
 		renderer->bindToShaderProgram(renderComponents);
 
-		/*RenderDrawCall renderDrawCall{ };
-		renderer->registerRenderInstruction(renderComponents, &renderDrawCall);*/
-
 		return { };
 	}
 
@@ -127,10 +114,34 @@ namespace diamond_engine
 
 		if (!renderer)
 		{
-			return { "Failed to unregister RenderObject. Active renderer not found: " + name, true };
+			return { "Failed to unregister render object. Active renderer not found: " + name, true };
 		}
 
 		renderer->releaseGraphicsMemory(renderComponents, m_graphicsMemoryPool);
+
+		return { };
+	}
+
+	EngineStatus RenderingSubsystem::allocateVertexState(const std::string& name, GLenum drawType, const std::vector<VertexAttribute>& vertexAttributes)
+	{
+		Renderer* renderer = getRenderer(name);
+
+		if (!renderer)
+			return { "Failed to allocate vertex state. Active renderer not found: " + name, true };
+	
+		VertexState* vertexState = m_graphicsMemoryPool->requestMemory<VertexState>({ m_vertexArrayAllocator->Get(), renderer->getShaderProgram()->GetObject() });
+
+		if (!vertexState)
+			return { "Failed to allocate vertex state. Request for memory failed", true };
+
+		renderer->uploadMeshData(drawType, vertexState, vertexAttributes);
+
+		return { };
+	}
+
+	EngineStatus RenderingSubsystem::releaseVertexState()
+	{
+		m_graphicsMemoryPool->freeMemory(sizeof(VertexState));
 
 		return { };
 	}
@@ -161,30 +172,16 @@ namespace diamond_engine
 		Renderer* registeredRenderer = getRenderer(name);
 
 		if (!registeredRenderer)
-		{
 			throw std::runtime_error("Attempt to access invalid renderer. Name: " + name);
-		}
 
-		glUseProgram(registeredRenderer->getShaderProgram()->GetObject());
-		glBindVertexArray(registeredRenderer->getVertexArrayObject());
+		const VertexState* vertexState = reinterpret_cast<const VertexState*>(m_graphicsMemoryPool->peek());
+		m_graphicsMemoryPool->advanceSeek(sizeof(VertexState));
+
+		glUseProgram(vertexState->shaderProgram);
+		glBindVertexArray(vertexState->vertexArrayObject);
 		for (const auto& gameInstance : gameInstances)
 		{
 			registeredRenderer->render(gameInstance->getRenderComponents(), m_graphicsMemoryPool);
-		}
-	}
-
-	void RenderingSubsystem::renderAll() const
-	{
-		for (size_t i = 0; i < m_registeredRenderers.size(); ++i)
-		{
-			Renderer* registeredRenderer = getRenderer(m_registeredRenderers[i]);
-
-			if (!registeredRenderer)
-			{
-				throw std::runtime_error("Attempt to access invalid renderer. Name: " + m_registeredRenderers[i]);
-			}
-
-			// registeredRenderer->render();
 		}
 	}
 
@@ -196,11 +193,5 @@ namespace diamond_engine
 	void RenderingSubsystem::setBackgroundColor(const glm::vec4& backgroundColor)
 	{
 		m_backgroundColor = backgroundColor;
-	}
-
-	GLuint RenderingSubsystem::getVertexArrayObject(const std::string& name) const
-	{
-		auto rendererIt = m_renderers.find(name);
-		return m_renderers.find(name) == m_renderers.cend() ? 0 : rendererIt->second->getVertexArrayObject();
 	}
 }

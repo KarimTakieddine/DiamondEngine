@@ -12,6 +12,16 @@ namespace diamond_engine
 		m_type = type;
 	}
 
+	const std::string& GameInstanceConfig::getName() const
+	{
+		return m_name;
+	}
+
+	void GameInstanceConfig::setName(const std::string& name)
+	{
+		setName(name);
+	}
+
 	const std::vector<std::unique_ptr<RenderComponentConfig>>& GameInstanceConfig::getRenderConfigs() const
 	{
 		return m_renderConfigs;

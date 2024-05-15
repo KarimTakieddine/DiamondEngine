@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "BehaviourComponentConfig.h"
@@ -20,6 +21,9 @@ namespace diamond_engine
 		GameInstanceType getType() const;
 		void setType(GameInstanceType type);
 
+		const std::string& getName() const;
+		void setName(const std::string& name);
+
 		const std::vector<std::unique_ptr<RenderComponentConfig>>& getRenderConfigs() const;
 		std::vector<std::unique_ptr<RenderComponentConfig>>& getRenderConfigs();
 		void setRenderConfigs(std::vector<std::unique_ptr<RenderComponentConfig>> renderConfigs);
@@ -33,6 +37,7 @@ namespace diamond_engine
 	private:
 		std::vector<std::unique_ptr<RenderComponentConfig>> m_renderConfigs;
 		std::vector<std::unique_ptr<BehaviourComponentConfig>> m_behaviourConfigs;
+		std::string m_name{ "Unnamed" };
 		GameInstanceType m_type{ GameInstanceType::SPRITE };
 	};
 }

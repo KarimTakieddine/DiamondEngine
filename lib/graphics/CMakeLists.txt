@@ -26,7 +26,6 @@ set(SOURCES
     ${SRC_DIR}/graphics/Transform.cpp
     ${SRC_DIR}/graphics/Renderer.cpp
     ${SRC_DIR}/graphics/RenderingSubsystem.cpp
-    ${SRC_DIR}/graphics/RenderUploadObject.cpp
     ${SRC_DIR}/graphics/UniformBufferAgent.cpp
     ${SRC_DIR}/shader/Shader.cpp
     ${SRC_DIR}/shader/ShaderProgram.cpp

@@ -2,21 +2,6 @@
 
 namespace diamond_engine
 {
-	void GameInstance::setRenderObject(RenderObject* renderObject)
-	{
-		for (const auto& behaviourComponent : m_behaviourComponents)
-		{
-			behaviourComponent->setRenderObject(renderObject);
-		}
-
-		for (const auto& renderComponent : m_renderComponents)
-		{
-			renderComponent->onRenderObjectAllocated(renderObject);
-		}
-
-		m_renderObject = renderObject;
-	}
-
 	EngineStatus GameInstance::acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent)
 	{
 		if (!renderComponent)
@@ -28,8 +13,6 @@ namespace diamond_engine
 		{
 			return { "Cannot acquire two render components of the same type", true };
 		}
-
-		renderComponent->onRenderObjectAllocated(m_renderObject);
 
 		m_renderComponents.push_back(std::move(renderComponent));
 
@@ -47,8 +30,6 @@ namespace diamond_engine
 		{
 			return { "Cannot acquire two behaviour components of the same type", true };
 		}
-
-		behaviourComponent->setRenderObject(m_renderObject);
 
 		m_behaviourComponents.push_back(std::move(behaviourComponent));
 

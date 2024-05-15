@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderObject.h"
+#include <GL/glew.h>
 
 namespace diamond_engine
 {
@@ -8,13 +8,11 @@ namespace diamond_engine
 	{
 	public:
 		virtual ~BehaviourComponent() = default;
-		void setRenderObject(RenderObject* renderObject) { m_renderObject = renderObject; }
-		RenderObject* getRenderObject() const { return m_renderObject; }
 
 		virtual const char* getName() const = 0;
 		virtual void update(GLfloat deltaTime) = 0;
 
 	protected:
-		RenderObject* m_renderObject{ nullptr };
+		
 	};
 }

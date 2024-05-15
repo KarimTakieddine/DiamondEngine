@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include "BehaviourComponent.h"
 #include "ColliderType.h"
 #include "Size.h"
@@ -14,8 +16,8 @@ namespace diamond_engine
 		const char* getName() const final override;
 		void update(GLfloat deltaTime) final override;
 
-		RenderObject* getTarget() const;
-		void setTarget(RenderObject* target);
+		//RenderObject* getTarget() const;
+		//void setTarget(RenderObject* target);
 
 		const Size& getSize() const;
 		void setSize(const Size& size);
@@ -24,7 +26,7 @@ namespace diamond_engine
 		void setType(ColliderType type);
 
 	private:
-		RenderObject* m_target{ nullptr };
+		//RenderObject* m_target{ nullptr };
 		Size m_size{ 1, 1 };
 		ColliderType m_type{ ColliderType::OBSTACLE };
 	};

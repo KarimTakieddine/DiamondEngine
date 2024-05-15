@@ -30,6 +30,12 @@ namespace diamond_engine
 	{
 		std::unique_ptr<GameInstanceConfig> result = std::make_unique<GameInstanceConfig>();
 
+		pugi::xml_attribute nameAttribute = node.attribute("name");
+		if (nameAttribute)
+		{
+			result->setName(nameAttribute.as_string(result->getName().c_str()));
+		}
+
 		pugi::xml_attribute typeAttribute = node.attribute("type");
 		if (typeAttribute)
 		{
