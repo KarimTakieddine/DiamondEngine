@@ -1,7 +1,7 @@
 #include <algorithm>
 
 #include "Collider2DComponent.h"
-#include "GameInstanceBuilder.h"
+// #include "GameInstanceBuilder.h"
 #include "GameInstanceManager.h"
 #include "MaterialRenderComponent.h"
 #include "TransformRenderComponent.h"
@@ -9,51 +9,39 @@
 
 namespace diamond_engine
 {
-	GameInstanceManager::GameInstanceManager() :
+	/*GameInstanceManager::GameInstanceManager() :
 		m_collisionResolver2D(std::make_unique<CollisionResolver2D>()),
 		m_renderObjectAllocator(std::make_unique<AlignedAllocator<RenderObject, 4>>())
 	{
 		m_renderObjectAllocator->Allocate(256);
-	}
+	}*/
 
-	void GameInstanceManager::setRenderingSubsystem(const std::shared_ptr<RenderingSubsystem>& renderingSubsystem)
+	/*void GameInstanceManager::setRenderingSubsystem(const std::shared_ptr<RenderingSubsystem>& renderingSubsystem)
 	{
 		m_renderingSubsystem = renderingSubsystem;
-	}
+	}*/
 
 	void GameInstanceManager::unloadCurrentScene()
 	{
-		m_colliders.clear();
-		m_instances.clear();
+		//m_colliders.clear();
+		//m_instances.clear();
 		m_registeredInstances.clear();
-		m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAssignedObjectCount());
-		m_collisionResolver2D->clear();
+		//m_renderObjectAllocator->Free(m_renderObjectAllocator->GetAssignedObjectCount());
+		//m_collisionResolver2D->clear();
 	}
 
-	std::unique_ptr<GameInstance> GameInstanceManager::createInstance()
+	/*std::unique_ptr<GameInstance> GameInstanceManager::createInstance()
 	{
 		std::unique_ptr<GameInstance> result = std::make_unique<GameInstance>();
 		result->setRenderObject(m_renderObjectAllocator->Get());
 		return result;
-	}
+	}*/
 
 	EngineStatus GameInstanceManager::registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig)
 	{
 		if (!instance)
 		{
 			return { "Failed to register game instance. No allocated instance was provided", true };
-		}
-
-		if (!instanceConfig)
-		{
-			return { "Failed to register game instance. No instance config was provided", true };
-		}
-
-		EngineStatus buildStatus = buildGameInstance(instance, instanceConfig);
-
-		if (!buildStatus)
-		{
-			return buildStatus;
 		}
 
 		const std::string& instanceName = instance->getName();
@@ -146,7 +134,7 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
+	/*EngineStatus GameInstanceManager::loadScene(const GameSceneConfig& sceneConfig)
 	{
 		const size_t gameInstanceCount = static_cast<size_t>(sceneConfig.getInstanceConfigs().size());
 
@@ -193,5 +181,5 @@ namespace diamond_engine
 				behaviourComponent->update(deltaTime);
 			}
 		}
-	}
+	}*/
 }

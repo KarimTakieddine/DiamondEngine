@@ -3,6 +3,7 @@
 
 #include "Camera.h"
 #include "GameEngine.h"
+#include "GameInstanceBuilder.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
 #include "SharedMeshStore.h"
@@ -52,7 +53,7 @@ namespace diamond_engine
 			"unlit_color");
 
 		m_instanceManager = std::make_unique<GameInstanceManager>();
-		m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
+		//m_instanceManager->setRenderingSubsystem(m_renderingSubsystem);
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
@@ -152,10 +153,15 @@ namespace diamond_engine
 		{
 			std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
 
-			EngineStatus registerStatus = m_instanceManager->registerInstance(gameInstance, gameInstanceConfig.get());
+			const EngineStatus registerStatus = m_instanceManager->registerInstance(gameInstance, gameInstanceConfig.get());
 
 			if (!registerStatus)
 				throw std::runtime_error("Failed to load scene: " + name + " error was: " + registerStatus.message);
+
+			const EngineStatus buildStatus = buildGameInstance(gameInstance, gameInstanceConfig.get());
+
+			if (!buildStatus)
+				throw std::runtime_error("Failed to load scene: " + name + " error was: " + buildStatus.message);
 
 			switch (gameInstanceConfig->getType())
 			{
