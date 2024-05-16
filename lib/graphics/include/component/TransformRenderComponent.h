@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/vec3.hpp>
+#define GL_FORCE_SWIZZLE
+#include <glm/glm.hpp>
 
 #include "IRenderComponent.h"
 #include "UniformMemory.hpp"
@@ -18,6 +19,15 @@ namespace diamond_engine
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
 
 		void setPosition(const glm::vec3& position);
+		glm::vec3 getPosition() const;
+
+		const glm::mat4& getLocalScale() const;
+		void setLocalScale(const glm::vec3& scale);
+
+		void translate(const glm::vec3& displacement);
+		void translate(const glm::vec2& displacement);
+		void rotate(GLfloat degrees, const glm::vec3& axis);
+		void setLocalEulerAngles(const glm::vec3& localEulerAngles);
 
 		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;

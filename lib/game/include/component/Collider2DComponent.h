@@ -31,12 +31,10 @@ namespace diamond_engine
 		ColliderType getType() const;
 		void setType(ColliderType type);
 
-		void bindSourceToTarget(const std::unique_ptr<GameInstance>& source, const std::unique_ptr<GameInstance>& target);
-
 	private:
+		Size m_size{ 1, 1 };
 		TransformRenderComponent* m_target{ nullptr };
 		TransformRenderComponent* m_source{ nullptr };
-		Size m_size{ 1, 1 };
 		ColliderType m_type{ ColliderType::OBSTACLE };
 	};
 }

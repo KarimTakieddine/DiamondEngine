@@ -26,4 +26,14 @@ namespace diamond_engine
 	{
 		m_type = type;
 	}
+
+	GLsizei Collider2DComponentConfig::getTargetIndex() const
+	{
+		return m_targetIndex;
+	}
+
+	void Collider2DComponentConfig::setTargetIndex(GLsizei index)
+	{
+		m_targetIndex = index;
+	}
 }

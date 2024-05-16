@@ -3,6 +3,8 @@
 #include <stdexcept>
 
 #include "Camera.h"
+#include "Collider2DComponent.h"
+#include "Collider2DComponentConfig.h"
 #include "ComponentFactory.h"
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
@@ -12,6 +14,7 @@
 #include "SharedShaderStore.h"
 #include "TextureLoader.h"
 #include "TransformComponentConfig.h"
+#include "TransformRenderComponent.h"
 
 namespace diamond_engine
 {
@@ -143,8 +146,10 @@ namespace diamond_engine
 		std::vector<GameInstanceConfig*> spriteConfigs;
 		std::vector<std::unique_ptr<GameInstanceConfig>> collider2DConfigs;
 
-		for (const auto& gameInstanceConfig : sceneConfig->getInstanceConfigs())
+		const auto& gameInstanceConfigs = sceneConfig->getInstanceConfigs();
+		for (GLsizei i = 0; i < gameInstanceConfigs.size(); ++i)
 		{
+			const auto& gameInstanceConfig = gameInstanceConfigs[i];
 			switch (gameInstanceConfig->getType())
 			{
 				case (GameInstanceType::SPRITE):
@@ -179,6 +184,7 @@ namespace diamond_engine
 						materialConfig->setColor({ 0.0f, 1.0f, 0.0f });
 						colliderConfig->addRenderConfig(std::move(materialConfig));
 
+						dynamic_cast<Collider2DComponentConfig*>(collider2DIt->get())->setTargetIndex(i);
 						colliderConfig->addBehaviourConfig(std::move(*collider2DIt));
 						behaviourConfigs.erase(collider2DIt);
 						
@@ -222,7 +228,18 @@ namespace diamond_engine
 
 		for (const auto& collider2DConfig : collider2DConfigs)
 		{
-			m_collider2DInstances.push_back(buildGameInstance(collider2DConfig.get()));
+			auto collider2DInstance = buildGameInstance(collider2DConfig.get());
+			Collider2DComponent* collider2D = collider2DInstance->getBehaviourComponent<Collider2DComponent>("Collider2D");
+
+			// TODO: This needs to change...
+			const Collider2DComponentConfig* colliderConfig = dynamic_cast<const Collider2DComponentConfig*>(collider2DConfig->getBehaviourConfigs().back().get());
+			collider2D->setTarget(
+				m_spriteInstances[static_cast<size_t>(colliderConfig->getTargetIndex())]->
+				getRenderComponent<TransformRenderComponent>("Transform"));
+
+			collider2D->setSource(collider2DInstance->getRenderComponent<TransformRenderComponent>("Transform"));
+
+			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
 
 		m_currentScene = name;
@@ -260,14 +277,6 @@ namespace diamond_engine
 		// m_collisionResolver2D->ResolveCollisions();
 
 		GameInstanceManager::updateGameInstances(deltaTime, m_collider2DInstances);
-
-		for (const auto& collider2DInstance : m_collider2DInstances)
-		{
-			for (const auto& behaviourComponent : collider2DInstance->getBehaviourComponents())
-			{
-				behaviourComponent->update(deltaTime);
-			}
-		}
 
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);

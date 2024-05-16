@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include "BehaviourComponentConfig.h"
 #include "ColliderType.h"
 #include "Size.h"
@@ -18,8 +20,12 @@ namespace diamond_engine
 		ColliderType getType() const;
 		void setType(ColliderType type);
 
+		GLsizei getTargetIndex() const;
+		void setTargetIndex(GLsizei index);
+
 	private:
 		Size m_size{ 1, 1 };
 		ColliderType m_type{ ColliderType::OBSTACLE };
+		GLsizei m_targetIndex{ -1 };
 	};
 }

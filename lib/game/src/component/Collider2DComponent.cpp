@@ -11,24 +11,23 @@ namespace diamond_engine
 	}
 
 	void Collider2DComponent::update(GLfloat deltaTime)
-	{/*
-		if (!m_target)
+	{
+		if (!m_source || !m_target)
 		{
 			return;
 		}
 
-		const Transform& targetTransform	= m_target->transform;
-		const glm::mat4& targetLocalScale	= targetTransform.getLocalScale();
+		const glm::mat4& targetLocalScale = m_target->getLocalScale();
 		const glm::vec2 targetScale{ targetLocalScale[0].x, targetLocalScale[1].y };
 
-		m_renderObject->transform.SetLocalScale(
+		m_source->setLocalScale(
 			{
 				static_cast<GLfloat>(m_size.width) * targetScale.x,
 				static_cast<GLfloat>(m_size.height) * targetScale.y,
 				1.0f
 			});
 
-		m_renderObject->transform.SetPosition(targetTransform.getPosition());*/
+		m_source->setPosition(m_target->getPosition());
 	}
 
 	EngineStatus Collider2DComponent::initialize(const BehaviourComponentConfig* config)
@@ -82,11 +81,5 @@ namespace diamond_engine
 	void Collider2DComponent::setType(ColliderType type)
 	{
 		m_type = type;
-	}
-
-	void Collider2DComponent::bindSourceToTarget(const std::unique_ptr<GameInstance>& source, const std::unique_ptr<GameInstance>& target)
-	{
-		setSource(source->getRenderComponent<TransformRenderComponent>("Transform"));
-		setTarget(target->getRenderComponent<TransformRenderComponent>("Transform"));
 	}
 }
