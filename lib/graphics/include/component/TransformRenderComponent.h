@@ -27,6 +27,8 @@ namespace diamond_engine
 		void translate(const glm::vec3& displacement);
 		void translate(const glm::vec2& displacement);
 		void rotate(GLfloat degrees, const glm::vec3& axis);
+
+		const glm::mat4& getLocalRotation() const;
 		void setLocalEulerAngles(const glm::vec3& localEulerAngles);
 
 		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;

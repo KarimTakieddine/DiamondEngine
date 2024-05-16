@@ -47,7 +47,8 @@ namespace diamond_engine
 			"collider_2d_renderer",
 			"unlit_color");
 
-		m_instanceManager = std::make_unique<GameInstanceManager>();
+		m_instanceManager		= std::make_unique<GameInstanceManager>();
+		m_collisionResolver2D	= std::make_unique<CollisionResolver2D>();
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
@@ -229,15 +230,24 @@ namespace diamond_engine
 		for (const auto& collider2DConfig : collider2DConfigs)
 		{
 			auto collider2DInstance = buildGameInstance(collider2DConfig.get());
-			Collider2DComponent* collider2D = collider2DInstance->getBehaviourComponent<Collider2DComponent>("Collider2D");
 
 			// TODO: This needs to change...
 			const Collider2DComponentConfig* colliderConfig = dynamic_cast<const Collider2DComponentConfig*>(collider2DConfig->getBehaviourConfigs().back().get());
-			collider2D->setTarget(
-				m_spriteInstances[static_cast<size_t>(colliderConfig->getTargetIndex())]->
-				getRenderComponent<TransformRenderComponent>("Transform"));
+			GameInstance* targetSpriteInstance				= m_spriteInstances[static_cast<size_t>(colliderConfig->getTargetIndex())].get();
 
+			Collider2DComponent* collider2D = collider2DInstance->getBehaviourComponent<Collider2DComponent>("Collider2D");
+			collider2D->setTarget(targetSpriteInstance->getRenderComponent<TransformRenderComponent>("Transform"));
 			collider2D->setSource(collider2DInstance->getRenderComponent<TransformRenderComponent>("Transform"));
+
+			switch (collider2D->getType())
+			{
+			case ColliderType::OBSTACLE:
+				m_collisionResolver2D->addObstacle(collider2DInstance.get());
+				break;
+			case ColliderType::CHARACTER:
+				m_collisionResolver2D->addCharacter(collider2DInstance.get());
+				break;
+			}
 
 			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
@@ -265,6 +275,8 @@ namespace diamond_engine
 		m_renderingSubsystem->releaseVertexState();
 		m_spriteInstances.clear();
 
+		m_collisionResolver2D->clear();
+
 		m_currentScene.clear();
 	}
 
@@ -274,7 +286,7 @@ namespace diamond_engine
 
 		GameInstanceManager::updateGameInstances(deltaTime, m_spriteInstances);
 
-		// m_collisionResolver2D->ResolveCollisions();
+		m_collisionResolver2D->ResolveCollisions();
 
 		GameInstanceManager::updateGameInstances(deltaTime, m_collider2DInstances);
 

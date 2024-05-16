@@ -82,6 +82,11 @@ namespace diamond_engine
 		m_localToWorld->memory.value = glm::rotate(m_localToWorld->memory.value, glm::radians(degrees), axis);
 	}
 
+	const glm::mat4& TransformRenderComponent::getLocalRotation() const
+	{
+		return m_localRotation->memory.value;
+	}
+
 	void TransformRenderComponent::setLocalEulerAngles(const glm::vec3& localEulerAngles)
 	{
 		if (!m_localRotation)

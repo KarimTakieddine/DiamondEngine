@@ -23,9 +23,9 @@ namespace diamond_engine
 	class CollisionResolver2D
 	{
 	public:
-		void addCharacterSprite(GameInstance* characterSprite);
+		void addCharacter(GameInstance* character);
 
-		void addObstacleSprite(GameInstance* obstacleSprite);
+		void addObstacle(GameInstance* obstacle);
 
 		void ResolveCollisions();
 
@@ -33,7 +33,7 @@ namespace diamond_engine
 
 	private:
 		std::unordered_map<std::string, std::string> m_collisionResolutionMap;
-		std::vector<GameInstance*> m_characterSprites;
-		std::vector<GameInstance*> m_obstacleSprites;
+		std::vector<GameInstance*> m_characters;
+		std::vector<GameInstance*> m_obstacles;
 	};
 }
