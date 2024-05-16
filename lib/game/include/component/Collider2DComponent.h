@@ -8,6 +8,8 @@
 
 namespace diamond_engine
 {
+	class TransformRenderComponent;
+	class GameInstance;
 	class Collider2DComponent : public BehaviourComponent
 	{
 	public:
@@ -15,9 +17,13 @@ namespace diamond_engine
 
 		const char* getName() const final override;
 		void update(GLfloat deltaTime) final override;
+		EngineStatus initialize(const BehaviourComponentConfig* config) final override;
 
-		//RenderObject* getTarget() const;
-		//void setTarget(RenderObject* target);
+		TransformRenderComponent* getTarget() const;
+		void setTarget(TransformRenderComponent* target);
+
+		TransformRenderComponent* getSource() const;
+		void setSource(TransformRenderComponent* source);
 
 		const Size& getSize() const;
 		void setSize(const Size& size);
@@ -25,8 +31,11 @@ namespace diamond_engine
 		ColliderType getType() const;
 		void setType(ColliderType type);
 
+		void bindSourceToTarget(const std::unique_ptr<GameInstance>& source, const std::unique_ptr<GameInstance>& target);
+
 	private:
-		//RenderObject* m_target{ nullptr };
+		TransformRenderComponent* m_target{ nullptr };
+		TransformRenderComponent* m_source{ nullptr };
 		Size m_size{ 1, 1 };
 		ColliderType m_type{ ColliderType::OBSTACLE };
 	};

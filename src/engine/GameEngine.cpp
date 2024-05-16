@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <filesystem>
 #include <stdexcept>
 
@@ -6,9 +7,11 @@
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
+#include "MaterialComponentConfig.h"
 #include "SharedMeshStore.h"
 #include "SharedShaderStore.h"
 #include "TextureLoader.h"
+#include "TransformComponentConfig.h"
 
 namespace diamond_engine
 {
@@ -35,16 +38,11 @@ namespace diamond_engine
 			"sprite_renderer",
 			"sprite");
 
-		/*m_renderingSubsystem->registerRenderer(
+		m_renderingSubsystem->registerRenderer(
 			MeshType::COLLIDER,
-			GL_DYNAMIC_DRAW,
 			GL_LINES,
-			{
-				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
-				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT }
-			},
 			"collider_2d_renderer",
-			"unlit_color");*/
+			"unlit_color");
 
 		m_instanceManager = std::make_unique<GameInstanceManager>();
 
@@ -143,7 +141,7 @@ namespace diamond_engine
 		m_renderingSubsystem->setBackgroundColor(sceneConfig->getBackgroundColor());
 
 		std::vector<GameInstanceConfig*> spriteConfigs;
-		std::vector<GameInstanceConfig*> collider2DConfigs;
+		std::vector<std::unique_ptr<GameInstanceConfig>> collider2DConfigs;
 
 		for (const auto& gameInstanceConfig : sceneConfig->getInstanceConfigs())
 		{
@@ -151,6 +149,49 @@ namespace diamond_engine
 			{
 				case (GameInstanceType::SPRITE):
 				{
+					auto& behaviourConfigs = gameInstanceConfig->getBehaviourConfigs();
+					auto collider2DIt = std::find_if(
+						behaviourConfigs.begin(),
+						behaviourConfigs.end(),
+						[](const auto& behaviourConfig) { return std::string(behaviourConfig->getName()) == "Collider2D"; });
+
+					if (collider2DIt != behaviourConfigs.cend())
+					{
+						std::unique_ptr<GameInstanceConfig> colliderConfig = std::make_unique<GameInstanceConfig>();
+
+						colliderConfig->setType(GameInstanceType::COLLIDER_2D);
+
+						std::unique_ptr<TransformComponentConfig> transformConfig = std::make_unique<TransformComponentConfig>();
+
+						const auto& renderConfigs = gameInstanceConfig->getRenderConfigs();
+						auto transformConfigIt = std::find_if(
+							renderConfigs.cbegin(),
+							renderConfigs.cend(),
+							[](const auto& renderConfig) { return std::string(renderConfig->getName()) == "Transform"; });
+
+						transformConfig->setPosition(
+							transformConfigIt == renderConfigs.cend() ?
+							glm::vec3{ 0.0f, 0.0f, 0.0f } : dynamic_cast<const TransformComponentConfig*>(transformConfigIt->get())->getPosition());
+
+						colliderConfig->addRenderConfig(std::move(transformConfig));
+
+						std::unique_ptr<MaterialComponentConfig> materialConfig = std::make_unique<MaterialComponentConfig>();
+						materialConfig->setColor({ 0.0f, 1.0f, 0.0f });
+						colliderConfig->addRenderConfig(std::move(materialConfig));
+
+						colliderConfig->addBehaviourConfig(std::move(*collider2DIt));
+						behaviourConfigs.erase(collider2DIt);
+						
+						const std::string& colliderName = gameInstanceConfig->getName() + "_collider_";
+						int colliderCount = std::count_if(
+							collider2DConfigs.cbegin(),
+							collider2DConfigs.cend(),
+							[colliderName](const auto& c) { return c->getName() == colliderName; });
+						colliderConfig->setName(colliderName + std::to_string(colliderCount));
+
+						collider2DConfigs.push_back(std::move(colliderConfig));
+					}
+
 					spriteConfigs.push_back(gameInstanceConfig.get());
 					break;
 				}
@@ -171,20 +212,32 @@ namespace diamond_engine
 			m_spriteInstances.push_back(buildGameInstance(spriteConfig));
 		}
 
-		// TODO: Collider 2D instances as well...
+		m_renderingSubsystem->allocateVertexState(
+			"collider_2d_renderer",
+			GL_DYNAMIC_DRAW,
+			{
+				VertexAttribute{ "position", 0, 3, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "color", sizeof(glm::vec3), 3, sizeof(Vertex), GL_FLOAT }
+			});
+
+		for (const auto& collider2DConfig : collider2DConfigs)
+		{
+			m_collider2DInstances.push_back(buildGameInstance(collider2DConfig.get()));
+		}
 
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		/*for (const auto& collider2DInstance : m_collider2DInstances)
+		for (const auto& collider2DInstance : m_collider2DInstances)
 		{
 			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
 			m_instanceManager->unregisterInstance(collider2DInstance->getInternalName());
 		}
 
-		m_collider2DInstances.clear();*/
+		m_renderingSubsystem->releaseVertexState();
+		m_collider2DInstances.clear();
 
 		for (const auto& spriteInstance : m_spriteInstances)
 		{
@@ -193,7 +246,6 @@ namespace diamond_engine
 		}
 
 		m_renderingSubsystem->releaseVertexState();
-
 		m_spriteInstances.clear();
 
 		m_currentScene.clear();
@@ -219,11 +271,7 @@ namespace diamond_engine
 
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
-
-		/*for (const auto& collider2DInstance : m_collider2DInstances)
-		{
-			m_renderingSubsystem->render("collider2DRenderer", collider2DInstance->getRenderComponents());
-		}*/
+		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
@@ -249,7 +297,9 @@ namespace diamond_engine
 		case GameInstanceType::SPRITE:
 			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
 			break;
-		// TODO: Colliders!
+		case GameInstanceType::COLLIDER_2D:
+			registerStatus = m_renderingSubsystem->registerRenderObject("collider_2d_renderer", renderComponents);
+			break;
 		default:
 			registerStatus = { "Failed to register game instance of unknown type", true };
 			break;
@@ -282,7 +332,7 @@ namespace diamond_engine
 		{
 			auto& behaviourComponent = behaviourComponents[i];
 
-			initializeStatus = behaviourComponent->initialize(gameInstance, behaviourConfigs[i].get());
+			initializeStatus = behaviourComponent->initialize(behaviourConfigs[i].get());
 
 			if (!initializeStatus)
 				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);

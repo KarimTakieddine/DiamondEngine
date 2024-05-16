@@ -1,4 +1,7 @@
+#include "GameInstance.h"
 #include "Collider2DComponent.h"
+#include "Collider2DComponentConfig.h"
+#include "TransformRenderComponent.h"
 
 namespace diamond_engine
 {
@@ -28,15 +31,38 @@ namespace diamond_engine
 		m_renderObject->transform.SetPosition(targetTransform.getPosition());*/
 	}
 
-	/*RenderObject* Collider2DComponent::getTarget() const
+	EngineStatus Collider2DComponent::initialize(const BehaviourComponentConfig* config)
+	{
+		const Collider2DComponentConfig* componentConfig = dynamic_cast<const Collider2DComponentConfig*>(config);
+
+		if (!componentConfig)
+			return { "Collider2DComponent::initialize failed. Could not convert config to target type", true };
+
+		setSize(componentConfig->getSize());
+		setType(componentConfig->getType());
+
+		return { };
+	}
+
+	TransformRenderComponent* Collider2DComponent::getTarget() const
 	{
 		return m_target;
 	}
 
-	void Collider2DComponent::setTarget(RenderObject* target)
+	void Collider2DComponent::setTarget(TransformRenderComponent* target)
 	{
 		m_target = target;
-	}*/
+	}
+
+	TransformRenderComponent* Collider2DComponent::getSource() const
+	{
+		return m_source;
+	}
+
+	void Collider2DComponent::setSource(TransformRenderComponent* source)
+	{
+		m_source = source;
+	}
 
 	const Size& Collider2DComponent::getSize() const
 	{
@@ -56,5 +82,11 @@ namespace diamond_engine
 	void Collider2DComponent::setType(ColliderType type)
 	{
 		m_type = type;
+	}
+
+	void Collider2DComponent::bindSourceToTarget(const std::unique_ptr<GameInstance>& source, const std::unique_ptr<GameInstance>& target)
+	{
+		setSource(source->getRenderComponent<TransformRenderComponent>("Transform"));
+		setTarget(target->getRenderComponent<TransformRenderComponent>("Transform"));
 	}
 }

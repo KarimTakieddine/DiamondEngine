@@ -1,5 +1,6 @@
 #include "ComponentFactory.h"
 #include "BehaviourComponentConfig.h"
+#include "Collider2DComponent.h"
 #include "GameInstanceConfig.h"
 #include "MaterialRenderComponent.h"
 #include "RenderComponentConfig.h"
@@ -7,6 +8,7 @@
 
 namespace
 {
+	using diamond_engine::BehaviourComponentPtr;
 	using diamond_engine::RenderComponentPtr;
 	
 	static RenderComponentPtr createMaterialComponent()
@@ -19,6 +21,12 @@ namespace
 	{
 		using diamond_engine::TransformRenderComponent;
 		return std::make_unique<TransformRenderComponent>();
+	}
+
+	static BehaviourComponentPtr createCollider2DComponent()
+	{
+		using diamond_engine::Collider2DComponent;
+		return std::make_unique<Collider2DComponent>();
 	}
 }
 
@@ -42,7 +50,7 @@ namespace diamond_engine
 
 	/* static */ std::unordered_map<std::string, ComponentFactory::BehaviourCreateMethod> ComponentFactory::behaviourCreateMethods =
 	{
-		// { "Collider2D", ::buildCollider2DComponent }
+		{ "Collider2D", ::createCollider2DComponent }
 	};
 
 	/* static */ RenderComponentPtr	ComponentFactory::createRenderComponent(const RenderComponentConfig* config)
