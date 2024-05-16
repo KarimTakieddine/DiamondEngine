@@ -168,32 +168,7 @@ namespace diamond_engine
 
 		for (const auto* spriteConfig : spriteConfigs)
 		{
-			std::unique_ptr<GameInstance> spriteInstance = std::make_unique<GameInstance>();
-
-			EngineStatus registerStatus = m_instanceManager->registerInstance(spriteInstance, spriteConfig);
-
-			if (!registerStatus)
-				throw std::runtime_error("Failed to register sprite instance: " + name + " error was: " + registerStatus.message);
-
-			std::vector<RenderComponentPtr> renderComponents = ComponentFactory::createRenderComponents(spriteConfig);
-			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
-			
-			if (!registerStatus)
-				throw std::runtime_error("Failed to register sprite instance: " + name + " error was: " + registerStatus.message);
-
-			const auto& renderConfigs = spriteConfig->getRenderConfigs();
-			for (size_t i = 0; i < renderConfigs.size(); ++i)
-			{
-				auto& renderComponent = renderComponents[i];
-				renderComponent->initialize(renderConfigs[i].get());
-				spriteInstance->acquireRenderComponent(std::move(renderComponent));
-			}
-
-			// TODO: Behaviours. Maybe above?
-
-			renderComponents.clear();
-
-			m_spriteInstances.push_back(std::move(spriteInstance));
+			m_spriteInstances.push_back(buildGameInstance(spriteConfig));
 		}
 
 		// TODO: Collider 2D instances as well...
@@ -228,15 +203,11 @@ namespace diamond_engine
 	{
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
-		for (const auto& spriteInstance : m_spriteInstances)
-		{
-			for (const auto& behaviourComponent : spriteInstance->getBehaviourComponents())
-			{
-				behaviourComponent->update(deltaTime);
-			}
-		}
+		GameInstanceManager::updateGameInstances(deltaTime, m_spriteInstances);
 
 		// m_collisionResolver2D->ResolveCollisions();
+
+		GameInstanceManager::updateGameInstances(deltaTime, m_collider2DInstances);
 
 		for (const auto& collider2DInstance : m_collider2DInstances)
 		{
@@ -253,8 +224,6 @@ namespace diamond_engine
 		{
 			m_renderingSubsystem->render("collider2DRenderer", collider2DInstance->getRenderComponents());
 		}*/
-
-		//m_instanceManager->updateInstances(deltaTime);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
@@ -262,5 +231,65 @@ namespace diamond_engine
 		m_renderingSubsystem->getCamera()->SetAspectRatio(static_cast<float>(size.width) / size.height);
 
 		glViewport(0, 0, size.width, size.height);
+	}
+
+	std::unique_ptr<GameInstance> GameEngine::buildGameInstance(const GameInstanceConfig* config)
+	{
+		std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
+
+		EngineStatus registerStatus = m_instanceManager->registerInstance(gameInstance, config);
+
+		if (!registerStatus)
+			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
+
+		std::vector<RenderComponentPtr> renderComponents = ComponentFactory::createRenderComponents(config);
+
+		switch (config->getType())
+		{
+		case GameInstanceType::SPRITE:
+			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
+			break;
+		// TODO: Colliders!
+		default:
+			registerStatus = { "Failed to register game instance of unknown type", true };
+			break;
+		}
+
+		if (!registerStatus)
+			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
+
+		EngineStatus initializeStatus;
+
+		// TODO: Refactor i.e. make a base Component(::initialize) class once everything is replaced and remove duplicate code
+
+		const auto& renderConfigs = config->getRenderConfigs();
+		for (size_t i = 0; i < renderConfigs.size(); ++i)
+		{
+			auto& renderComponent = renderComponents[i];
+
+			initializeStatus = renderComponent->initialize(renderConfigs[i].get());
+
+			if (!initializeStatus)
+				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
+
+			gameInstance->acquireRenderComponent(std::move(renderComponent));
+		}
+
+		std::vector<BehaviourComponentPtr> behaviourComponents = ComponentFactory::createBehaviourComponents(config);
+
+		const auto& behaviourConfigs = config->getBehaviourConfigs();
+		for (size_t i = 0; i < behaviourConfigs.size(); ++i)
+		{
+			auto& behaviourComponent = behaviourComponents[i];
+
+			initializeStatus = behaviourComponent->initialize(gameInstance, behaviourConfigs[i].get());
+
+			if (!initializeStatus)
+				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
+
+			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
+		}
+
+		return gameInstance;
 	}
 }

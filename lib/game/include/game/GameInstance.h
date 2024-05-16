@@ -12,7 +12,6 @@ namespace diamond_engine
 	class GameInstance
 	{
 	public:
-		void setRenderObject(RenderObject* renderObject);
 		EngineStatus acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent);
 		EngineStatus acquireBehaviourComponent(std::unique_ptr<BehaviourComponent> behaviourComponent);
 

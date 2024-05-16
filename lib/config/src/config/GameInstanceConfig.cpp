@@ -19,7 +19,7 @@ namespace diamond_engine
 
 	void GameInstanceConfig::setName(const std::string& name)
 	{
-		setName(name);
+		m_name = name;
 	}
 
 	const std::vector<std::unique_ptr<RenderComponentConfig>>& GameInstanceConfig::getRenderConfigs() const

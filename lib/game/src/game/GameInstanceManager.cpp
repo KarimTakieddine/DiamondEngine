@@ -5,6 +5,17 @@
 
 namespace diamond_engine
 {
+	/* static */ void GameInstanceManager::updateGameInstances(GLfloat deltaTime, const std::vector<std::unique_ptr<GameInstance>>& instances)
+	{
+		for (const auto& instance : instances)
+		{
+			for (const auto& behaviour : instance->getBehaviourComponents())
+			{
+				behaviour->update(deltaTime);
+			}
+		}
+	}
+
 	EngineStatus GameInstanceManager::registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig)
 	{
 		if (!instance)

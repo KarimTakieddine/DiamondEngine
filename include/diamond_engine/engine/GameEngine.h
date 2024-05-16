@@ -33,6 +33,7 @@ namespace diamond_engine
 		void initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig);
 		void onWindowUpdate(GLfloat deltaTime);
 		void onWindowResize(const Size& size);
+		std::unique_ptr<GameInstance> buildGameInstance(const GameInstanceConfig* config);
 
 		std::unordered_map<std::string, std::unique_ptr<GameSceneConfig>> m_gameScenes;
 		std::vector<std::unique_ptr<GameInstance>> m_spriteInstances;

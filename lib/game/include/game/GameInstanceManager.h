@@ -12,6 +12,7 @@ namespace diamond_engine
 	class GameInstanceManager
 	{
 	public:
+		static void updateGameInstances(GLfloat deltaTime, const std::vector<std::unique_ptr<GameInstance>>& instances);
 		EngineStatus registerInstance(const std::unique_ptr<GameInstance>& instance, const GameInstanceConfig* instanceConfig);
 		EngineStatus unregisterInstance(const std::string& name);
 
