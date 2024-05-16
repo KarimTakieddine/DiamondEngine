@@ -58,8 +58,9 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents();
 		const std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents() const;
 		std::unique_ptr<BehaviourComponent> extractBehaviourComponent(const std::string& name);
+		void onCollisionEnter2D(const glm::vec2& resolution, const std::string& name);
+		void onCollisionExit2D(const std::string& name);
 
-		RenderObject* getRenderObject() const;
 		const std::string& getName() const;
 		void setName(const std::string& name);
 		const std::string& getInternalName() const;
@@ -70,6 +71,5 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<BehaviourComponent>> m_behaviourComponents;
 		std::string m_name{ "Unnamed" };
 		std::string m_internalName{ "Unnamed" };
-		RenderObject* m_renderObject{ nullptr };
 	};
 }

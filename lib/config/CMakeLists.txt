@@ -15,7 +15,9 @@ set(GLM_DIR ../../glm)
 
 # pugixml
 
-set(PUGI_XML_DIR ../../pugixml)
+set(PUGI_XML_DIR pugixml)
+set(PUGI_XML_DIR ${PUGI_XML_DIR} PARENT_SCOPE)
+set(PUGI_XML_DIR ../../${PUGI_XML_DIR})
 
 set(SOURCES
     ${SRC_DIR}/config/Collider2DComponentConfig.cpp

@@ -20,7 +20,7 @@ namespace diamond_engine
 	};
 
 	class GameInstance;
-	class CollisionResolver2D
+	class CollisionSolver2D
 	{
 	public:
 		void addCharacter(GameInstance* character);

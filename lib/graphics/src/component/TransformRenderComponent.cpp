@@ -129,22 +129,16 @@ namespace diamond_engine
 
 	EngineStatus TransformRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
-		// TODO: Upload m_localToWorld
-
 		uploadUniformMemory(m_localToWorld);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		// TODO: Upload m_localRotation
 
 		uploadUniformMemory(m_localRotation);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
 
-		// TODO: Upload m_localScale
-
 		uploadUniformMemory(m_localScale);
 		memoryPool->advanceSeek(sizeof(UniformMat4));
 
-		// Skip position upload (no position)
+		// Skip position upload (no shader position uniform)
 
 		memoryPool->advanceSeek(sizeof(UniformVec3));
 
@@ -159,6 +153,7 @@ namespace diamond_engine
 			return { "TransformRenderComponent::initialize failed. Could not convert config parameter to target type" ,true};
 
 		setPosition(transformConfig->getPosition());
+		setLocalScale(transformConfig->getLocalScale());
 
 		return { };
 	}

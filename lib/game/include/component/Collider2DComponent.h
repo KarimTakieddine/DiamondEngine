@@ -19,11 +19,11 @@ namespace diamond_engine
 		void update(GLfloat deltaTime) final override;
 		EngineStatus initialize(const BehaviourComponentConfig* config) final override;
 
-		TransformRenderComponent* getTarget() const;
-		void setTarget(TransformRenderComponent* target);
+		GameInstance* getTarget() const;
+		void setTarget(GameInstance* target);
 
-		TransformRenderComponent* getSource() const;
-		void setSource(TransformRenderComponent* source);
+		GameInstance* getSource() const;
+		void setSource(GameInstance* source);
 
 		const Size& getSize() const;
 		void setSize(const Size& size);
@@ -31,10 +31,13 @@ namespace diamond_engine
 		ColliderType getType() const;
 		void setType(ColliderType type);
 
+		void onCollisionEnter2D(const glm::vec2& resolution, const std::string& name) final override;
+		void onCollisionExit2D(const std::string& name) final override;
+
 	private:
 		Size m_size{ 1, 1 };
-		TransformRenderComponent* m_target{ nullptr };
-		TransformRenderComponent* m_source{ nullptr };
+		GameInstance* m_target{ nullptr };
+		GameInstance* m_source{ nullptr };
 		ColliderType m_type{ ColliderType::OBSTACLE };
 	};
 }

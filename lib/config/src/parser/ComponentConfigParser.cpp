@@ -71,6 +71,12 @@ namespace
 			result->setPosition(Vector3Parser::Parse(positionNode));
 		}
 
+		pugi::xml_node localScaleNode = node.child("LocalScale");
+		if (localScaleNode)
+		{
+			result->setLocalScale(Vector3Parser::Parse(localScaleNode));
+		}
+
 		return result;
 	}
 

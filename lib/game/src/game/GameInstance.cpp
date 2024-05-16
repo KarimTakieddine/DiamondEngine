@@ -75,9 +75,20 @@ namespace diamond_engine
 		return result;
 	}
 
-	RenderObject* GameInstance::getRenderObject() const
+	void GameInstance::onCollisionEnter2D(const glm::vec2& resolution, const std::string& name)
 	{
-		return m_renderObject;
+		for (const auto& behaviour : m_behaviourComponents)
+		{
+			behaviour->onCollisionEnter2D(resolution, name);
+		}
+	}
+
+	void GameInstance::onCollisionExit2D(const std::string& name)
+	{
+		for (const auto& behaviour : m_behaviourComponents)
+		{
+			behaviour->onCollisionExit2D(name);
+		}
 	}
 
 	const std::string& GameInstance::getName() const

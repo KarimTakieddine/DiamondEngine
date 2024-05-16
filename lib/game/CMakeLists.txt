@@ -18,7 +18,7 @@ set(SOURCES
     ${SRC_DIR}/component/ComponentFactory.cpp
     ${SRC_DIR}/game/GameInstance.cpp
     ${SRC_DIR}/game/GameInstanceManager.cpp
-    ${SRC_DIR}/physics/CollisionResolver2D.cpp)
+    ${SRC_DIR}/physics/CollisionSolver2D.cpp)
 
 add_library(libDiamondEngineGame STATIC ${SOURCES})
 

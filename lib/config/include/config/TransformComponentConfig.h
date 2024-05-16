@@ -15,7 +15,11 @@ namespace diamond_engine
 		const glm::vec3& getPosition() const;
 		void setPosition(const glm::vec3& position);
 
+		const glm::vec3& getLocalScale() const;
+		void setLocalScale(const glm::vec3& localScale);
+
 	private:
 		glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
+		glm::vec3 m_localScale{ 1.0f, 1.0f, 1.0f };
 	};
 }

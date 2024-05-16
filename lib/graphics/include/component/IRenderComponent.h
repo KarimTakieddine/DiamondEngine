@@ -22,8 +22,6 @@
 namespace diamond_engine
 {
 	struct DrawCall;
-	struct RenderDrawCall;
-	struct RenderObject;
 	class ShaderProgram;
 	class RenderComponentConfig;
 	class IRenderComponent

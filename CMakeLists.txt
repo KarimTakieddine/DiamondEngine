@@ -40,10 +40,7 @@ set(IRR_KLANG_BINARY_DIR "${IRR_KLANG_DIR}/bin/winx64-visualStudio")
 
 set(IRR_KLANG_BINARY_DIR ${IRR_KLANG_BINARY_DIR} PARENT_SCOPE)
 
-# pugixml
-
-add_subdirectory(pugixml)
-
+set(COMMON_DIR "${LIB_DIR_PREFIX}/common")
 set(CONFIG_DIR "${LIB_DIR_PREFIX}/config")
 set(GRAPHICS_DIR "${LIB_DIR_PREFIX}/graphics")
 set(GAME_DIR "${LIB_DIR_PREFIX}/game")
@@ -52,6 +49,10 @@ add_subdirectory(${CONFIG_DIR})
 add_subdirectory(${GRAPHICS_DIR})
 add_subdirectory(${GAME_DIR})
 add_subdirectory(${INPUT_DIR})
+
+# pugixml
+
+add_subdirectory(${PUGI_XML_DIR})
 
 # DiamondEngine:
 
@@ -63,13 +64,11 @@ set(SOURCES
     #${SRC_DIR}/builder/SpriteAnimationPlayerBuilder.cpp
     ${SRC_DIR}/component/AnimationPlayer.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
-    #${SRC_DIR}/config/Collider2DConfig.cpp
     #${SRC_DIR}/config/SpriteAnimationPlayerConfig.cpp
     ${SRC_DIR}/engine/GraphicsContext.cpp
     ${SRC_DIR}/engine/Window.cpp
     #${SRC_DIR}/parser/AnimationParser.cpp
     #${SRC_DIR}/parser/AudioMetadataParser.cpp
-    #${SRC_DIR}/parser/Collider2DConfigParser.cpp
     #${SRC_DIR}/parser/FrameMetadataParser.cpp
     #${SRC_DIR}/parser/SpriteAnimationPlayerConfigParser.cpp
     #${SRC_DIR}/parser/SpriteSheetMetadataParser.cpp
@@ -86,7 +85,8 @@ target_include_directories(DiamondEngine PUBLIC
     "${GLFW_DIR}/include"
     ${GLM_DIR}
     ${STB_DIR}
-    "./lib/common/${INCLUDE_DIR}"
+    "${PUGI_XML_DIR}/${SRC_DIR}"
+    "${LIB_DIR_PREFIX}/common/${INCLUDE_DIR}"
     "${IRR_KLANG_DIR}/include"
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"

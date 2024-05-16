@@ -9,7 +9,7 @@
 #include "KeyboardConfig.h"
 #include "GameInstanceManager.h"
 #include "RenderingSubsystem.h"
-#include "CollisionResolver2D.h"
+#include "CollisionSolver2D.h"
 
 namespace diamond_engine
 {
@@ -42,7 +42,7 @@ namespace diamond_engine
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
 		std::shared_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
-		std::unique_ptr<CollisionResolver2D> m_collisionResolver2D{ nullptr };
+		std::unique_ptr<CollisionSolver2D> m_collisionSolver2D{ nullptr };
 		std::string m_currentScene;
 	};
 }

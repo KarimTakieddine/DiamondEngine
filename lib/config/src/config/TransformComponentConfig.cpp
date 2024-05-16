@@ -16,4 +16,14 @@ namespace diamond_engine
 	{
 		m_position = position;
 	}
+
+	const glm::vec3& TransformComponentConfig::getLocalScale() const
+	{
+		return m_localScale;
+	}
+
+	void TransformComponentConfig::setLocalScale(const glm::vec3& localScale)
+	{
+		m_localScale = localScale;
+	}
 }

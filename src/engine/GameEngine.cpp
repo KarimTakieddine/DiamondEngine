@@ -47,8 +47,8 @@ namespace diamond_engine
 			"collider_2d_renderer",
 			"unlit_color");
 
-		m_instanceManager		= std::make_unique<GameInstanceManager>();
-		m_collisionResolver2D	= std::make_unique<CollisionResolver2D>();
+		m_instanceManager	= std::make_unique<GameInstanceManager>();
+		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
@@ -236,16 +236,16 @@ namespace diamond_engine
 			GameInstance* targetSpriteInstance				= m_spriteInstances[static_cast<size_t>(colliderConfig->getTargetIndex())].get();
 
 			Collider2DComponent* collider2D = collider2DInstance->getBehaviourComponent<Collider2DComponent>("Collider2D");
-			collider2D->setTarget(targetSpriteInstance->getRenderComponent<TransformRenderComponent>("Transform"));
-			collider2D->setSource(collider2DInstance->getRenderComponent<TransformRenderComponent>("Transform"));
+			collider2D->setTarget(targetSpriteInstance);
+			collider2D->setSource(collider2DInstance.get());
 
 			switch (collider2D->getType())
 			{
 			case ColliderType::OBSTACLE:
-				m_collisionResolver2D->addObstacle(collider2DInstance.get());
+				m_collisionSolver2D->addObstacle(collider2DInstance.get());
 				break;
 			case ColliderType::CHARACTER:
-				m_collisionResolver2D->addCharacter(collider2DInstance.get());
+				m_collisionSolver2D->addCharacter(collider2DInstance.get());
 				break;
 			}
 
@@ -275,7 +275,7 @@ namespace diamond_engine
 		m_renderingSubsystem->releaseVertexState();
 		m_spriteInstances.clear();
 
-		m_collisionResolver2D->clear();
+		m_collisionSolver2D->clear();
 
 		m_currentScene.clear();
 	}
@@ -285,9 +285,7 @@ namespace diamond_engine
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
 		GameInstanceManager::updateGameInstances(deltaTime, m_spriteInstances);
-
-		m_collisionResolver2D->ResolveCollisions();
-
+		m_collisionSolver2D->ResolveCollisions();
 		GameInstanceManager::updateGameInstances(deltaTime, m_collider2DInstances);
 
 		m_renderingSubsystem->preRender();
@@ -358,6 +356,7 @@ namespace diamond_engine
 			if (!initializeStatus)
 				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
 
+			behaviourComponent->setGameInstance(gameInstance.get());
 			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
 		}
 
