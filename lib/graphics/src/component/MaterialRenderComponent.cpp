@@ -76,12 +76,27 @@ namespace diamond_engine
 		}
 	}
 
+	const glm::vec3& MaterialRenderComponent::getColor() const
+	{
+		return m_colorMemory->memory.value;
+	}
+
 	void MaterialRenderComponent::setTextureOffset(const glm::vec2& textureOffset)
 	{
 		if (m_textureOffsetMemory)
 		{
 			m_textureOffsetMemory->memory.value = textureOffset;
 		}
+	}
+
+	const glm::vec2& MaterialRenderComponent::getTextureOffset() const
+	{
+		return m_textureOffsetMemory->memory.value;
+	}
+
+	glm::vec2& MaterialRenderComponent::getTextureOffset()
+	{
+		return m_textureOffsetMemory->memory.value;
 	}
 
 	EngineStatus MaterialRenderComponent::requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)

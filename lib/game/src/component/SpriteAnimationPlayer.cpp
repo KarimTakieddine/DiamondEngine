@@ -13,9 +13,7 @@ namespace diamond_engine
 		auto it = m_spriteSheetAnimations.find(name);
 
 		if (it == m_spriteSheetAnimations.cend())
-		{
 			throw std::runtime_error("Could not find sprite animation named: " + name);
-		}
 
 		SpriteSheetAnimation& spriteSheetAnimation = it->second;
 
@@ -41,11 +39,16 @@ namespace diamond_engine
 			return;
 		}
 
-		m_gameInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(m_currentSpriteSheet->frames[animationFrame]);
+		m_material->setTexture(m_currentSpriteSheet->frames[animationFrame]);
 	}
 
 	EngineStatus SpriteAnimationPlayer::initialize(const BehaviourComponentConfig* config)
 	{
+		m_material = m_gameInstance->getRenderComponent<MaterialRenderComponent>("Material");
+
+		if (!m_material)
+			return { "SpriteAnimationPlayer::initialize failed. No material was assigned", true };
+
 		const SpriteAnimationPlayerConfig* spriteAnimationConfig = dynamic_cast<const SpriteAnimationPlayerConfig*>(config);
 
 		if (!spriteAnimationConfig)

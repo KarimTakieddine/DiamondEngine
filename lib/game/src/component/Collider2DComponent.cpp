@@ -17,6 +17,8 @@ namespace diamond_engine
 			return;
 		}
 
+		// TODO: Optimise getting of these components. Does not need to be done here!
+
 		const TransformRenderComponent* const targetTransform	= m_target->getRenderComponent<TransformRenderComponent>("Transform");
 		const glm::mat4& targetLocalScale						= targetTransform->getLocalScale();
 		const glm::vec2 targetScale{ targetLocalScale[0].x, targetLocalScale[1].y };

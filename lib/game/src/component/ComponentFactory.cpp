@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "ComponentFactory.h"
 #include "BehaviourComponentConfig.h"
 #include "Collider2DComponent.h"
@@ -90,6 +92,17 @@ namespace diamond_engine
 		for (const auto& behaviourConfig : instanceConfig->getBehaviourConfigs())
 		{
 			result.push_back(createBehaviourComponent(behaviourConfig.get()));
+		}
+
+		if (instanceConfig->getType() == GameInstanceType::SPRITE)
+		{
+			auto collider2DIt = std::find_if(
+				result.cbegin(),
+				result.cend(),
+				[](const auto& component) { return std::string(component->getName()) == "Collider2D"; });
+
+			if (collider2DIt != result.cend())
+				result.erase(collider2DIt);
 		}
 
 		return result;

@@ -11,6 +11,7 @@ namespace diamond_engine
 		Animation animation;
 	};
 
+	class MaterialRenderComponent;
 	class SpriteAnimationPlayer : public AnimationPlayer
 	{
 	public:
@@ -26,6 +27,7 @@ namespace diamond_engine
 
 	private:
 		std::unordered_map<std::string, SpriteSheetAnimation> m_spriteSheetAnimations;
+		MaterialRenderComponent* m_material{ nullptr };
 		const SpriteSheet* m_currentSpriteSheet{ nullptr };
 	};
 }

@@ -318,31 +318,12 @@ namespace diamond_engine
 		if (!registerStatus)
 			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
 
-		EngineStatus initializeStatus;
-
-		std::vector<BehaviourComponentPtr> behaviourComponents = ComponentFactory::createBehaviourComponents(config);
-
-		const auto& behaviourConfigs = config->getBehaviourConfigs();
-		for (size_t i = 0; i < behaviourConfigs.size(); ++i)
-		{
-			auto& behaviourComponent = behaviourComponents[i];
-
-			initializeStatus = behaviourComponent->initialize(behaviourConfigs[i].get());
-
-			if (!initializeStatus)
-				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
-
-			behaviourComponent->setGameInstance(gameInstance.get());
-			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
-		}
-
 		std::vector<RenderComponentPtr> renderComponents = ComponentFactory::createRenderComponents(config);
 
 		switch (config->getType())
 		{
 		case GameInstanceType::SPRITE:
 			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
-			gameInstance->removeBehaviourComponent("Collider2D");
 			break;
 		case GameInstanceType::COLLIDER_2D:
 			registerStatus = m_renderingSubsystem->registerRenderObject("collider_2d_renderer", renderComponents);
@@ -354,6 +335,8 @@ namespace diamond_engine
 
 		if (!registerStatus)
 			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
+
+		EngineStatus initializeStatus;
 
 		// TODO: Refactor i.e. make a base Component(::initialize) class once everything is replaced and remove duplicate code
 
@@ -368,6 +351,27 @@ namespace diamond_engine
 				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
 
 			gameInstance->acquireRenderComponent(std::move(renderComponent));
+		}
+
+		std::vector<BehaviourComponentPtr> behaviourComponents	= ComponentFactory::createBehaviourComponents(config);
+		const auto& behaviourConfigs = config->getBehaviourConfigs();
+
+		for (auto& behaviourComponent : behaviourComponents)
+		{
+			const BehaviourComponentConfig* behaviourConfig = std::find_if(
+				behaviourConfigs.cbegin(),
+				behaviourConfigs.cend(),
+				[&behaviourComponent](const auto& componentConfig) {
+					return std::string(componentConfig->getName()) == std::string(behaviourComponent->getName());
+				})->get();
+
+			behaviourComponent->setGameInstance(gameInstance.get());
+			initializeStatus = behaviourComponent->initialize(behaviourConfig);
+
+			if (!initializeStatus)
+				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
+
+			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
 		}
 
 		return gameInstance;
