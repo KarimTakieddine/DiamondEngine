@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <stdexcept>
 
+#include "AudioEngine.h"
 #include "Camera.h"
 #include "Collider2DComponent.h"
 #include "Collider2DComponentConfig.h"
@@ -12,6 +13,7 @@
 #include "MaterialComponentConfig.h"
 #include "SharedMeshStore.h"
 #include "SharedShaderStore.h"
+#include "SpriteSheetLoader.h"
 #include "TextureLoader.h"
 #include "TransformComponentConfig.h"
 #include "TransformRenderComponent.h"
@@ -24,6 +26,8 @@ namespace diamond_engine
 
 	void GameEngine::initialize(const EngineConfig& engineConfig)
 	{
+		AudioEngine::getInstance()->initialize(engineConfig.getAudioDirectory());
+
 		m_graphicsContext->Initialize(
 			engineConfig,
 			std::bind(&GameEngine::onWindowUpdate, this, std::placeholders::_1),
@@ -31,6 +35,7 @@ namespace diamond_engine
 
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
+		SpriteSheetLoader::getInstance()->load(engineConfig.getSpriteSheetsDirectory());
 		SharedMeshStore::getInstance()->loadMeshes();
 
 		m_renderingSubsystem = std::make_unique<RenderingSubsystem>();
@@ -185,9 +190,13 @@ namespace diamond_engine
 						materialConfig->setColor({ 0.0f, 1.0f, 0.0f });
 						colliderConfig->addRenderConfig(std::move(materialConfig));
 
-						dynamic_cast<Collider2DComponentConfig*>(collider2DIt->get())->setTargetIndex(i);
-						colliderConfig->addBehaviourConfig(std::move(*collider2DIt));
-						behaviourConfigs.erase(collider2DIt);
+						Collider2DComponentConfig* colliderComponentConfig = dynamic_cast<Collider2DComponentConfig*>(collider2DIt->get());
+						colliderComponentConfig->setTargetIndex(i);
+						std::unique_ptr<Collider2DComponentConfig> copy = std::make_unique<Collider2DComponentConfig>();
+						copy->setSize(colliderComponentConfig->getSize());
+						copy->setType(colliderComponentConfig->getType());
+						copy->setTargetIndex(colliderComponentConfig->getTargetIndex());
+						colliderConfig->addBehaviourConfig(std::move(copy));
 						
 						const std::string& colliderName = gameInstanceConfig->getName() + "_collider_";
 						int colliderCount = std::count_if(
@@ -309,40 +318,7 @@ namespace diamond_engine
 		if (!registerStatus)
 			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
 
-		std::vector<RenderComponentPtr> renderComponents = ComponentFactory::createRenderComponents(config);
-
-		switch (config->getType())
-		{
-		case GameInstanceType::SPRITE:
-			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
-			break;
-		case GameInstanceType::COLLIDER_2D:
-			registerStatus = m_renderingSubsystem->registerRenderObject("collider_2d_renderer", renderComponents);
-			break;
-		default:
-			registerStatus = { "Failed to register game instance of unknown type", true };
-			break;
-		}
-
-		if (!registerStatus)
-			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
-
 		EngineStatus initializeStatus;
-
-		// TODO: Refactor i.e. make a base Component(::initialize) class once everything is replaced and remove duplicate code
-
-		const auto& renderConfigs = config->getRenderConfigs();
-		for (size_t i = 0; i < renderConfigs.size(); ++i)
-		{
-			auto& renderComponent = renderComponents[i];
-
-			initializeStatus = renderComponent->initialize(renderConfigs[i].get());
-
-			if (!initializeStatus)
-				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
-
-			gameInstance->acquireRenderComponent(std::move(renderComponent));
-		}
 
 		std::vector<BehaviourComponentPtr> behaviourComponents = ComponentFactory::createBehaviourComponents(config);
 
@@ -358,6 +334,40 @@ namespace diamond_engine
 
 			behaviourComponent->setGameInstance(gameInstance.get());
 			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
+		}
+
+		std::vector<RenderComponentPtr> renderComponents = ComponentFactory::createRenderComponents(config);
+
+		switch (config->getType())
+		{
+		case GameInstanceType::SPRITE:
+			registerStatus = m_renderingSubsystem->registerRenderObject("sprite_renderer", renderComponents);
+			gameInstance->removeBehaviourComponent("Collider2D");
+			break;
+		case GameInstanceType::COLLIDER_2D:
+			registerStatus = m_renderingSubsystem->registerRenderObject("collider_2d_renderer", renderComponents);
+			break;
+		default:
+			registerStatus = { "Failed to register game instance of unknown type", true };
+			break;
+		}
+
+		if (!registerStatus)
+			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
+
+		// TODO: Refactor i.e. make a base Component(::initialize) class once everything is replaced and remove duplicate code
+
+		const auto& renderConfigs = config->getRenderConfigs();
+		for (size_t i = 0; i < renderConfigs.size(); ++i)
+		{
+			auto& renderComponent = renderComponents[i];
+
+			initializeStatus = renderComponent->initialize(renderConfigs[i].get());
+
+			if (!initializeStatus)
+				throw std::runtime_error("Failed to initialize game instance: " + config->getName() + " error was: " + initializeStatus.message);
+
+			gameInstance->acquireRenderComponent(std::move(renderComponent));
 		}
 
 		return gameInstance;

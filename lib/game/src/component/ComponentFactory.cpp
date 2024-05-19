@@ -4,6 +4,7 @@
 #include "GameInstanceConfig.h"
 #include "MaterialRenderComponent.h"
 #include "RenderComponentConfig.h"
+#include "SpriteAnimationPlayer.h"
 #include "TransformRenderComponent.h"
 
 namespace
@@ -28,6 +29,12 @@ namespace
 		using diamond_engine::Collider2DComponent;
 		return std::make_unique<Collider2DComponent>();
 	}
+
+	static BehaviourComponentPtr createSpriteAnimationPlayer()
+	{
+		using diamond_engine::SpriteAnimationPlayer;
+		return std::make_unique<SpriteAnimationPlayer>();
+	}
 }
 
 namespace diamond_engine
@@ -50,7 +57,8 @@ namespace diamond_engine
 
 	/* static */ std::unordered_map<std::string, ComponentFactory::BehaviourCreateMethod> ComponentFactory::behaviourCreateMethods =
 	{
-		{ "Collider2D", ::createCollider2DComponent }
+		{ "Collider2D",				::createCollider2DComponent },
+		{ "SpriteAnimationPlayer",	::createSpriteAnimationPlayer }
 	};
 
 	/* static */ RenderComponentPtr	ComponentFactory::createRenderComponent(const RenderComponentConfig* config)

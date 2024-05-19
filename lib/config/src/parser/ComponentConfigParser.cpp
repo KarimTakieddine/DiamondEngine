@@ -2,10 +2,12 @@
 
 #include <pugixml.hpp>
 
+#include "AnimationParser.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentConfigParser.h"
 #include "MaterialComponentConfig.h"
 #include "TransformComponentConfig.h"
+#include "SpriteAnimationPlayerConfig.h"
 #include "Vector3Parser.h"
 #include "Vector2Parser.h"
 
@@ -116,6 +118,23 @@ namespace
 
 		return result;
 	}
+
+	static std::unique_ptr<BehaviourComponentConfig> parseSpriteAnimationPlayerConfig(const pugi::xml_node& node, EngineStatus* outStatus)
+	{
+		// TODO: Remove need for separate AnimationParser class...
+
+		using diamond_engine::AnimationParser;
+		using diamond_engine::SpriteAnimationPlayerConfig;
+
+		std::unique_ptr<SpriteAnimationPlayerConfig> result = std::make_unique<SpriteAnimationPlayerConfig>();
+
+		for (const auto& animationNode : node.children("Animation"))
+		{
+			result->addAnimation(AnimationParser::Parse(animationNode));
+		}
+
+		return result;
+	}
 }
 
 namespace diamond_engine
@@ -164,6 +183,7 @@ namespace diamond_engine
 	};
 
 	/* static */ std::unordered_map<std::string, ComponentConfigParser::BehaviourParseMethod> ComponentConfigParser::behaviourParseMethods = {
-		{ "Collider2D", &parseCollider2DConfig }
+		{ "Collider2D",				&parseCollider2DConfig },
+		{ "SpriteAnimationPlayer",	&parseSpriteAnimationPlayerConfig }
 	};
 }

@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "SharedShaderStore.h"
-#include "ShaderMetadataParser.h"
+#include "ShaderConfigParser.h"
 
 namespace
 {
@@ -51,16 +51,16 @@ namespace diamond_engine {
 				continue;
 			}
 
-			const ShaderProgramMetadata programMetadata = ShaderMetadataParser::LoadShaderProgramMetadata(programMetadataPath.string());
+			const ShaderProgramConfig programConfig = ShaderConfigParser::ParseProgramConfig(programMetadataPath.string());
 
 			std::shared_ptr<ShaderProgram> shaderProgram = std::make_shared<ShaderProgram>();
 
-			const auto& shaderMetadataEntries = programMetadata.getShaderEntries();
+			const auto& shaderConfigs = programConfig.getShaderConfigs();
 
-			for (const auto& shaderMetadata : shaderMetadataEntries) {
-				const std::filesystem::path sourcePath(shaderMetadata.file);
+			for (const auto& shaderConfig : shaderConfigs) {
+				const std::filesystem::path sourcePath(shaderConfig.file);
 
-				std::shared_ptr<Shader> shader = std::make_shared<Shader>(shaderMetadata.type);
+				std::shared_ptr<Shader> shader = std::make_shared<Shader>(shaderConfig.type);
 				shader->SetSource(
 					readFile(
 						sourcePath.is_absolute() ?
@@ -69,7 +69,7 @@ namespace diamond_engine {
 				shader->Compile();
 
 				if (!shader->IsCompiled()) {
-					throw std::runtime_error("Failed to compile shader defined in file: " + shaderMetadata.file);
+					throw std::runtime_error("Failed to compile shader defined in file: " + shaderConfig.file);
 				}
 
 				shaderProgram->AttachShader(shader);
@@ -77,16 +77,16 @@ namespace diamond_engine {
 			shaderProgram->Link();
 
 			if (!shaderProgram->IsLinked()) {
-				throw std::runtime_error("Failed to link program named: " + programMetadata.GetName());
+				throw std::runtime_error("Failed to link program named: " + programConfig.GetName());
 			}
 
-			for (const auto& shaderMetadata : shaderMetadataEntries) {
+			for (const auto& shaderConfig : shaderConfigs) {
 				// TODO: Clearing logic somewhere?
-				shaderProgram->LoadAttributes(shaderMetadata.attributes);
-				shaderProgram->LoadUniforms(shaderMetadata.uniforms);
+				shaderProgram->LoadAttributes(shaderConfig.attributes);
+				shaderProgram->LoadUniforms(shaderConfig.uniforms);
 			}
 
-			m_store.emplace(programMetadata.GetName(), shaderProgram);
+			m_store.emplace(programConfig.GetName(), shaderProgram);
 		}
 	}
 

@@ -13,7 +13,9 @@ namespace diamond_engine
 	{
 	public:
 		EngineStatus acquireRenderComponent(std::unique_ptr<IRenderComponent> renderComponent);
+		EngineStatus removeRenderComponent(const std::string& name);
 		EngineStatus acquireBehaviourComponent(std::unique_ptr<BehaviourComponent> behaviourComponent);
+		EngineStatus removeBehaviourComponent(const std::string& name);
 
 		template<typename T>
 		T* getRenderComponent(const std::string& name) const
@@ -27,6 +29,17 @@ namespace diamond_engine
 				});
 
 			return componentIt == m_renderComponents.cend() ? nullptr : dynamic_cast<T*>(componentIt->get());
+		}
+
+		std::vector<std::unique_ptr<IRenderComponent>>::const_iterator getRenderComponentIt(const std::string& name) const
+		{
+			return std::find_if(
+				m_renderComponents.begin(),
+				m_renderComponents.end(),
+				[name](const std::unique_ptr<IRenderComponent>& renderComponent)
+				{
+					return std::string(renderComponent->getName()) == name;
+				});
 		}
 
 		std::vector<std::unique_ptr<BehaviourComponent>>::const_iterator getBehaviourComponentIt(const std::string& name) const

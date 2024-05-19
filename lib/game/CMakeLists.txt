@@ -14,6 +14,9 @@ set(SRC_DIR src)
 set(GLM_DIR ../../glm)
 
 set(SOURCES
+    ${SRC_DIR}/animation/SpriteSheetLoader.cpp
+    ${SRC_DIR}/component/AnimationPlayer.cpp
+    ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     ${SRC_DIR}/component/Collider2DComponent.cpp
     ${SRC_DIR}/component/ComponentFactory.cpp
     ${SRC_DIR}/game/GameInstance.cpp
@@ -34,7 +37,7 @@ target_include_directories(libDiamondEngineGame PRIVATE
     "${GRAPHICS_DIR}/include/mesh"
     "${GRAPHICS_DIR}/include/shader"
     "${GRAPHICS_DIR}/include/texture"
-    "${INCLUDE_DIR}/allocator"
+    "${INCLUDE_DIR}/animation"
     "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/game"
     "${INCLUDE_DIR}/physics"

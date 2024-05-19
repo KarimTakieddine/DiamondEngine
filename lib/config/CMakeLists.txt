@@ -27,15 +27,20 @@ set(SOURCES
     ${SRC_DIR}/config/GameInstanceConfig.cpp
     ${SRC_DIR}/config/GameSceneConfig.cpp
     ${SRC_DIR}/config/MaterialComponentConfig.cpp
+    ${SRC_DIR}/config/SpriteAnimationPlayerConfig.cpp
     ${SRC_DIR}/config/TransformComponentConfig.cpp
     ${SRC_DIR}/config/WindowConfig.cpp
+    ${SRC_DIR}/parser/AnimationParser.cpp
     ${SRC_DIR}/parser/ComponentConfigParser.cpp
     ${SRC_DIR}/parser/ControllerConfigParser.cpp
     ${SRC_DIR}/parser/EngineConfigParser.cpp
+    ${SRC_DIR}/parser/FrameConfigParser.cpp
     ${SRC_DIR}/parser/GameInstanceConfigParser.cpp
     ${SRC_DIR}/parser/GameSceneConfigParser.cpp
     ${SRC_DIR}/parser/KeyboardConfigParser.cpp
-    ${SRC_DIR}/parser/ShaderMetadataParser.cpp
+    ${SRC_DIR}/parser/ShaderConfigParser.cpp
+    ${SRC_DIR}/parser/SoundConfigParser.cpp
+    ${SRC_DIR}/parser/SpriteSheetConfigParser.cpp
     ${SRC_DIR}/parser/TextureMetadataParser.cpp
     ${SRC_DIR}/parser/Vector2Parser.cpp
     ${SRC_DIR}/parser/Vector3Parser.cpp
@@ -50,10 +55,10 @@ target_include_directories(libDiamondEngineConfig PRIVATE
     "${PUGI_XML_DIR}/${SRC_DIR}"
     "${COMMON_DIR}/${INCLUDE_DIR}"
     "${INPUT_DIR}/include/input"
+    "${GAME_DIR}/include/animation"
     "${GAME_DIR}/include/physics"
     "${INCLUDE_DIR}/config"
     "${INCLUDE_DIR}/parser"
-
 )
 
 target_link_libraries(libDiamondEngineConfig PRIVATE pugixml)

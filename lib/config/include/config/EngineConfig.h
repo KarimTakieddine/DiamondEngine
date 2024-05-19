@@ -34,11 +34,21 @@ public:
 
 	const std::string& getTexturesDirectory() const;
 
+	void setAudioDirectory(const std::string& audioDirectory);
+
+	const std::string& getAudioDirectory() const;
+
+	void setSpriteSheetsDirectory(const std::string& spriteSheetsDirectory);
+
+	const std::string& getSpriteSheetsDirectory() const;
+
 private:
 	KeyboardConfig m_keyboardConfig;
 	ControllerConfig m_controllerConfig;
 	WindowConfig m_windowConfig;
 	std::string m_shadersDirectory;
 	std::string m_texturesDirectory;
+	std::string m_audioDirectory;
+	std::string m_spriteSheetsDirectory;
 };
 }

@@ -56,4 +56,24 @@ namespace diamond_engine {
 	{
 		return m_texturesDirectory;
 	}
+
+	void EngineConfig::setAudioDirectory(const std::string& audioDirectory)
+	{
+		m_audioDirectory = audioDirectory;
+	}
+
+	const std::string& EngineConfig::getAudioDirectory() const
+	{
+		return m_audioDirectory;
+	}
+
+	void EngineConfig::setSpriteSheetsDirectory(const std::string& spriteSheetsDirectory)
+	{
+		m_spriteSheetsDirectory = spriteSheetsDirectory;
+	}
+
+	const std::string& EngineConfig::getSpriteSheetsDirectory() const
+	{
+		return m_spriteSheetsDirectory;
+	}
 }

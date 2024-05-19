@@ -30,6 +30,20 @@ namespace diamond_engine {
 		}
 		result.setTexturesDirectory(texturesDirectoryAttribute.as_string());
 
+		pugi::xml_attribute audioDirectoryAttribute = engineConfigNode.attribute("audioDirectory");
+		if (!audioDirectoryAttribute)
+		{
+			throw std::runtime_error("Failed to parse EngineConfig. No root \"audioDirectory\" value was set");
+		}
+		result.setAudioDirectory(audioDirectoryAttribute.as_string());
+
+		pugi::xml_attribute spriteSheetsDirectoryAttribute = engineConfigNode.attribute("spriteSheetsDirectory");
+		if (!spriteSheetsDirectoryAttribute)
+		{
+			throw std::runtime_error("Failed to parse EngineConfig. No root \"spriteSheetsDirectory\" value was set");
+		}
+		result.setSpriteSheetsDirectory(spriteSheetsDirectoryAttribute.as_string());
+
 		return result;
 	}
 	

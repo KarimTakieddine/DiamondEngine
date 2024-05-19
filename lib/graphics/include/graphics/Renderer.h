@@ -17,8 +17,9 @@ namespace diamond_engine
 	class Renderer
 	{
 	public:
-		Renderer(MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
+		Renderer(GLuint vertexArrayObject, MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram);
 		const std::shared_ptr<ShaderProgram>& getShaderProgram() const;
+		GLuint getVertexArrayObject() const;
 		void render(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 		void uploadMeshData(GLenum drawType, const VertexState* vertexState, const std::vector<VertexAttribute>& vertexAttributes);
 
@@ -29,6 +30,7 @@ namespace diamond_engine
 	private:
 		std::shared_ptr<ShaderProgram> m_shaderProgram{ nullptr };
 		Mesh* m_sharedMesh{ nullptr };
+		GLenum m_vertexArrayObject{ 0 };
 		GLenum m_drawMode{ GL_TRIANGLES };
 	};
 }

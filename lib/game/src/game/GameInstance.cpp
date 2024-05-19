@@ -19,6 +19,20 @@ namespace diamond_engine
 		return { };
 	}
 
+	EngineStatus GameInstance::removeRenderComponent(const std::string& name)
+	{
+		auto it = getRenderComponentIt(name);
+
+		if (it == m_renderComponents.cend())
+		{
+			return { "Render component removal failed. Not found: " + name, true };
+		}
+
+		m_renderComponents.erase(it);
+
+		return { };
+	}
+
 	EngineStatus GameInstance::acquireBehaviourComponent(std::unique_ptr<BehaviourComponent> behaviourComponent)
 	{
 		if (!behaviourComponent)
@@ -32,6 +46,20 @@ namespace diamond_engine
 		}
 
 		m_behaviourComponents.push_back(std::move(behaviourComponent));
+
+		return { };
+	}
+
+	EngineStatus GameInstance::removeBehaviourComponent(const std::string& name)
+	{
+		auto it = getBehaviourComponentIt(name);
+
+		if (it == m_behaviourComponents.cend())
+		{
+			return { "Behaviour component removal failed. Not found: " + name, true };
+		}
+
+		m_behaviourComponents.erase(it);
 
 		return { };
 	}

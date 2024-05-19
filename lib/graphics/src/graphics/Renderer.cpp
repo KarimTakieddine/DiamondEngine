@@ -13,7 +13,7 @@
 
 namespace diamond_engine
 {
-	Renderer::Renderer(MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram) : m_drawMode(drawMode), m_shaderProgram(shaderProgram)
+	Renderer::Renderer(GLuint vertexArrayObject, MeshType meshType, GLenum drawMode, const std::shared_ptr<ShaderProgram>& shaderProgram) : m_vertexArrayObject(vertexArrayObject), m_drawMode(drawMode), m_shaderProgram(shaderProgram)
 	{
 		if (!m_shaderProgram)
 		{
@@ -68,6 +68,11 @@ namespace diamond_engine
 	const std::shared_ptr<ShaderProgram>& Renderer::getShaderProgram() const
 	{
 		return m_shaderProgram;
+	}
+
+	GLuint Renderer::getVertexArrayObject() const
+	{
+		return m_vertexArrayObject;
 	}
 
 	EngineStatus Renderer::allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)

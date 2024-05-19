@@ -10,18 +10,18 @@ namespace diamond_engine
 	RenderingSubsystem::RenderingSubsystem() :
 		m_camera(std::make_unique<Camera>()),
 		m_uniformBufferAgent(std::make_unique<UniformBufferAgent>()),
+		m_vertexArrayAllocator(std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays)),
 		m_graphicsMemoryPool(std::make_unique< GraphicsMemoryPool>())
 	{
-		m_graphicsMemoryPool->allocate(4096);
-
 		m_uniformBufferAgent->reserveCapacity(1);
 		m_uniformBufferAgent->allocateBuffers(1); // Camera buffer. Common to all renderers / shader programs
 
-		m_vertexArrayAllocator = std::make_unique<GLAllocator>(glGenVertexArrays, glDeleteVertexArrays);
-		m_vertexArrayAllocator->Reserve(256);
+		m_vertexArrayAllocator->Reserve(2);
+
+		m_graphicsMemoryPool->allocate(4096);
 
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		m_camera->SetProjectionFrustum(45.0f, 1.333f, 0.3f, 1000.0f);
+		m_camera->SetProjectionFrustum(60.0f, 1.333f, 0.3f, 1000.0f);
 	}
 
 	void RenderingSubsystem::setMaxRendererCount(GLsizei maxRendererCount)
@@ -85,7 +85,7 @@ namespace diamond_engine
 			return uniformBufferStatus;
 		}
 
-		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(meshType, drawMode, shaderProgram);
+		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(m_vertexArrayAllocator->Get(), meshType, drawMode, shaderProgram);
 
 		m_renderers.insert(
 			{ name, std::move(renderer) });
@@ -129,7 +129,8 @@ namespace diamond_engine
 		if (!renderer)
 			return { "Failed to allocate vertex state. Active renderer not found: " + name, true };
 	
-		VertexState* vertexState = m_graphicsMemoryPool->requestMemory<VertexState>({ m_vertexArrayAllocator->Get(), renderer->getShaderProgram()->GetObject() });
+		VertexState* vertexState = m_graphicsMemoryPool->requestMemory<VertexState>(
+			{ renderer->getVertexArrayObject(), renderer->getShaderProgram()->GetObject() });
 
 		if (!vertexState)
 			return { "Failed to allocate vertex state. Request for memory failed", true };
