@@ -61,6 +61,19 @@ namespace diamond_engine {
 					}
 				},
 				{
+					MeshType::QUAD,
+					MeshData
+					{
+						{
+							Vertex({ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }),
+							Vertex({ { -0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f } }),
+							Vertex({ { 0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }),
+							Vertex({ { 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } })
+						},
+						{ 0, 2, 1, 0, 3, 2 }
+					}
+				},
+				{
 					MeshType::CUBE,
 					MeshData
 					{
@@ -120,5 +133,7 @@ namespace diamond_engine {
 				}
 			}
 		);
+
+		m_bufferAllocator->Reserve(MESH_COUNT << 1);
 	}
 }
