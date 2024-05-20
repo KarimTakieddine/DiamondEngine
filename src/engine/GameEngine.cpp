@@ -245,16 +245,16 @@ namespace diamond_engine
 			GameInstance* targetSpriteInstance				= m_spriteInstances[static_cast<size_t>(colliderConfig->getTargetIndex())].get();
 
 			Collider2DComponent* collider2D = collider2DInstance->getBehaviourComponent<Collider2DComponent>("Collider2D");
-			collider2D->setTarget(targetSpriteInstance);
-			collider2D->setSource(collider2DInstance.get());
+			collider2D->setTarget(targetSpriteInstance->getRenderComponent<TransformRenderComponent>("Transform"));
+			collider2D->setSource(collider2DInstance->getRenderComponent<TransformRenderComponent>("Transform"));
 
 			switch (collider2D->getType())
 			{
 			case ColliderType::OBSTACLE:
-				m_collisionSolver2D->addObstacle(collider2DInstance.get());
+				m_collisionSolver2D->addObstacle(targetSpriteInstance, collider2D);
 				break;
 			case ColliderType::CHARACTER:
-				m_collisionSolver2D->addCharacter(collider2DInstance.get());
+				m_collisionSolver2D->addCharacter(targetSpriteInstance, collider2D);
 				break;
 			}
 

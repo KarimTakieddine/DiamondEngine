@@ -20,12 +20,22 @@ namespace diamond_engine
 	};
 
 	class GameInstance;
+	class TransformRenderComponent;
+	class Collider2DComponent;
+
+	struct CollisionInstance2D
+	{
+		GameInstance* gameInstance{ nullptr };
+		TransformRenderComponent* transform{ nullptr };
+		Collider2DComponent* collider{ nullptr };
+	};
+
 	class CollisionSolver2D
 	{
 	public:
-		void addCharacter(GameInstance* character);
+		void addCharacter(GameInstance* character, Collider2DComponent* collider);
 
-		void addObstacle(GameInstance* obstacle);
+		void addObstacle(GameInstance* obstacle, Collider2DComponent* collider);
 
 		void ResolveCollisions();
 
@@ -33,7 +43,7 @@ namespace diamond_engine
 
 	private:
 		std::unordered_map<std::string, std::string> m_collisionResolutionMap;
-		std::vector<GameInstance*> m_characters;
-		std::vector<GameInstance*> m_obstacles;
+		std::vector<CollisionInstance2D> m_characters;
+		std::vector<CollisionInstance2D> m_obstacles;
 	};
 }

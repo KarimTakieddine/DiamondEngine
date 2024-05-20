@@ -17,21 +17,16 @@ namespace diamond_engine
 			return;
 		}
 
-		// TODO: Optimise getting of these components. Does not need to be done here!
-
-		const TransformRenderComponent* const targetTransform	= m_target->getRenderComponent<TransformRenderComponent>("Transform");
-		const glm::mat4& targetLocalScale						= targetTransform->getLocalScale();
+		const glm::mat4& targetLocalScale = m_target->getLocalScale();
 		const glm::vec2 targetScale{ targetLocalScale[0].x, targetLocalScale[1].y };
-
-		TransformRenderComponent* sourceTransform = m_source->getRenderComponent<TransformRenderComponent>("Transform");
-		sourceTransform->setLocalScale(
+		m_source->setLocalScale(
 			{
 				static_cast<GLfloat>(m_size.width) * targetScale.x,
 				static_cast<GLfloat>(m_size.height) * targetScale.y,
 				1.0f
 			});
 
-		sourceTransform->setPosition(targetTransform->getPosition());
+		m_source->setPosition(m_target->getPosition());
 	}
 
 	EngineStatus Collider2DComponent::initialize(const BehaviourComponentConfig* config)
@@ -47,22 +42,22 @@ namespace diamond_engine
 		return { };
 	}
 
-	GameInstance* Collider2DComponent::getTarget() const
+	TransformRenderComponent* Collider2DComponent::getTarget() const
 	{
 		return m_target;
 	}
 
-	void Collider2DComponent::setTarget(GameInstance* target)
+	void Collider2DComponent::setTarget(TransformRenderComponent* target)
 	{
 		m_target = target;
 	}
 
-	GameInstance* Collider2DComponent::getSource() const
+	TransformRenderComponent* Collider2DComponent::getSource() const
 	{
 		return m_source;
 	}
 
-	void Collider2DComponent::setSource(GameInstance* source)
+	void Collider2DComponent::setSource(TransformRenderComponent* source)
 	{
 		m_source = source;
 	}
@@ -85,21 +80,5 @@ namespace diamond_engine
 	void Collider2DComponent::setType(ColliderType type)
 	{
 		m_type = type;
-	}
-
-	void Collider2DComponent::onCollisionEnter2D(const glm::vec2& resolution, const std::string& name)
-	{
-		if (!m_target)
-			return;
-
-		m_target->onCollisionEnter2D(resolution, name);
-	}
-
-	void Collider2DComponent::onCollisionExit2D(const std::string& name)
-	{
-		if (!m_target)
-			return;
-
-		m_target->onCollisionExit2D(name);
 	}
 }
