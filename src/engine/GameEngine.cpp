@@ -39,7 +39,13 @@ namespace diamond_engine
 		SharedMeshStore::getInstance()->loadMeshes();
 
 		m_renderingSubsystem = std::make_unique<RenderingSubsystem>();
-		m_renderingSubsystem->setMaxRendererCount(2);
+		m_renderingSubsystem->setMaxRendererCount(3);
+		m_renderingSubsystem->registerRenderer(
+			MeshType::QUAD,
+			GL_TRIANGLES,
+			"font_renderer",
+			"font");
+
 		m_renderingSubsystem->registerRenderer(
 			MeshType::QUAD,
 			GL_TRIANGLES,
@@ -51,6 +57,10 @@ namespace diamond_engine
 			GL_LINES,
 			"collider_2d_renderer",
 			"unlit_color");
+
+		m_fontEngine = std::make_unique<FontEngine>();
+		m_fontEngine->registerFont({ 64, 64, 'a' });
+		m_fontEngine->registerFont({ 64, 64, 'b' });
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -65,6 +75,7 @@ namespace diamond_engine
 		m_graphicsContext->Execute();
 
 		unloadCurrentScene();
+
 		m_renderingSubsystem->freeAllocatedRenderers();
 		SharedMeshStore::getInstance()->unloadMeshes();
 		TextureLoader::getInstance()->unloadTextures();
@@ -261,11 +272,27 @@ namespace diamond_engine
 			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
 
+		// TODO: This causes a double buffer write for the same QUAD buffer location later.
+		// Who knows. We could be using another mesh later
+
+		m_renderingSubsystem->allocateVertexState(
+			"font_renderer",
+			GL_STATIC_DRAW,
+			{
+				VertexAttribute{ "position", 0, 2, sizeof(Vertex), GL_FLOAT },
+				VertexAttribute{ "uv", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
+			});
+
+		const Texture& fontTexture = TextureLoader::getInstance()->GetTexture("ascii_font_green");
+		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem, fontTexture);
+
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
+		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
+
 		for (const auto& collider2DInstance : m_collider2DInstances)
 		{
 			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
@@ -300,6 +327,10 @@ namespace diamond_engine
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
+		m_fontEngine->render(m_renderingSubsystem);
+
+		m_fontEngine->printFont('a', 0, 0);
+		m_fontEngine->printFont('b', 1, 1);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

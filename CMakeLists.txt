@@ -78,6 +78,8 @@ target_include_directories(DiamondEngine PUBLIC
     "${LIB_DIR_PREFIX}/common/${INCLUDE_DIR}"
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"
+    "${FONT_DIR}/include/component"
+    "${FONT_DIR}/include/font"
     "${GAME_DIR}/include/animation"
     "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"
@@ -99,5 +101,6 @@ target_link_libraries(DiamondEngine PRIVATE
     libDiamondEngineAudio
     libDiamondEngineGraphics
     libDiamondEngineConfig
+    libDiamondEngineFont
     libDiamondEngineGame
     libDiamondEngineInput)

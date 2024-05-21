@@ -16,7 +16,7 @@ namespace diamond_engine
 		m_uniformBufferAgent->reserveCapacity(1);
 		m_uniformBufferAgent->allocateBuffers(1); // Camera buffer. Common to all renderers / shader programs
 
-		m_vertexArrayAllocator->Reserve(2);
+		m_vertexArrayAllocator->Reserve(3);
 
 		m_graphicsMemoryPool->allocate(4096);
 

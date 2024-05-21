@@ -1,0 +1,12 @@
+#version 450 core
+
+in vec2 vertexUV;
+
+uniform sampler2D textureSampler;
+uniform vec2 uvOffset;
+
+out vec4 outColor;
+
+void main() {
+	outColor = texture(textureSampler, vertexUV * uvOffset);
+}
