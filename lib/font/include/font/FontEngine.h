@@ -9,6 +9,7 @@
 #include "EngineStatus.h"
 #include "Font.h"
 #include "Texture.h"
+#include "Size.h"
 
 namespace diamond_engine
 {
@@ -20,13 +21,17 @@ namespace diamond_engine
 		EngineStatus registerFont(const Font& font);
 		EngineStatus allocateGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
 		EngineStatus releaseGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
-		EngineStatus setRenderDimensions(const glm::vec2& topLeft, const Texture& canvas);
+		EngineStatus setTopLeft(const glm::vec2& topLeft);
 		void render(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
-		void printFont(const GLubyte symbol, GLsizei row, GLsizei column);
+		void printFont(GLubyte symbol, GLsizei row, GLsizei column);
+		void printString(const std::string& s, GLsizei startRow, GLsizei startColumn);
+		EngineStatus configure(const Size& fontSize, const Texture& canvas);
 
 	private:
 		std::map<GLubyte, size_t> m_symbolToIndex;
 		std::vector<std::unique_ptr<GameInstance>> m_fontInstances;
 		std::vector<Font> m_fonts;
+		Texture m_canvas;
+		Size m_fontSize;
 	};
 }

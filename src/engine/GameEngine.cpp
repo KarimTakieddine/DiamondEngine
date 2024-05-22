@@ -60,9 +60,20 @@ namespace diamond_engine
 			"unlit_color");
 
 		m_fontEngine = std::make_unique<FontEngine>();
-		m_fontEngine->registerFont({ 64, 64, 0, 0, 'a' });
-		m_fontEngine->registerFont({ 64, 64, 0, 1, 'b' });
-		m_fontEngine->registerFont({ 64, 64, 0, 4, 'e' });
+		m_fontEngine->configure({ 64, 64 }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
+
+		// TODO: Move this to a config
+		m_fontEngine->registerFont({ 0, 0, 'a' });
+		m_fontEngine->registerFont({ 0, 1, 'b' });
+		m_fontEngine->registerFont({ 0, 2, 'c' });
+		m_fontEngine->registerFont({ 0, 3, 'd' });
+		m_fontEngine->registerFont({ 0, 4, 'e' });
+		m_fontEngine->registerFont({ 0, 5, 'f' });
+		m_fontEngine->registerFont({ 0, 6, 'g' });
+		m_fontEngine->registerFont({ 0, 7, 'h' });
+		m_fontEngine->registerFont({ 0, 8, 'i' });
+		m_fontEngine->registerFont({ 0, 9, 'j' });
+		m_fontEngine->registerFont({ 0, 10, 'k' });
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -286,7 +297,7 @@ namespace diamond_engine
 			});
 
 		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
-		m_fontEngine->setRenderDimensions({ -0.96f, 0.96f }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
+		m_fontEngine->setTopLeft({ -0.96f, 0.96f });
 
 		m_currentScene = name;
 	}
@@ -331,9 +342,8 @@ namespace diamond_engine
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 		m_fontEngine->render(m_renderingSubsystem);
 
-		m_fontEngine->printFont('a', 0, 1);
-		m_fontEngine->printFont('b', 0, 0);
-		m_fontEngine->printFont('e', 0, 2);
+		m_fontEngine->printString("aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkk", 0, 0);
+		m_fontEngine->printString("kkkkjjjjiiiihhhhggggffffeeeeddddccccbbbbaaaa", 0, 0);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
@@ -407,6 +417,8 @@ namespace diamond_engine
 
 			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
 		}
+
+		gameInstance->setActive(true);
 
 		return gameInstance;
 	}
