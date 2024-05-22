@@ -21,9 +21,6 @@ namespace diamond_engine
 		const glm::vec2& getVXOffset() const;
 		void setVXOffset(const glm::vec2& vxOffset);
 
-		const glm::vec2& getUVOffset() const;
-		void setUVOffset(const glm::vec2& uvOffset);
-
 		const glm::vec2& getFontSize() const;
 		void setFontSize(const glm::vec2& fontSize);
 
@@ -34,6 +31,5 @@ namespace diamond_engine
 		UniformVec2* m_ctopLeft{ nullptr };
 		UniformVec2* m_fontSize{ nullptr };
 		UniformVec2* m_vxOffset{ nullptr };
-		UniformVec2* m_uvOffset{ nullptr };
 	};
 }

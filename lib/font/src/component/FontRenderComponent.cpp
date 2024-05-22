@@ -28,11 +28,6 @@ namespace diamond_engine
 
 		m_vxOffset->memory.location = shaderProgram->GetUniform("vxOffset");
 
-		if (!m_uvOffset)
-			return { "No uv offset memory allocated for FontRenderComponent", true };
-
-		m_uvOffset->memory.location = shaderProgram->GetUniform("uvOffset");
-
 		return { };
 	}
 
@@ -53,19 +48,11 @@ namespace diamond_engine
 		if (!m_vxOffset)
 			return { "FontRenderComponent failed to allocate vertex offset graphics memory", true };
 
-		m_uvOffset = memoryPool->requestMemory<UniformVec2>({ { { 0.0f, 0.0f }, 1 } });
-
-		if (!m_uvOffset)
-			return { "FontRenderComponent failed to allocate uv offset graphics memory", true };
-
 		return { };
 	}
 
 	EngineStatus FontRenderComponent::releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
-		memoryPool->freeMemory(sizeof(UniformVec2));
-		m_uvOffset = nullptr;
-
 		memoryPool->freeMemory(sizeof(UniformVec2));
 		m_vxOffset = nullptr;
 
@@ -94,9 +81,6 @@ namespace diamond_engine
 		uploadUniformMemory(m_vxOffset);
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
-		uploadUniformMemory(m_uvOffset);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
 		return { };
 	}
 
@@ -113,19 +97,6 @@ namespace diamond_engine
 			return;
 
 		m_vxOffset->memory.value = vxOffset;
-	}
-
-	const glm::vec2& FontRenderComponent::getUVOffset() const
-	{
-		return m_uvOffset->memory.value;
-	}
-
-	void FontRenderComponent::setUVOffset(const glm::vec2& uvOffset)
-	{
-		if (!m_uvOffset)
-			return;
-
-		m_uvOffset->memory.value = uvOffset;
 	}
 
 	const glm::vec2& FontRenderComponent::getFontSize() const

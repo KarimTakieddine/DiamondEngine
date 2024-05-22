@@ -103,7 +103,7 @@ namespace diamond_engine
 		const glm::vec2& fontSize		= component->getFontSize();
 
 		component->setVXOffset({ column * fontSize.x, -row * fontSize.y });
-		component->setUVOffset({ fontSize.x * font.column, fontSize.y * font.row });
+		fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTextureOffset({ fontSize.x * font.column, fontSize.y * font.row });
 		fontInstance->setActive(true);
 	}
 

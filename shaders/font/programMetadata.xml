@@ -13,7 +13,7 @@
 	</Shader>
 	<Shader type="fragment" file="fragment_font.dmsh">
 		<Uniforms>
-			<Uniform name="uvOffset"/>
+			<Uniform name="materialTextureOffset"/>
 		</Uniforms>
 	</Shader>
 </Program>
