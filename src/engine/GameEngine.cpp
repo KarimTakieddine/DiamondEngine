@@ -62,6 +62,7 @@ namespace diamond_engine
 		m_fontEngine = std::make_unique<FontEngine>();
 		m_fontEngine->registerFont({ 64, 64, 0, 0, 'a' });
 		m_fontEngine->registerFont({ 64, 64, 0, 1, 'b' });
+		m_fontEngine->registerFont({ 64, 64, 0, 4, 'e' });
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -332,6 +333,7 @@ namespace diamond_engine
 
 		m_fontEngine->printFont('a', 0, 1);
 		m_fontEngine->printFont('b', 0, 0);
+		m_fontEngine->printFont('e', 0, 2);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
