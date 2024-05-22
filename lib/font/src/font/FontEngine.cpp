@@ -119,24 +119,29 @@ namespace diamond_engine
 			}
 		}
 
+		// TODO: Smarter clearing logic. Shouldn't need to call print("")!
+
 		// TODO: Don't need to re-calculate this...
 
 		const GLsizei rows		= static_cast<GLsizei>(static_cast<GLfloat>(m_canvas.height) / m_fontSize.height);
 		const GLsizei columns	= static_cast<GLsizei>(static_cast<GLfloat>(m_canvas.width) / m_fontSize.width);
 
+		if (startRow >= rows || startColumn >= columns)
+			return;
+
 		const GLsizei columnRemainder	= size % rows;
 		const GLsizei rowCount			= (size - columnRemainder) / rows;
 		
-		for (GLsizei row = 0; row < rowCount; ++row)
+		for (GLsizei row = startRow; row < rowCount; ++row)
 		{
-			for (GLsizei column = 0; column < columns; ++column)
+			for (GLsizei column = startColumn; column < columns; ++column)
 			{
 				const GLsizei index = ( row * columns ) + column;
 				printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), row, column);
 			}
 		}
 
-		for (GLsizei column = 0; column < columnRemainder; ++column)
+		for (GLsizei column = startColumn; column < columnRemainder; ++column)
 		{
 			const GLsizei index = (rowCount * columns) + column;
 			printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), rowCount, column);
