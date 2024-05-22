@@ -41,7 +41,8 @@ namespace diamond_engine
 			const GLfloat strideX = static_cast<GLfloat>(font.width) / canvas.width;
 			const GLfloat strideY = static_cast<GLfloat>(font.height) / canvas.height;
 
-			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setUVOffset({ strideX * index, strideY * index });
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setUVOffset({ strideX * font.column, strideY * font.row });
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setFontSize({ strideX, strideY });
 			fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(canvas);
 		}
 
@@ -82,6 +83,8 @@ namespace diamond_engine
 		if (indexIt == m_symbolToIndex.cend())
 			return;
 
-		m_fontInstances[indexIt->second]->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setVXOffset({ row * 0.0625f, row * 0.0625f });
+		FontRenderComponent* component = m_fontInstances[indexIt->second]->getRenderComponent<FontRenderComponent>("FontRenderComponent");
+		const glm::vec2& fontSize = component->getFontSize();
+		m_fontInstances[indexIt->second]->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setVXOffset({ column * fontSize.x, row * fontSize.y });
 	}
 }

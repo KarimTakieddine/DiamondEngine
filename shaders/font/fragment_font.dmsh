@@ -8,5 +8,5 @@ uniform vec2 uvOffset;
 out vec4 outColor;
 
 void main() {
-	outColor = texture(textureSampler, vertexUV * uvOffset);
+	outColor = texture(textureSampler, vertexUV + uvOffset);
 }

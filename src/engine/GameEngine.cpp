@@ -36,6 +36,7 @@ namespace diamond_engine
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
 		SpriteSheetLoader::getInstance()->load(engineConfig.getSpriteSheetsDirectory());
+		SharedMeshStore::getInstance()->setMaxMeshCount(16);
 		SharedMeshStore::getInstance()->loadMeshes();
 
 		m_renderingSubsystem = std::make_unique<RenderingSubsystem>();
@@ -59,8 +60,8 @@ namespace diamond_engine
 			"unlit_color");
 
 		m_fontEngine = std::make_unique<FontEngine>();
-		m_fontEngine->registerFont({ 64, 64, 'a' });
-		m_fontEngine->registerFont({ 64, 64, 'b' });
+		m_fontEngine->registerFont({ 64, 64, 0, 0, 'a' });
+		m_fontEngine->registerFont({ 64, 64, 0, 1, 'b' });
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -329,8 +330,8 @@ namespace diamond_engine
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 		m_fontEngine->render(m_renderingSubsystem);
 
-		m_fontEngine->printFont('a', 0, 0);
-		m_fontEngine->printFont('b', 1, 1);
+		m_fontEngine->printFont('a', 0, 1);
+		m_fontEngine->printFont('b', 0, 0);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

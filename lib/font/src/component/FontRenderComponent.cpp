@@ -23,6 +23,11 @@ namespace diamond_engine
 
 		m_uvOffset->memory.location = shaderProgram->GetUniform("uvOffset");
 
+		if (!m_fontSize)
+			return { "No font size memory allocated for FontRenderComponent", true };
+
+		m_fontSize->memory.location = shaderProgram->GetUniform("fontSize");
+
 		return { };
 	}
 
@@ -38,11 +43,19 @@ namespace diamond_engine
 		if (!m_uvOffset)
 			return { "FontRenderComponent failed to allocate uv offset graphics memory", true };
 
+		m_fontSize = memoryPool->requestMemory<UniformVec2>({ { { 0.0f, 0.0f }, 1 } });
+
+		if (!m_fontSize)
+			return { "FontRenderComponent failed to allocate font size graphics memory", true };
+
 		return { };
 	}
 
 	EngineStatus FontRenderComponent::releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
+		memoryPool->freeMemory(sizeof(UniformVec2));
+		m_fontSize = nullptr;
+
 		memoryPool->freeMemory(sizeof(UniformVec2));
 		m_vxOffset = nullptr;
 
@@ -63,6 +76,9 @@ namespace diamond_engine
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
 		uploadUniformMemory(m_uvOffset);
+		memoryPool->advanceSeek(sizeof(UniformVec2));
+
+		uploadUniformMemory(m_fontSize);
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
 		return { };
@@ -99,5 +115,18 @@ namespace diamond_engine
 			return;
 
 		m_uvOffset->memory.value = uvOffset;
+	}
+
+	const glm::vec2& FontRenderComponent::getFontSize() const
+	{
+		return m_fontSize->memory.value;
+	}
+
+	void FontRenderComponent::setFontSize(const glm::vec2& fontSize)
+	{
+		if (!m_fontSize)
+			return;
+
+		m_fontSize->memory.value = fontSize;
 	}
 }
