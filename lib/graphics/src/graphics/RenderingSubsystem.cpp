@@ -18,7 +18,7 @@ namespace diamond_engine
 
 		m_vertexArrayAllocator->Reserve(3);
 
-		m_graphicsMemoryPool->allocate(4096);
+		m_graphicsMemoryPool->allocate(8192);
 
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		m_camera->SetProjectionFrustum(60.0f, 1.333f, 0.3f, 1000.0f);

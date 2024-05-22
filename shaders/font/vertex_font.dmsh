@@ -11,12 +11,13 @@ uniform CameraMatrices
     mat4 cameraView;
 };
 
-uniform vec2 vxOffset;
+uniform vec2 ctopLeft;
 uniform vec2 fontSize;
+uniform vec2 vxOffset;
 
 out vec2 vertexUV;
 
 void main() {
-    gl_Position = vec4( ( position * fontSize ) + vxOffset, 0.0, 1.0);
+    gl_Position = vec4( ctopLeft + ( position * fontSize ) + vxOffset, 0.0, 1.0);
 	vertexUV = uv * fontSize;
 }

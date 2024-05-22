@@ -284,8 +284,8 @@ namespace diamond_engine
 				VertexAttribute{ "uv", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
 			});
 
-		const Texture& fontTexture = TextureLoader::getInstance()->GetTexture("ascii_font_green");
-		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem, fontTexture);
+		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
+		m_fontEngine->setRenderDimensions({ -0.96f, 0.96f }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
 		m_currentScene = name;
 	}

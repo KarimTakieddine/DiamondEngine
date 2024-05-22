@@ -24,26 +24,14 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus FontEngine::allocateGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem, const Texture& canvas)
+	EngineStatus FontEngine::allocateGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem)
 	{
 		if (!renderingSubsystem)
 			return { "FontEngine failed to allocate graphics memory. No rendering subsystem assigned", true };
 
-		for (const auto& pair : m_symbolToIndex)
+		for (const auto& fontInstance : m_fontInstances)
 		{
-			const auto index = pair.second;
-
-			const Font& font = m_fonts[index];
-			const auto& fontInstance = m_fontInstances[index];
-
 			renderingSubsystem->registerRenderObject("font_renderer", fontInstance->getRenderComponents());
-
-			const GLfloat strideX = static_cast<GLfloat>(font.width) / canvas.width;
-			const GLfloat strideY = static_cast<GLfloat>(font.height) / canvas.height;
-
-			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setUVOffset({ strideX * font.column, strideY * font.row });
-			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setFontSize({ strideX, strideY });
-			fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(canvas);
 		}
 
 		return { };
@@ -66,6 +54,28 @@ namespace diamond_engine
 		}
 
 		return renderingSubsystem->releaseVertexState();
+	}
+
+	EngineStatus FontEngine::setRenderDimensions(const glm::vec2& topLeft, const Texture& canvas)
+	{
+		for (const auto& pair : m_symbolToIndex)
+		{
+			const auto index = pair.second;
+
+			const Font& font = m_fonts[index];
+			const auto& fontInstance = m_fontInstances[index];
+
+			const GLfloat strideX = static_cast<GLfloat>(font.width) / canvas.width;
+			const GLfloat strideY = static_cast<GLfloat>(font.height) / canvas.height;
+
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setCTopLeft(topLeft);
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setFontSize({ strideX, strideY });
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setUVOffset({ strideX * font.column, strideY * font.row });
+			
+			fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(canvas);
+		}
+
+		return { };
 	}
 
 	void FontEngine::render(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem)

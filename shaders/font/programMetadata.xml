@@ -6,8 +6,9 @@
 			<Attribute name="uv"/>
 		</Attributes>
 		<Uniforms>
-			<Uniform name="vxOffset"/>
+			<Uniform name="ctopLeft"/>
 			<Uniform name="fontSize"/>
+			<Uniform name="vxOffset"/>
 		</Uniforms>
 	</Shader>
 	<Shader type="fragment" file="fragment_font.dmsh">
