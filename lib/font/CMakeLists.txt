@@ -13,7 +13,8 @@ set(SRC_DIR         src)
 set(SOURCES
     ${SRC_DIR}/component/FontRenderComponent.cpp
     ${SRC_DIR}/font/Font.cpp
-    ${SRC_DIR}/font/FontEngine.cpp)
+    ${SRC_DIR}/font/FontLibrary.cpp
+    ${SRC_DIR}/window/TextWindow.cpp)
 
 add_library(libDiamondEngineFont STATIC ${SOURCES})
 
@@ -31,4 +32,5 @@ target_include_directories(libDiamondEngineFont PRIVATE
     "${GRAPHICS_DIR}/${INCLUDE_DIR}/texture"
     "${INCLUDE_DIR}/component"
     "${INCLUDE_DIR}/font"
+    "${INCLUDE_DIR}/window"
 )

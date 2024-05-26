@@ -80,6 +80,7 @@ target_include_directories(DiamondEngine PUBLIC
     "${CONFIG_DIR}/include/parser"
     "${FONT_DIR}/include/component"
     "${FONT_DIR}/include/font"
+    "${FONT_DIR}/include/window"
     "${GAME_DIR}/include/animation"
     "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"

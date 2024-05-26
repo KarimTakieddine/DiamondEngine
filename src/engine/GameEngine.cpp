@@ -7,6 +7,8 @@
 #include "Collider2DComponent.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentFactory.h"
+#include "EngineMacros.h"
+#include "FontLibrary.h"
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
@@ -59,26 +61,29 @@ namespace diamond_engine
 			"collider_2d_renderer",
 			"unlit_color");
 
-		m_fontEngine = std::make_unique<FontEngine>();
-		m_fontEngine->configure({ 64, 64 }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
-
 		// TODO: Move this to a config
-		m_fontEngine->registerFont({ 0, 0, 'a' });
-		m_fontEngine->registerFont({ 0, 1, 'b' });
-		m_fontEngine->registerFont({ 0, 2, 'c' });
-		m_fontEngine->registerFont({ 0, 3, 'd' });
-		m_fontEngine->registerFont({ 0, 4, 'e' });
-		m_fontEngine->registerFont({ 0, 5, 'f' });
-		m_fontEngine->registerFont({ 0, 6, 'g' });
-		m_fontEngine->registerFont({ 0, 7, 'h' });
-		m_fontEngine->registerFont({ 0, 8, 'i' });
-		m_fontEngine->registerFont({ 0, 9, 'j' });
-		m_fontEngine->registerFont({ 0, 10, 'k' });
-		m_fontEngine->registerFont({ 0, 11, 'l' });
-		m_fontEngine->registerFont({ 0, 12, 'm' });
-		m_fontEngine->registerFont({ 0, 13, 'n' });
-		m_fontEngine->registerFont({ 0, 14, 'o' });
-		m_fontEngine->registerFont({ 0, 14, 'p' });
+		m_fontLibrary = std::make_shared<FontLibrary>();
+		m_fontLibrary->registerFont('a', { 0, 0 });
+		m_fontLibrary->registerFont('b', { 0, 1 });
+		m_fontLibrary->registerFont('c', { 0, 2 });
+		m_fontLibrary->registerFont('d', { 0, 3 });
+		m_fontLibrary->registerFont('e', { 0, 4 });
+		m_fontLibrary->registerFont('f', { 0, 5 });
+		m_fontLibrary->registerFont('g', { 0, 6 });
+		m_fontLibrary->registerFont('h', { 0, 7 });
+		m_fontLibrary->registerFont('i', { 0, 8 });
+		m_fontLibrary->registerFont('j', { 0, 9 });
+		m_fontLibrary->registerFont('k', { 0, 10 });
+		m_fontLibrary->registerFont('l', { 0, 11 });
+		m_fontLibrary->registerFont('m', { 0, 12 });
+		m_fontLibrary->registerFont('n', { 0, 13 });
+		m_fontLibrary->registerFont('o', { 0, 14 });
+		m_fontLibrary->registerFont('p', { 0, 15 });
+
+		DEBUG_EXEC(
+			m_debugWindow = std::make_unique<TextWindow>();
+			m_debugWindow->setFontLibrary(m_fontLibrary);
+			m_debugWindow->configure({ 64, 64 }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green")););
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -293,25 +298,26 @@ namespace diamond_engine
 		// TODO: This causes a double buffer write for the same QUAD buffer location later.
 		// Who knows. We could be using another mesh later
 
-		m_renderingSubsystem->allocateVertexState(
-			"font_renderer",
-			GL_STATIC_DRAW,
-			{
-				VertexAttribute{ "position", 0, 2, sizeof(Vertex), GL_FLOAT },
-				VertexAttribute{ "uv", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
-			});
+		DEBUG_EXEC(
+			m_renderingSubsystem->allocateVertexState(
+				"font_renderer",
+				GL_STATIC_DRAW,
+				{
+					VertexAttribute{ "position", 0, 2, sizeof(Vertex), GL_FLOAT },
+					VertexAttribute{ "uv", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
+				});
 
-		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
-		m_fontEngine->setFontColor({ 1.0f, 1.0f, 1.0f });
-		m_fontEngine->setFontScale({ 0.5f, 0.5f });
-		m_fontEngine->setTopLeft({ -0.96f, 0.94f });
+			m_debugWindow->allocateGraphicsMemory(m_renderingSubsystem);
+			m_debugWindow->setFontColor({ 1.0f, 1.0f, 1.0f });
+			m_debugWindow->setFontScale({ 0.5f, 0.5f });
+			m_debugWindow->setTopLeft({ -0.96f, 0.94f }));
 
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
+		DEBUG_EXEC(m_debugWindow->releaseGraphicsMemory(m_renderingSubsystem));
 
 		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
@@ -347,17 +353,12 @@ namespace diamond_engine
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
-		m_fontEngine->render(m_renderingSubsystem);
 
-		m_fontEngine->printString("aaaa");
-		m_fontEngine->printString("bbbb");
-		m_fontEngine->printString("cccc");
-		m_fontEngine->printString("dddd");
-		m_fontEngine->printString("eeee");
-		m_fontEngine->printString("ffff");
-		m_fontEngine->printString("gggg");
-		//m_fontEngine->printString("", 0, 0);
-		//m_fontEngine->printString("diamondengine", 0, 0);
+		DEBUG_EXEC(
+			m_debugWindow->printString("hello\n");
+			m_debugWindow->printString("diamond\n");
+			m_debugWindow->printString("engine\n\n");
+			m_debugWindow->render(m_renderingSubsystem));
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

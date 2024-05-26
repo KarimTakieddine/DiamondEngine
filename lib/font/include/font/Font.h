@@ -8,6 +8,5 @@ namespace diamond_engine
 	{
 		GLsizei row		{ 0 };
 		GLsizei column	{ 0 };
-		GLubyte symbol	{ '\0' };
 	};
 }

@@ -8,18 +8,18 @@
 #include <glm/vec3.hpp>
 
 #include "EngineStatus.h"
-#include "Font.h"
 #include "Texture.h"
 #include "Size.h"
 
 namespace diamond_engine
 {
+	class FontLibrary;
 	class GameInstance;
 	class RenderingSubsystem;
-	class FontEngine
+	class TextWindow
 	{
 	public:
-		EngineStatus registerFont(const Font& font);
+		EngineStatus setFontLibrary(const std::shared_ptr<FontLibrary>& fontLibrary);
 		EngineStatus allocateGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
 		EngineStatus releaseGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
 		EngineStatus setTopLeft(const glm::vec2& topLeft);
@@ -31,11 +31,11 @@ namespace diamond_engine
 		EngineStatus configure(const Size& fontSize, const Texture& canvas);
 
 	private:
-		std::map<GLubyte, size_t> m_symbolToIndex;
+		std::shared_ptr<FontLibrary> m_fontLibrary{ nullptr };
 		std::vector<std::unique_ptr<GameInstance>> m_fontInstances;
-		std::vector<Font> m_fonts;
 		Texture m_canvas;
 		Size m_fontSize;
 		Size m_cursorPos;
+		Size m_size;
 	};
 }
