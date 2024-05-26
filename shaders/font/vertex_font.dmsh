@@ -13,11 +13,12 @@ uniform CameraMatrices
 
 uniform vec2 ctopLeft;
 uniform vec2 fontSize;
+uniform vec2 fontScale;
 uniform vec2 vxOffset;
 
 out vec2 vertexUV;
 
 void main() {
-    gl_Position = vec4( ctopLeft + ( position * fontSize ) + vxOffset, 0.0, 1.0);
+    gl_Position = vec4( ctopLeft + ( ( position * fontSize ) + vxOffset ) * fontScale, 0.0, 1.0);
 	vertexUV = uv * fontSize;
 }

@@ -37,12 +37,10 @@ namespace diamond_engine
 		if (!renderingSubsystem)
 			return { "FontEngine failed to release graphics memory. No rendering subsystem assigned", true };
 
-		// TODO: Releasing needs to be properly ordered and debugged for render components!
-
 		EngineStatus releaseStatus;
-		for (const auto& fontInstance : m_fontInstances)
+		for (auto fontInstanceIt = m_fontInstances.rbegin(); fontInstanceIt != m_fontInstances.rend(); ++fontInstanceIt)
 		{
-			releaseStatus = renderingSubsystem->unregisterRenderObject("font_renderer", fontInstance->getRenderComponents());
+			releaseStatus = renderingSubsystem->unregisterRenderObject("font_renderer", (*fontInstanceIt)->getRenderComponents());
 
 			if (!releaseStatus)
 				return releaseStatus;
@@ -55,15 +53,33 @@ namespace diamond_engine
 	{
 		for (const auto& fontInstance : m_fontInstances)
 		{
-			const GLfloat strideX = static_cast<GLfloat>(m_fontSize.width) / m_canvas.width;
-			const GLfloat strideY = static_cast<GLfloat>(m_fontSize.height) / m_canvas.height;
+			const GLfloat strideX		= static_cast<GLfloat>(m_fontSize.width) / m_canvas.width;
+			const GLfloat strideY		= static_cast<GLfloat>(m_fontSize.height) / m_canvas.height;
+			const glm::vec2& fontScale	= fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->getFontScale();
 
-			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setCTopLeft(topLeft);
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setCTopLeft(topLeft + glm::vec2{-strideX * ( 1.0f - fontScale.x ), strideY * ( 1.0f - fontScale.y )});
 			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setFontSize({ strideX, strideY });
-
-			// TODO: Can re-use material for uvOffset
-
 			fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(m_canvas);
+		}
+
+		return { };
+	}
+
+	EngineStatus FontEngine::setFontColor(const glm::vec3& fontColor)
+	{
+		for (const auto& fontInstance : m_fontInstances)
+		{
+			fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setColor(fontColor);
+		}
+
+		return { };
+	}
+
+	EngineStatus FontEngine::setFontScale(const glm::vec2& fontScale)
+	{
+		for (const auto& fontInstance : m_fontInstances)
+		{
+			fontInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setFontScale(fontScale);
 		}
 
 		return { };
@@ -107,7 +123,7 @@ namespace diamond_engine
 		fontInstance->setActive(true);
 	}
 
-	void FontEngine::printString(const std::string& s, GLsizei startRow, GLsizei startColumn)
+	void FontEngine::printString(const std::string& s)
 	{
 		const GLsizei size = static_cast<GLsizei>(s.size());
 
@@ -117,6 +133,8 @@ namespace diamond_engine
 			{
 				fontInstance->setActive(false);
 			}
+
+			m_cursorPos = { 0, 0 };
 		}
 
 		// TODO: Smarter clearing logic. Shouldn't need to call print("")!
@@ -126,26 +144,41 @@ namespace diamond_engine
 		const GLsizei rows		= static_cast<GLsizei>(static_cast<GLfloat>(m_canvas.height) / m_fontSize.height);
 		const GLsizei columns	= static_cast<GLsizei>(static_cast<GLfloat>(m_canvas.width) / m_fontSize.width);
 
-		if (startRow >= rows || startColumn >= columns)
-			return;
+		GLsizei& startRow		= m_cursorPos.height;
+		GLsizei& startColumn	= m_cursorPos.width;
+		
+		if (startColumn >= columns)
+		{
+			startColumn = 0;
+			++startRow;
+		}
+
+		if (startRow >= rows)
+		{
+			startRow = 0;
+		}
 
 		const GLsizei columnRemainder	= size % rows;
 		const GLsizei rowCount			= (size - columnRemainder) / rows;
 		
-		for (GLsizei row = startRow; row < rowCount; ++row)
+		for (GLsizei row = 0; row < rowCount; ++row)
 		{
-			for (GLsizei column = startColumn; column < columns; ++column)
+			for (GLsizei column = 0; column < columns; ++column)
 			{
 				const GLsizei index = ( row * columns ) + column;
-				printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), row, column);
+				printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), startRow + row, startColumn + column);
 			}
 		}
 
-		for (GLsizei column = startColumn; column < columnRemainder; ++column)
+		startRow += rowCount;
+
+		for (GLsizei column = 0; column < columnRemainder; ++column)
 		{
 			const GLsizei index = (rowCount * columns) + column;
-			printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), rowCount, column);
+			printFont(static_cast<GLubyte>(s[static_cast<size_t>(index)]), startRow + rowCount, startColumn + column);
 		}
+
+		startColumn += columnRemainder;
 	}
 
 	EngineStatus FontEngine::configure(const Size& fontSize, const Texture& canvas)

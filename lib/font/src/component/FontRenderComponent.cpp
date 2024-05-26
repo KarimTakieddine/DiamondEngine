@@ -23,6 +23,11 @@ namespace diamond_engine
 
 		m_fontSize->memory.location = shaderProgram->GetUniform("fontSize");
 
+		if (!m_fontScale)
+			return { "No font scale memory allocated for FontRenderComponent", true };
+
+		m_fontScale->memory.location = shaderProgram->GetUniform("fontScale");
+
 		if (!m_vxOffset)
 			return { "No vertex offset memory allocated for FontRenderComponent", true };
 
@@ -43,6 +48,11 @@ namespace diamond_engine
 		if (!m_fontSize)
 			return { "FontRenderComponent failed to allocate font size graphics memory", true };
 
+		m_fontScale = memoryPool->requestMemory<UniformVec2>({ { { 0.0f, 0.0f }, 1 } });
+
+		if (!m_fontScale)
+			return { "FontRenderComponent failed to allocate font scale graphics memory", true };
+
 		m_vxOffset = memoryPool->requestMemory<UniformVec2>({ { { 0.0f, 0.0f }, 1 } });
 
 		if (!m_vxOffset)
@@ -58,6 +68,9 @@ namespace diamond_engine
 
 		memoryPool->freeMemory(sizeof(UniformVec2));
 		m_fontSize = nullptr;
+
+		memoryPool->freeMemory(sizeof(UniformVec2));
+		m_fontScale = nullptr;
 
 		memoryPool->freeMemory(sizeof(UniformVec2));
 		m_ctopLeft = nullptr;
@@ -76,6 +89,9 @@ namespace diamond_engine
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
 		uploadUniformMemory(m_fontSize);
+		memoryPool->advanceSeek(sizeof(UniformVec2));
+
+		uploadUniformMemory(m_fontScale);
 		memoryPool->advanceSeek(sizeof(UniformVec2));
 
 		uploadUniformMemory(m_vxOffset);
@@ -110,6 +126,27 @@ namespace diamond_engine
 			return;
 
 		m_fontSize->memory.value = fontSize;
+	}
+
+	const glm::vec2& FontRenderComponent::getFontScale() const
+	{
+		return m_fontScale->memory.value;
+	}
+
+	void FontRenderComponent::setFontScale(const glm::vec2& fontScale)
+	{
+		if (!m_fontScale)
+			return;
+
+		const GLfloat fontScaleX = fontScale.x;
+		const GLfloat fontScaleY = fontScale.y;
+
+		const glm::vec2 clampedScale{
+			fontScaleX > 1.0f ? 1.0f : ( fontScaleX < 0.0f ? 0.0f : fontScaleX ),
+			fontScaleY > 1.0f ? 1.0f : ( fontScaleY < 0.0f ? 0.0f : fontScaleY ),
+		};
+
+		m_fontScale->memory.value = clampedScale;
 	}
 
 	const glm::vec2& FontRenderComponent::getCTopLeft() const

@@ -24,12 +24,16 @@ namespace diamond_engine
 		const glm::vec2& getFontSize() const;
 		void setFontSize(const glm::vec2& fontSize);
 
+		const glm::vec2& getFontScale() const;
+		void setFontScale(const glm::vec2& fontScale);
+
 		const glm::vec2& getCTopLeft() const;
 		void setCTopLeft(const glm::vec2& ctopLeft);
 
 	private:
 		UniformVec2* m_ctopLeft{ nullptr };
 		UniformVec2* m_fontSize{ nullptr };
+		UniformVec2* m_fontScale{ nullptr };
 		UniformVec2* m_vxOffset{ nullptr };
 	};
 }

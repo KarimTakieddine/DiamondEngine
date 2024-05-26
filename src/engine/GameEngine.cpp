@@ -302,7 +302,9 @@ namespace diamond_engine
 			});
 
 		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
-		m_fontEngine->setTopLeft({ -0.96f, 0.96f });
+		m_fontEngine->setFontColor({ 1.0f, 1.0f, 1.0f });
+		m_fontEngine->setFontScale({ 0.5f, 0.5f });
+		m_fontEngine->setTopLeft({ -0.96f, 0.94f });
 
 		m_currentScene = name;
 	}
@@ -311,19 +313,19 @@ namespace diamond_engine
 	{
 		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
 
-		for (const auto& collider2DInstance : m_collider2DInstances)
+		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
-			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
-			m_instanceManager->unregisterInstance(collider2DInstance->getInternalName());
+			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", (*collider2DIt)->getRenderComponents());
+			m_instanceManager->unregisterInstance((*collider2DIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
 		m_collider2DInstances.clear();
 
-		for (const auto& spriteInstance : m_spriteInstances)
+		for (auto spriteIt = m_spriteInstances.rbegin(); spriteIt != m_spriteInstances.rend(); ++spriteIt)
 		{
-			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", spriteInstance->getRenderComponents());
-			m_instanceManager->unregisterInstance(spriteInstance->getInternalName());
+			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", (*spriteIt)->getRenderComponents());
+			m_instanceManager->unregisterInstance((*spriteIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
@@ -347,10 +349,15 @@ namespace diamond_engine
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 		m_fontEngine->render(m_renderingSubsystem);
 
-		m_fontEngine->printString("aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkk", 0, 0);
-		m_fontEngine->printString("kkkkjjjjiiiihhhhggggffffeeeeddddccccbbbbaaaa", 0, 0);
-		m_fontEngine->printString("", 0, 0);
-		m_fontEngine->printString("diamondengine", 0, 0);
+		m_fontEngine->printString("aaaa");
+		m_fontEngine->printString("bbbb");
+		m_fontEngine->printString("cccc");
+		m_fontEngine->printString("dddd");
+		m_fontEngine->printString("eeee");
+		m_fontEngine->printString("ffff");
+		m_fontEngine->printString("gggg");
+		//m_fontEngine->printString("", 0, 0);
+		//m_fontEngine->printString("diamondengine", 0, 0);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
