@@ -80,10 +80,17 @@ namespace diamond_engine
 		m_fontLibrary->registerFont('o', { 0, 14 });
 		m_fontLibrary->registerFont('p', { 0, 15 });
 
-		DEBUG_EXEC(
-			m_debugWindow = std::make_unique<TextWindow>();
-			m_debugWindow->setFontLibrary(m_fontLibrary);
-			m_debugWindow->configure({ 64, 64 }, TextureLoader::getInstance()->GetTexture("ascii_fonts_green")););
+		m_fontEngine = std::make_unique<FontEngine>();
+		
+		m_fontEngine->setFontLibrary(m_fontLibrary);
+
+		m_fontEngine->registerTextWindow(
+			{ 64, 64 },
+			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
+
+		m_fontEngine->registerTextWindow(
+			{ 64, 64 },
+			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -298,26 +305,20 @@ namespace diamond_engine
 		// TODO: This causes a double buffer write for the same QUAD buffer location later.
 		// Who knows. We could be using another mesh later
 
-		DEBUG_EXEC(
-			m_renderingSubsystem->allocateVertexState(
-				"font_renderer",
-				GL_STATIC_DRAW,
-				{
-					VertexAttribute{ "position", 0, 2, sizeof(Vertex), GL_FLOAT },
-					VertexAttribute{ "uv", 2 * sizeof(glm::vec3), 2, sizeof(Vertex), GL_FLOAT }
-				});
+		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
 
-			m_debugWindow->allocateGraphicsMemory(m_renderingSubsystem);
-			m_debugWindow->setFontColor({ 1.0f, 1.0f, 1.0f });
-			m_debugWindow->setFontScale({ 0.5f, 0.5f });
-			m_debugWindow->setTopLeft({ -0.96f, 0.94f }));
+		m_fontEngine->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
+		m_fontEngine->setWindowColor(0, { 0.5f, 0.5f, 0.5f });
+
+		m_fontEngine->setWindowDimensions(1, { 0.54f, 0.94f }, { 0.5f, 0.5f });
+		m_fontEngine->setWindowColor(1, { 1.0f, 1.0f, 1.0f });
 
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		DEBUG_EXEC(m_debugWindow->releaseGraphicsMemory(m_renderingSubsystem));
+		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
 
 		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
@@ -354,15 +355,22 @@ namespace diamond_engine
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 
-		DEBUG_EXEC(
-			m_debugWindow->printString("hello\n");
-			m_debugWindow->printString("diamond\n");
-			m_debugWindow->printString("engine\n\n");
-			m_debugWindow->render(m_renderingSubsystem));
+		m_fontEngine->printString("hello", 0);
+		m_fontEngine->printString("diamond", 0);
+		m_fontEngine->printString("engine", 0);
+
+		m_fontEngine->printString("aaaaa", 1);
+		m_fontEngine->printString("bbbbb", 1);
+		m_fontEngine->printString("ccccc", 1);
+
+		m_fontEngine->render(m_renderingSubsystem);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
 	{
+		if (size.width <= 0 || size.height <= 0)
+			return;
+
 		m_renderingSubsystem->getCamera()->SetAspectRatio(static_cast<float>(size.width) / size.height);
 
 		glViewport(0, 0, size.width, size.height);

@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "EngineConfig.h"
+#include "FontEngine.h"
 #include "GraphicsContext.h"
 #include "KeyboardConfig.h"
 #include "GameInstanceManager.h"
@@ -41,7 +42,7 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<GameInstance>> m_spriteInstances;
 		std::vector<std::unique_ptr<GameInstance>> m_collider2DInstances;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
-		std::unique_ptr<TextWindow> m_debugWindow{ nullptr };
+		std::unique_ptr<FontEngine> m_fontEngine{ nullptr };
 		std::unique_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		std::unique_ptr<CollisionSolver2D> m_collisionSolver2D{ nullptr };
