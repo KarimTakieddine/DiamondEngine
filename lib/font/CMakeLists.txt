@@ -12,7 +12,6 @@ set(SRC_DIR         src)
 
 set(SOURCES
     ${SRC_DIR}/component/FontRenderComponent.cpp
-    ${SRC_DIR}/font/Font.cpp
     ${SRC_DIR}/font/FontEngine.cpp
     ${SRC_DIR}/font/FontLibrary.cpp
     ${SRC_DIR}/window/TextWindow.cpp)
