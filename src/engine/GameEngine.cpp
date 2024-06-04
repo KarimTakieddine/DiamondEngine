@@ -88,10 +88,6 @@ namespace diamond_engine
 			{ 64, 64 },
 			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
-		m_fontEngine->registerTextWindow(
-			{ 64, 64 },
-			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
-
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
 
@@ -303,12 +299,8 @@ namespace diamond_engine
 		}
 
 		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
-
 		m_fontEngine->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
-		m_fontEngine->setWindowColor(0, { 0.5f, 0.5f, 0.5f });
-
-		m_fontEngine->setWindowDimensions(1, { 0.54f, 0.94f }, { 0.5f, 0.5f });
-		m_fontEngine->setWindowColor(1, { 1.0f, 1.0f, 1.0f });
+		m_fontEngine->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
 
 		m_currentScene = name;
 	}
@@ -351,6 +343,7 @@ namespace diamond_engine
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
+
 		m_fontEngine->render(m_renderingSubsystem);
 	}
 
