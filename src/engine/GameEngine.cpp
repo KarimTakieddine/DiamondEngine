@@ -302,9 +302,6 @@ namespace diamond_engine
 			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
 
-		// TODO: This causes a double buffer write for the same QUAD buffer location later.
-		// Who knows. We could be using another mesh later
-
 		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
 
 		m_fontEngine->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
