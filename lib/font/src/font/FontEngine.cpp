@@ -131,7 +131,7 @@ namespace diamond_engine
 
 		if (flattenedIndex == -1 || flattenedIndex >= m_liveFonts.size())
 			return {
-				"Cannot print font: " + std::to_string(symbol) + " to out of bounds instance index: " + std::to_string(flattenedIndex),
+				"Cannot print font: " + std::to_string(symbol) + " to out of bounds live font index: " + std::to_string(flattenedIndex),
 				true
 			};
 
