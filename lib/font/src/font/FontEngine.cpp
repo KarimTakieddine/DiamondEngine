@@ -32,9 +32,7 @@ namespace diamond_engine
 		fontInstances.reserve(count);
 		for (size_t i = 0; i < count; ++i)
 		{
-			auto fontInstance = registerFontInstance();
-
-			if (!fontInstance)
+			if (!registerFontInstance())
 				return { "FontEngine failed to register font instance", true };
 		}
 
@@ -70,9 +68,9 @@ namespace diamond_engine
 				{
 					const GLsizei i = windowToFontIndex(windowIndex, row, column);
 
-					const auto& fontGameInstance = m_fontGameInstances[i];
-					renderingSubsystem->registerRenderObject("font_renderer", fontGameInstance->getRenderComponents());
-					fontGameInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(textWindow->getCanvas());
+					const auto& fontInstance = m_fontInstances[i];
+					renderingSubsystem->registerRenderObject("font_renderer", fontInstance->getRenderComponents());
+					fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(textWindow->getCanvas());
 				}
 			}
 		}
@@ -93,8 +91,8 @@ namespace diamond_engine
 			{
 				for (GLsizei column = textWindow->getSize().width - 1; column >= 0; --column)
 				{
-					const auto& fontGameInstance = m_fontGameInstances[windowToFontIndex(windowIndex, row, column)];
-					renderingSubsystem->unregisterRenderObject("font_renderer", fontGameInstance->getRenderComponents());
+					const auto& fontInstance = m_fontInstances[windowToFontIndex(windowIndex, row, column)];
+					renderingSubsystem->unregisterRenderObject("font_renderer", fontInstance->getRenderComponents());
 				}
 			}
 		}
@@ -106,37 +104,32 @@ namespace diamond_engine
 
 	GameInstance* FontEngine::registerFontInstance()
 	{
-		// TODO: Re-enable font instance tracking
-
 		std::unique_ptr<GameInstance> instance = std::make_unique<GameInstance>();
 
-		//FontInstance fontInstance{ instance.get() };
+		LiveFont liveFont;
 
 		std::unique_ptr<FontRenderComponent> renderComponent	= std::make_unique<FontRenderComponent>();
-		//fontInstance.renderComponent							= renderComponent.get();
+		liveFont.renderComponent								= renderComponent.get();
 		instance->acquireRenderComponent(std::move(renderComponent));
 
 		std::unique_ptr<MaterialRenderComponent> material	= std::make_unique<MaterialRenderComponent>();
-		//fontInstance.material								= material.get();
+		liveFont.material									= material.get();
 		instance->acquireRenderComponent(std::move(material));
 
-		auto result = instance.get();
+		auto result		= instance.get();
+		liveFont.instance					= result;
+		m_fontInstances.push_back(std::move(instance));
 
-		m_fontGameInstances.push_back(std::move(instance));
+		m_liveFonts.push_back(liveFont);
 
 		return result;
 	}
 
 	EngineStatus FontEngine::printFont(GLubyte symbol, size_t windowIndex, GLsizei row, GLsizei column)
 	{
-		if (windowIndex == 1)
-		{
-			printf("");
-		}
-
 		const GLsizei flattenedIndex = windowToFontIndex(windowIndex, row, column);
 
-		if (flattenedIndex == -1 || flattenedIndex >= m_fontGameInstances.size())
+		if (flattenedIndex == -1 || flattenedIndex >= m_liveFonts.size())
 			return {
 				"Cannot print font: " + std::to_string(symbol) + " to out of bounds instance index: " + std::to_string(flattenedIndex),
 				true
@@ -150,25 +143,23 @@ namespace diamond_engine
 				true
 			};
 
-		const auto& fontGameInstance = m_fontGameInstances[flattenedIndex];
+		const auto& liveFont = m_liveFonts[flattenedIndex];
 
-		const glm::vec2& fontSize = fontGameInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->getFontSize();
+		const glm::vec2& fontSize = liveFont.renderComponent->getFontSize();
 
-		fontGameInstance->getRenderComponent<FontRenderComponent>("FontRenderComponent")->setVXOffset({ column * fontSize.x, -row * fontSize.y });
-		fontGameInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTextureOffset({ fontSize.x * font.column, fontSize.y * font.row });
-		fontGameInstance->setActive(true);
+		liveFont.renderComponent->setVXOffset({ column * fontSize.x, -row * fontSize.y });
+		liveFont.material->setTextureOffset({ fontSize.x * font.column, fontSize.y * font.row });
+		liveFont.instance->setActive(true);
 
 		return { };
 	}
 
-	// Maybe this unnecessarily pollutes the stack?
-
-	EngineStatus FontEngine::render(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem)
+	EngineStatus FontEngine::render(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem) const
 	{
 		if (!renderingSubsystem)
 			return { "Font engine cannot render. No rendering subsystem was assigned", true };
 
-		renderingSubsystem->render("font_renderer", m_fontGameInstances);
+		renderingSubsystem->render("font_renderer", m_fontInstances);
 
 		return { };
 	}
@@ -178,10 +169,19 @@ namespace diamond_engine
 		if (windowIndex >= m_textWindows.size())
 			return -1;
 
-		const Size& windowSize	= m_textWindows[windowIndex]->getSize();
+		const auto& textWindow = m_textWindows[windowIndex];
+
+		const Size& windowSize	= textWindow->getSize();
 		const GLsizei width		= windowSize.width;
-		const GLsizei offset	= windowIndex == 0 ?
-			0 : m_textWindows[windowIndex - 1]->getSize().width * m_textWindows[windowIndex - 1]->getSize().height;
+
+		GLsizei offset = 0;
+		if (windowIndex > 0)
+		{
+			const auto& previousWindow = m_textWindows[windowIndex - 1];
+
+			const Size& previousWindowSize	= textWindow->getSize();
+			offset							= previousWindowSize.width * previousWindowSize.height;
+		}
 
 		return ( width * row ) + column + offset;
 	}
@@ -223,7 +223,7 @@ namespace diamond_engine
 
 				for (GLsizei i = cursorColumn; i < columns; ++i)
 				{
-					m_fontGameInstances[windowToFontIndex(windowIndex, cursorRow, i)]->setActive(false);
+					m_fontInstances[windowToFontIndex(windowIndex, cursorRow, i)]->setActive(false);
 				}
 
 				++cursorRow;
@@ -275,7 +275,7 @@ namespace diamond_engine
 		{
 			const size_t fontInstanceIndex = static_cast<size_t>(offset + i);
 
-			auto* renderComponent = m_fontGameInstances[fontInstanceIndex]->getRenderComponent<FontRenderComponent>("FontRenderComponent");
+			auto* renderComponent = m_fontInstances[fontInstanceIndex]->getRenderComponent<FontRenderComponent>("FontRenderComponent");
 			renderComponent->setCTopLeft(topLeft + glm::vec2{ -strideX * (1.0f - fontScale.x), strideY * (1.0f - fontScale.y) });
 			renderComponent->setFontScale(fontScale);
 			renderComponent->setFontSize({ strideX, strideY });
@@ -296,7 +296,7 @@ namespace diamond_engine
 		{
 			const size_t fontInstanceIndex = static_cast<size_t>(offset + i);
 
-			m_fontGameInstances[fontInstanceIndex]->getRenderComponent<MaterialRenderComponent>("Material")->setColor(color);
+			m_fontInstances[fontInstanceIndex]->getRenderComponent<MaterialRenderComponent>("Material")->setColor(color);
 		}
 
 		return { };

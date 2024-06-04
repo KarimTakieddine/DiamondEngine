@@ -9,6 +9,11 @@ namespace diamond_engine
 	{
 		for (const auto& instance : instances)
 		{
+			if (!instance->isActive())
+			{
+				continue;
+			}
+
 			for (const auto& behaviour : instance->getBehaviourComponents())
 			{
 				behaviour->update(deltaTime);
