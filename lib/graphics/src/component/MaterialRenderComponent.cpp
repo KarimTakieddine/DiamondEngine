@@ -10,7 +10,7 @@ namespace diamond_engine
 	{
 		if (!drawCall)
 		{
-			return { "MaterialRenderComponent::formatDrawCall failed. DrawCall was null", true };
+			return { "MaterialRenderComponent::onDrawCallAllocated failed. DrawCall was null", true };
 		}
 
 		m_drawCall = drawCall;

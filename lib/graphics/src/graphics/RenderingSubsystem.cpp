@@ -16,9 +16,9 @@ namespace diamond_engine
 		m_uniformBufferAgent->reserveCapacity(1);
 		m_uniformBufferAgent->allocateBuffers(1); // Camera buffer. Common to all renderers / shader programs
 
-		m_vertexArrayAllocator->Reserve(2);
+		m_vertexArrayAllocator->Reserve(3);
 
-		m_graphicsMemoryPool->allocate(4096);
+		m_graphicsMemoryPool->allocate(65536);
 
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		m_camera->SetProjectionFrustum(60.0f, 1.333f, 0.3f, 1000.0f);
@@ -182,6 +182,9 @@ namespace diamond_engine
 		glBindVertexArray(vertexState->vertexArrayObject);
 		for (const auto& gameInstance : gameInstances)
 		{
+			if (!gameInstance->isActive())
+				continue;
+
 			registeredRenderer->render(gameInstance->getRenderComponents(), m_graphicsMemoryPool);
 		}
 	}

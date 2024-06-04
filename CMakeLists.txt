@@ -32,15 +32,18 @@ set(GLFW_BUILD_TESTS FALSE)
 
 add_subdirectory(${GLFW_DIR})
 
-set(COMMON_DIR "${LIB_DIR_PREFIX}/common")
-set(CONFIG_DIR "${LIB_DIR_PREFIX}/config")
-set(AUDIO_DIR "${LIB_DIR_PREFIX}/audio")
-set(GRAPHICS_DIR "${LIB_DIR_PREFIX}/graphics")
-set(GAME_DIR "${LIB_DIR_PREFIX}/game")
-set(INPUT_DIR "${LIB_DIR_PREFIX}/input")
+set(COMMON_DIR      "${LIB_DIR_PREFIX}/common")
+set(CONFIG_DIR      "${LIB_DIR_PREFIX}/config")
+set(AUDIO_DIR       "${LIB_DIR_PREFIX}/audio")
+set(GRAPHICS_DIR    "${LIB_DIR_PREFIX}/graphics")
+set(FONT_DIR        "${LIB_DIR_PREFIX}/font")
+set(GAME_DIR        "${LIB_DIR_PREFIX}/game")
+set(INPUT_DIR       "${LIB_DIR_PREFIX}/input")
+
 add_subdirectory(${CONFIG_DIR})
 add_subdirectory(${AUDIO_DIR})
 add_subdirectory(${GRAPHICS_DIR})
+add_subdirectory(${FONT_DIR})
 add_subdirectory(${GAME_DIR})
 add_subdirectory(${INPUT_DIR})
 
@@ -75,6 +78,9 @@ target_include_directories(DiamondEngine PUBLIC
     "${LIB_DIR_PREFIX}/common/${INCLUDE_DIR}"
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"
+    "${FONT_DIR}/include/component"
+    "${FONT_DIR}/include/font"
+    "${FONT_DIR}/include/window"
     "${GAME_DIR}/include/animation"
     "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"
@@ -96,5 +102,6 @@ target_link_libraries(DiamondEngine PRIVATE
     libDiamondEngineAudio
     libDiamondEngineGraphics
     libDiamondEngineConfig
+    libDiamondEngineFont
     libDiamondEngineGame
     libDiamondEngineInput)

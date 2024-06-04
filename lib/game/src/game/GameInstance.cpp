@@ -138,4 +138,14 @@ namespace diamond_engine
 	{
 		m_internalName = name;
 	}
+
+	bool GameInstance::isActive() const
+	{
+		return m_isActive;
+	}
+
+	void GameInstance::setActive(bool active)
+	{
+		m_isActive = active;
+	}
 }

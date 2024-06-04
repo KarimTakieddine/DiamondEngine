@@ -1,4 +1,8 @@
 .vs/
 out/
 
+irrKlang-64bit-1.6.0/examples.net/**
+
+irrKlang-64bit-1.6.0/examples/**
+
 **/doc/

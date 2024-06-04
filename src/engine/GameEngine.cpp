@@ -7,6 +7,8 @@
 #include "Collider2DComponent.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentFactory.h"
+#include "EngineMacros.h"
+#include "FontLibrary.h"
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "Input.h"
@@ -36,10 +38,17 @@ namespace diamond_engine
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
 		SpriteSheetLoader::getInstance()->load(engineConfig.getSpriteSheetsDirectory());
+		SharedMeshStore::getInstance()->setMaxMeshCount(16);
 		SharedMeshStore::getInstance()->loadMeshes();
 
 		m_renderingSubsystem = std::make_unique<RenderingSubsystem>();
-		m_renderingSubsystem->setMaxRendererCount(2);
+		m_renderingSubsystem->setMaxRendererCount(3);
+		m_renderingSubsystem->registerRenderer(
+			MeshType::QUAD,
+			GL_TRIANGLES,
+			"font_renderer",
+			"font");
+
 		m_renderingSubsystem->registerRenderer(
 			MeshType::QUAD,
 			GL_TRIANGLES,
@@ -51,6 +60,37 @@ namespace diamond_engine
 			GL_LINES,
 			"collider_2d_renderer",
 			"unlit_color");
+
+		// TODO: Move this to a config
+		m_fontLibrary = std::make_shared<FontLibrary>();
+		m_fontLibrary->registerFont('a', { 0, 0 });
+		m_fontLibrary->registerFont('b', { 0, 1 });
+		m_fontLibrary->registerFont('c', { 0, 2 });
+		m_fontLibrary->registerFont('d', { 0, 3 });
+		m_fontLibrary->registerFont('e', { 0, 4 });
+		m_fontLibrary->registerFont('f', { 0, 5 });
+		m_fontLibrary->registerFont('g', { 0, 6 });
+		m_fontLibrary->registerFont('h', { 0, 7 });
+		m_fontLibrary->registerFont('i', { 0, 8 });
+		m_fontLibrary->registerFont('j', { 0, 9 });
+		m_fontLibrary->registerFont('k', { 0, 10 });
+		m_fontLibrary->registerFont('l', { 0, 11 });
+		m_fontLibrary->registerFont('m', { 0, 12 });
+		m_fontLibrary->registerFont('n', { 0, 13 });
+		m_fontLibrary->registerFont('o', { 0, 14 });
+		m_fontLibrary->registerFont('p', { 0, 15 });
+
+		m_fontEngine = std::make_unique<FontEngine>();
+		
+		m_fontEngine->setFontLibrary(m_fontLibrary);
+
+		m_fontEngine->registerTextWindow(
+			{ 64, 64 },
+			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
+
+		m_fontEngine->registerTextWindow(
+			{ 64, 64 },
+			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
@@ -65,6 +105,7 @@ namespace diamond_engine
 		m_graphicsContext->Execute();
 
 		unloadCurrentScene();
+
 		m_renderingSubsystem->freeAllocatedRenderers();
 		SharedMeshStore::getInstance()->unloadMeshes();
 		TextureLoader::getInstance()->unloadTextures();
@@ -261,24 +302,34 @@ namespace diamond_engine
 			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
 
+		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
+
+		m_fontEngine->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
+		m_fontEngine->setWindowColor(0, { 0.5f, 0.5f, 0.5f });
+
+		m_fontEngine->setWindowDimensions(1, { 0.54f, 0.94f }, { 0.5f, 0.5f });
+		m_fontEngine->setWindowColor(1, { 1.0f, 1.0f, 1.0f });
+
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		for (const auto& collider2DInstance : m_collider2DInstances)
+		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
+
+		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
-			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", collider2DInstance->getRenderComponents());
-			m_instanceManager->unregisterInstance(collider2DInstance->getInternalName());
+			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", (*collider2DIt)->getRenderComponents());
+			m_instanceManager->unregisterInstance((*collider2DIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
 		m_collider2DInstances.clear();
 
-		for (const auto& spriteInstance : m_spriteInstances)
+		for (auto spriteIt = m_spriteInstances.rbegin(); spriteIt != m_spriteInstances.rend(); ++spriteIt)
 		{
-			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", spriteInstance->getRenderComponents());
-			m_instanceManager->unregisterInstance(spriteInstance->getInternalName());
+			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", (*spriteIt)->getRenderComponents());
+			m_instanceManager->unregisterInstance((*spriteIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
@@ -300,10 +351,14 @@ namespace diamond_engine
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
+		m_fontEngine->render(m_renderingSubsystem);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)
 	{
+		if (size.width <= 0 || size.height <= 0)
+			return;
+
 		m_renderingSubsystem->getCamera()->SetAspectRatio(static_cast<float>(size.width) / size.height);
 
 		glViewport(0, 0, size.width, size.height);
@@ -373,6 +428,8 @@ namespace diamond_engine
 
 			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
 		}
+
+		gameInstance->setActive(true);
 
 		return gameInstance;
 	}

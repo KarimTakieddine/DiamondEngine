@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Program name="font">
+	<Shader type="vertex" file="vertex_font.dmsh">
+		<Attributes>
+			<Attribute name="position"/>
+			<Attribute name="uv"/>
+		</Attributes>
+		<Uniforms>
+			<Uniform name="ctopLeft"/>
+			<Uniform name="fontSize"/>
+			<Uniform name="fontScale"/>
+			<Uniform name="vxOffset"/>
+		</Uniforms>
+	</Shader>
+	<Shader type="fragment" file="fragment_font.dmsh">
+		<Uniforms>
+			<Uniform name="materialColor"/>
+			<Uniform name="materialTextureOffset"/>
+		</Uniforms>
+	</Shader>
+</Program>
