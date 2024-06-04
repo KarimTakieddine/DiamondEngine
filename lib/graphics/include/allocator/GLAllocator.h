@@ -29,6 +29,8 @@ public:
 	~GLAllocator();
 
 private:
+	void debugAllocationEvent();
+
 	GLFunction m_allocateFunction	{ nullptr };
 	GLFunction m_freeFunction		{ nullptr };
 	GLuint* m_objectTopBounds		{ nullptr };

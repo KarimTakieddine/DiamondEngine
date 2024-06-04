@@ -7,6 +7,7 @@
 #include "Collider2DComponent.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentFactory.h"
+#include "Debugger.h"
 #include "EngineMacros.h"
 #include "FontLibrary.h"
 #include "GameEngine.h"
@@ -92,6 +93,8 @@ namespace diamond_engine
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
+
+		// Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, TODO!)
 
 		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
 	}

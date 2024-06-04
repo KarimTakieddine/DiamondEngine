@@ -12,6 +12,7 @@ set(GLM_DIR ../../glm)
 set(STB_DIR ../../stb)
 set(COMMON_DIR ../common)
 set(CONFIG_DIR ../config)
+set(DEBUG_DIR ../debug)
 set(GAME_DIR ../game)
 set(INCLUDE_DIR include)
 set(SRC_DIR src)
@@ -41,6 +42,8 @@ target_include_directories(libDiamondEngineGraphics PRIVATE
     "${COMMON_DIR}/${INCLUDE_DIR}"
     "${CONFIG_DIR}/${INCLUDE_DIR}/config"
     "${CONFIG_DIR}/${INCLUDE_DIR}/parser"
+    "${DEBUG_DIR}/${INCLUDE_DIR}/debug"
+    "${DEBUG_DIR}/${INCLUDE_DIR}/event"
     "${GAME_DIR}/${INCLUDE_DIR}/component"
     "${GAME_DIR}/${INCLUDE_DIR}/game"
     "${INCLUDE_DIR}/allocator"

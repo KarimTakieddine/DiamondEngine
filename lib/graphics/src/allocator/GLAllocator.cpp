@@ -2,6 +2,9 @@
 #include <sstream>
 
 #include "GLAllocator.h"
+#include "Debugger.h"
+#include "EngineMacros.h"
+#include "GLAllocationEvent.h"
 
 namespace diamond_engine {
 	GLAllocator::GLAllocator(GLFunction allocateFunction, GLFunction freeFunction) :
@@ -39,6 +42,10 @@ namespace diamond_engine {
 		}
 
 		m_allocateFunction(objectCount, m_objectTopBounds);
+
+		DEBUG_EXEC(Debugger::getInstance()->debugEvent(
+			DebugEvent::Type::GL_OBJECT_ALLOCATION,
+			std::make_unique<GLAllocationEvent>(m_objectTopBounds, updatedObjectTopBounds, objectCount )));
 
 		m_objectTopBounds = updatedObjectTopBounds;
 	}
@@ -89,6 +96,11 @@ namespace diamond_engine {
 
 	GLsizeiptr GLAllocator::GetLiveObjectCount() const {
 		return m_current - m_memory;
+	}
+
+	void GLAllocator::debugAllocationEvent()
+	{
+
 	}
 
 	std::string GLAllocator::ToString() const {
