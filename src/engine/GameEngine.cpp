@@ -354,15 +354,6 @@ namespace diamond_engine
 		m_renderingSubsystem->preRender();
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
-
-		m_fontEngine->printString("hello", 0);
-		m_fontEngine->printString("diamond", 0);
-		m_fontEngine->printString("engine", 0);
-
-		m_fontEngine->printString("aaaaa", 1);
-		m_fontEngine->printString("bbbbb", 1);
-		m_fontEngine->printString("ccccc", 1);
-
 		m_fontEngine->render(m_renderingSubsystem);
 	}
 
