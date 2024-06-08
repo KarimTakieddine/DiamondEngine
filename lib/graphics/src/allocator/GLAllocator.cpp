@@ -98,11 +98,6 @@ namespace diamond_engine {
 		return m_current - m_memory;
 	}
 
-	void GLAllocator::debugAllocationEvent()
-	{
-
-	}
-
 	std::string GLAllocator::ToString() const {
 		std::stringstream stream;
 		

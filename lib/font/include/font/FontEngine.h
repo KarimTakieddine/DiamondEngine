@@ -4,6 +4,9 @@
 #include <vector>
 #include <unordered_map>
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include "EngineStatus.h"
 #include "Size.h"
 #include "Texture.h"
@@ -27,8 +30,10 @@ namespace diamond_engine
 	class FontEngine
 	{
 	public:
+		static std::shared_ptr<FontEngine>& getInstance();
+
 		EngineStatus setFontLibrary(const std::shared_ptr<FontLibrary>& fontLibrary);
-		EngineStatus registerTextWindow(const Size& fontSize, const Texture& canvas);
+		EngineStatus registerTextWindow(const Size& fontSize, const Size& gridSize, const Texture& canvas);
 		EngineStatus allocateGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
 		EngineStatus releaseGraphicsMemory(const std::unique_ptr<RenderingSubsystem>& renderingSubsystem);
 		EngineStatus printFont(GLubyte symbol, size_t windowIndex, GLsizei row, GLsizei column);

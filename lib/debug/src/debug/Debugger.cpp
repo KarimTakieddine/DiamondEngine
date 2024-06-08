@@ -2,6 +2,7 @@
 
 #include "DebugEventHandler.h"
 #include "Debugger.h"
+#include "FontEngine.h"
 
 namespace diamond_engine
 {
@@ -37,7 +38,10 @@ namespace diamond_engine
 		auto handlerIt = m_handlers.find(type);
 
 		if (handlerIt == m_handlers.cend())
+		{
+			e->setConsumed();
 			return;
+		}
 
 		m_outstanding.push_back(
 			std::async(std::launch::async, &DebugEventHandler::handleEvent, handlerIt->second.get(), std::move(e)));
@@ -54,7 +58,8 @@ namespace diamond_engine
 			{
 				try
 				{
-					outstanding.get();
+					auto stream = outstanding.get();
+					FontEngine::getInstance()->printString(stream.str(), DEBUG_WINDOW_INDEX);
 				}
 				catch (const std::exception& e)
 				{

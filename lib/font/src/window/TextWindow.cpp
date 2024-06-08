@@ -1,22 +1,7 @@
-#include "FontLibrary.h"
-#include "FontRenderComponent.h"
-#include "GameInstance.h"
-#include "RenderingSubsystem.h"
-#include "MaterialRenderComponent.h"
 #include "TextWindow.h"
 
 namespace diamond_engine
 {
-	std::vector<std::unique_ptr<GameInstance>>& TextWindow::getFontInstances()
-	{
-		return m_fontInstances;
-	}
-
-	const std::vector<std::unique_ptr<GameInstance>>& TextWindow::getFontInstances() const
-	{
-		return m_fontInstances;
-	}
-
 	void TextWindow::setSize(const Size& size)
 	{
 		m_size = size;

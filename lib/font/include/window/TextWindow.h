@@ -11,9 +11,6 @@ namespace diamond_engine
 	class TextWindow
 	{
 	public:
-		std::vector<std::unique_ptr<GameInstance>>& getFontInstances();
-		const std::vector<std::unique_ptr<GameInstance>>& getFontInstances() const;
-
 		void setSize(const Size& size);
 		const Size& getSize() const;
 
@@ -28,7 +25,6 @@ namespace diamond_engine
 		Size& getCursorPos();
 
 	private:
-		std::vector<std::unique_ptr<GameInstance>> m_fontInstances;
 		Texture m_canvas;
 		Size m_fontSize;
 		Size m_cursorPos;

@@ -1,14 +1,28 @@
 #pragma once
 
 #include <memory>
+#include <sstream>
+
+#include "DebugEvent.h"
 
 namespace diamond_engine
 {
-	class DebugEvent;
 	class DebugEventHandler
 	{
 	public:
 		virtual ~DebugEventHandler() = default;
-		virtual void handleEvent(std::unique_ptr<DebugEvent> e) = 0;
+		virtual std::stringstream doHandleEvent(const std::unique_ptr<DebugEvent>& e) const = 0;
+	
+		std::stringstream handleEvent(std::unique_ptr<DebugEvent> e) const
+		{
+			if (e->isConsumed())
+				return { };
+
+			auto result = doHandleEvent(e);
+
+			e->setConsumed();
+
+			return result;
+		}
 	};
 }

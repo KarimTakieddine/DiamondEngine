@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <future>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 
@@ -13,6 +14,8 @@ namespace diamond_engine
 	class Debugger
 	{
 	public:
+		static constexpr size_t DEBUG_WINDOW_INDEX = 0;
+
 		~Debugger();
 
 		static std::shared_ptr<Debugger>& getInstance();
@@ -28,6 +31,6 @@ namespace diamond_engine
 		Debugger() = default;
 
 		std::unordered_map<DebugEvent::Type, std::unique_ptr<DebugEventHandler>> m_handlers;
-		std::vector<std::future<void>> m_outstanding;
+		std::vector<std::future<std::stringstream>> m_outstanding;
 	};
 }

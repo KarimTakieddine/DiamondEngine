@@ -26,5 +26,12 @@ namespace diamond_engine
 		};
 
 		virtual ~DebugEvent() = default;
+
+		// Who knows if we need this yet
+		void setConsumed(bool consumed = true) { m_consumed = consumed; }
+		bool isConsumed() const { return m_consumed; }
+
+	private:
+		bool m_consumed{ false };
 	};
 }

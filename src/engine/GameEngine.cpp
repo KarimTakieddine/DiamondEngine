@@ -9,9 +9,11 @@
 #include "ComponentFactory.h"
 #include "Debugger.h"
 #include "EngineMacros.h"
+#include "FontEngine.h"
 #include "FontLibrary.h"
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
+#include "GLAllocationEventHandler.h"
 #include "Input.h"
 #include "MaterialComponentConfig.h"
 #include "SharedMeshStore.h"
@@ -35,6 +37,8 @@ namespace diamond_engine
 			engineConfig,
 			std::bind(&GameEngine::onWindowUpdate, this, std::placeholders::_1),
 			std::bind(&GameEngine::onWindowResize, this, std::placeholders::_1));
+
+		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, std::make_unique<GLAllocationEventHandler>());
 
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
@@ -81,20 +85,17 @@ namespace diamond_engine
 		m_fontLibrary->registerFont('o', { 0, 14 });
 		m_fontLibrary->registerFont('p', { 0, 15 });
 
-		m_fontEngine = std::make_unique<FontEngine>();
-		
-		m_fontEngine->setFontLibrary(m_fontLibrary);
+		FontEngine::getInstance()->setFontLibrary(m_fontLibrary);
 
-		m_fontEngine->registerTextWindow(
+		FontEngine::getInstance()->registerTextWindow(
 			{ 64, 64 },
+			{ 64, 32 },
 			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
-
-		// Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, TODO!)
 
 		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
 	}
@@ -301,16 +302,16 @@ namespace diamond_engine
 			m_collider2DInstances.push_back(std::move(collider2DInstance));
 		}
 
-		m_fontEngine->allocateGraphicsMemory(m_renderingSubsystem);
-		m_fontEngine->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
-		m_fontEngine->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
+		FontEngine::getInstance()->allocateGraphicsMemory(m_renderingSubsystem);
+		FontEngine::getInstance()->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
+		FontEngine::getInstance()->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
 
 		m_currentScene = name;
 	}
 
 	void GameEngine::unloadCurrentScene()
 	{
-		m_fontEngine->releaseGraphicsMemory(m_renderingSubsystem);
+		FontEngine::getInstance()->releaseGraphicsMemory(m_renderingSubsystem);
 
 		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
@@ -337,6 +338,8 @@ namespace diamond_engine
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
+		Debugger::getInstance()->handleAllEvents();
+
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
 		GameInstanceManager::updateGameInstances(deltaTime, m_spriteInstances);
@@ -347,7 +350,7 @@ namespace diamond_engine
 		m_renderingSubsystem->render("sprite_renderer", m_spriteInstances);
 		m_renderingSubsystem->render("collider_2d_renderer", m_collider2DInstances);
 
-		m_fontEngine->render(m_renderingSubsystem);
+		FontEngine::getInstance()->render(m_renderingSubsystem);
 	}
 
 	void GameEngine::onWindowResize(const Size& size)

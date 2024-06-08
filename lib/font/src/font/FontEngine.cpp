@@ -9,6 +9,12 @@
 
 namespace diamond_engine
 {
+	/* static */ std::shared_ptr<FontEngine>& FontEngine::getInstance()
+	{
+		static std::shared_ptr<FontEngine> fontEngineInstance(new FontEngine());
+		return fontEngineInstance;
+	}
+
 	EngineStatus FontEngine::setFontLibrary(const std::shared_ptr<FontLibrary>& fontLibrary)
 	{
 		if (!fontLibrary)
@@ -19,17 +25,12 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus FontEngine::registerTextWindow(const Size& fontSize, const Texture& canvas)
+	EngineStatus FontEngine::registerTextWindow(const Size& fontSize, const Size& gridSize, const Texture& canvas)
 	{
 		std::unique_ptr<TextWindow> textWindow = std::make_unique<TextWindow>();
 
-		auto& fontInstances = textWindow->getFontInstances();
+		const GLsizei count	= gridSize.width * gridSize.height;
 
-		const GLsizei rows		= canvas.height / fontSize.height;
-		const GLsizei columns	= canvas.width / fontSize.width;
-		const GLsizei count		= rows * columns;
-
-		fontInstances.reserve(count);
 		for (size_t i = 0; i < count; ++i)
 		{
 			if (!registerFontInstance())
@@ -38,7 +39,7 @@ namespace diamond_engine
 
 		textWindow->setCanvas(canvas);
 		textWindow->setFontSize(fontSize);
-		textWindow->setSize({ columns, rows });
+		textWindow->setSize(gridSize);
 
 		m_textWindows.push_back(std::move(textWindow));
 
@@ -195,16 +196,6 @@ namespace diamond_engine
 		auto& cursorPos				= textWindow->getCursorPos();
 
 		const GLsizei size = static_cast<GLsizei>(s.size());
-
-		if (size == 0)
-		{
-			for (const auto& fontInstance : m_textWindows[windowIndex]->getFontInstances())
-			{
-				fontInstance->setActive(false);
-			}
-
-			cursorPos = { 0, 0 };
-		}
 
 		GLsizei& cursorRow		= cursorPos.height;
 		GLsizei& cursorColumn	= cursorPos.width;
