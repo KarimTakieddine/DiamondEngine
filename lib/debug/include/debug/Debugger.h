@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <future>
-#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -31,6 +31,6 @@ namespace diamond_engine
 		Debugger() = default;
 
 		std::unordered_map<DebugEvent::Type, std::unique_ptr<DebugEventHandler>> m_handlers;
-		std::vector<std::future<std::stringstream>> m_outstanding;
+		std::vector<std::future<std::string>> m_outstanding;
 	};
 }

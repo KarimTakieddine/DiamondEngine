@@ -58,8 +58,7 @@ namespace diamond_engine
 			{
 				try
 				{
-					auto stream = outstanding.get();
-					FontEngine::getInstance()->printString(stream.str(), DEBUG_WINDOW_INDEX);
+					FontEngine::getInstance()->printString(outstanding.get(), DEBUG_WINDOW_INDEX);
 				}
 				catch (const std::exception& e)
 				{

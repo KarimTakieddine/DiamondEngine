@@ -136,6 +136,8 @@ namespace diamond_engine
 				true
 			};
 
+		const auto& liveFont = m_liveFonts[flattenedIndex];
+
 		const Font font = m_fontLibrary->getFont(symbol);
 
 		if (font.row == -1 || font.column == -1)
@@ -143,8 +145,6 @@ namespace diamond_engine
 				"Cannot print font: " + std::to_string(symbol) + ". Invalid font data",
 				true
 			};
-
-		const auto& liveFont = m_liveFonts[flattenedIndex];
 
 		const glm::vec2& fontSize = liveFont.renderComponent->getFontSize();
 

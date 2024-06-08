@@ -14,6 +14,8 @@ namespace diamond_engine
 	class RenderingSubsystem
 	{
 	public:
+		static constexpr size_t MEMORY_POOL_SIZE = 2 << 21;
+
 		RenderingSubsystem();
 
 		void setMaxRendererCount(GLsizei maxInstanceCount);

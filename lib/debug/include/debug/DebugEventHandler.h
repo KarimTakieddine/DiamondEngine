@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <sstream>
+#include <string>
 
 #include "DebugEvent.h"
 
@@ -11,9 +11,9 @@ namespace diamond_engine
 	{
 	public:
 		virtual ~DebugEventHandler() = default;
-		virtual std::stringstream doHandleEvent(const std::unique_ptr<DebugEvent>& e) const = 0;
+		virtual std::string doHandleEvent(const std::unique_ptr<DebugEvent>& e) const = 0;
 	
-		std::stringstream handleEvent(std::unique_ptr<DebugEvent> e) const
+		std::string handleEvent(std::unique_ptr<DebugEvent> e) const
 		{
 			if (e->isConsumed())
 				return { };

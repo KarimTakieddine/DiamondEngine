@@ -84,12 +84,33 @@ namespace diamond_engine
 		m_fontLibrary->registerFont('n', { 0, 13 });
 		m_fontLibrary->registerFont('o', { 0, 14 });
 		m_fontLibrary->registerFont('p', { 0, 15 });
+		m_fontLibrary->registerFont('q', { 1, 0 });
+		m_fontLibrary->registerFont('r', { 1, 1 });
+		m_fontLibrary->registerFont('s', { 1, 2 });
+		m_fontLibrary->registerFont('t', { 1, 3 });
+		m_fontLibrary->registerFont('u', { 1, 4 });
+		m_fontLibrary->registerFont('v', { 1, 5 });
+		m_fontLibrary->registerFont('w', { 1, 6 });
+		m_fontLibrary->registerFont('x', { 1, 7 });
+		m_fontLibrary->registerFont('y', { 1, 8 });
+		m_fontLibrary->registerFont('z', { 1, 9 });
+		m_fontLibrary->registerFont('0', { 1, 10 });
+		m_fontLibrary->registerFont('1', { 1, 11 });
+		m_fontLibrary->registerFont('2', { 1, 12 });
+		m_fontLibrary->registerFont('3', { 1, 13 });
+		m_fontLibrary->registerFont('4', { 1, 14 });
+		m_fontLibrary->registerFont('5', { 1, 15 });
+		m_fontLibrary->registerFont('6', { 2, 0 });
+		m_fontLibrary->registerFont('7', { 2, 1 });
+		m_fontLibrary->registerFont('8', { 2, 2 });
+		m_fontLibrary->registerFont('9', { 2, 3 });
+		m_fontLibrary->registerFont(' ', { 2, 4 });
 
 		FontEngine::getInstance()->setFontLibrary(m_fontLibrary);
 
 		FontEngine::getInstance()->registerTextWindow(
 			{ 64, 64 },
-			{ 64, 32 },
+			{ 64, 64 },
 			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
 		m_instanceManager	= std::make_unique<GameInstanceManager>();
@@ -303,7 +324,7 @@ namespace diamond_engine
 		}
 
 		FontEngine::getInstance()->allocateGraphicsMemory(m_renderingSubsystem);
-		FontEngine::getInstance()->setWindowDimensions(0, { -0.96f, 0.94f }, { 0.5f, 0.5f });
+		FontEngine::getInstance()->setWindowDimensions(0, { -0.95f, 0.94f }, { 0.45f, 0.45f });
 		FontEngine::getInstance()->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
 
 		m_currentScene = name;
@@ -338,7 +359,7 @@ namespace diamond_engine
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
-		Debugger::getInstance()->handleAllEvents();
+		Debugger::getInstance()->handleAllEvents(); // TODO: Debug exec this!
 
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 

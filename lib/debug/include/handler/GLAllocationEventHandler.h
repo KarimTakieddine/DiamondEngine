@@ -8,6 +8,6 @@ namespace diamond_engine
 	{
 	public:
 		~GLAllocationEventHandler() final override = default;
-		std::stringstream doHandleEvent(const std::unique_ptr<DebugEvent>& e) const final override;
+		std::string doHandleEvent(const std::unique_ptr<DebugEvent>& e) const final override;
 	};
 }

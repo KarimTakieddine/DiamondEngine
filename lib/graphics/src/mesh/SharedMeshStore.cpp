@@ -99,8 +99,9 @@ namespace diamond_engine {
 
 	void SharedMeshStore::setMaxMeshCount(GLsizei count)
 	{
-		m_bufferAllocator->Reserve(count);
-		m_bufferAllocator->Allocate(count);
+		const GLsizei bufferCount = count << 1;
+		m_bufferAllocator->Reserve(bufferCount);
+		m_bufferAllocator->Allocate(bufferCount);
 	}
 
 	void SharedMeshStore::loadMeshes()
