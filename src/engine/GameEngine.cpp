@@ -129,6 +129,11 @@ namespace diamond_engine
 
 		unloadCurrentScene();
 
+		/*
+			TODO: Find a way to unload resources while the game
+			is still active so we can see debug events ?
+		*/
+
 		m_renderingSubsystem->freeAllocatedRenderers();
 		SharedMeshStore::getInstance()->unloadMeshes();
 		TextureLoader::getInstance()->unloadTextures();
@@ -361,7 +366,7 @@ namespace diamond_engine
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
-		Debugger::getInstance()->handleAllEvents(); // TODO: Debug exec this!
+		DEBUG_EXEC(Debugger::getInstance()->handleAllEvents());
 
 		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
 
