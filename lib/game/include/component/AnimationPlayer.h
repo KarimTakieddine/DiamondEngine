@@ -53,6 +53,7 @@ namespace diamond_engine
 		void update(GLfloat deltaTime) final override;
 
 		void play(const Animation& animation, bool immediate = false);
+		bool isPlaying(const std::string& name) const;
 		void pause();
 		void resume();
 		void stop();

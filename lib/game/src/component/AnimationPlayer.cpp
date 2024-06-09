@@ -11,7 +11,13 @@ namespace diamond_engine
 				Animation& playingAnimation	= m_animationQueue.front();
 				unsigned int& currentFrame	= playingAnimation.frame;
 
-				if (m_playTime >= playingAnimation.duration)
+				if (playingAnimation.duration <= 0.0f)
+				{
+					animate(playingAnimation, deltaTime);
+					m_animationQueue.pop_front();
+					m_playTime = 0.0f;
+				}
+				else if (m_playTime >= playingAnimation.duration)
 				{
 					m_animationQueue.pop_front();
 					m_playTime = 0.0f;
@@ -40,6 +46,11 @@ namespace diamond_engine
 
 		m_animationQueue.push_back(animation);
 		m_animationState = AnimationState::PLAYING;
+	}
+
+	bool AnimationPlayer::isPlaying(const std::string& name) const
+	{
+		return !m_animationQueue.empty() && m_animationQueue.front().name == name;
 	}
 
 	void AnimationPlayer::pause()
