@@ -16,11 +16,10 @@ namespace diamond_engine
 			throw std::runtime_error("GLAllocationEventHandler failed to convert event to target type");
 
 		stream
-		<< "GL mem alloc"	<< std::endl
-		<< "prev top "		<< std::hex << allocationEvent->getCurrentTop()				<< std::endl
-		<< "next top "		<< std::hex << allocationEvent->getNewTop()					<< std::endl
-		<< "objs cnt "		<< std::to_string(allocationEvent->getObjectCount())	<< std::endl
-		<< "ctop val "		<< std::to_string(*allocationEvent->getCurrentTop())	<< std::endl
+		<< "GL mem alloc"	<< std::hex << allocationEvent->getCurrentTop()
+		<< ' '				<< std::hex << allocationEvent->getNewTop()
+		<< ' '				<< std::to_string(allocationEvent->getObjectCount())
+		<< ' '				<< std::to_string(*allocationEvent->getCurrentTop())
 		<< std::endl;
 
 		std::string result = stream.str();

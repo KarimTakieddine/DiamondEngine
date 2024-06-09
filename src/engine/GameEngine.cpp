@@ -14,6 +14,7 @@
 #include "GameEngine.h"
 #include "GameSceneConfigParser.h"
 #include "GLAllocationEventHandler.h"
+#include "GLMemoryRequestHandler.h"
 #include "Input.h"
 #include "MaterialComponentConfig.h"
 #include "SharedMeshStore.h"
@@ -39,6 +40,7 @@ namespace diamond_engine
 			std::bind(&GameEngine::onWindowResize, this, std::placeholders::_1));
 
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, std::make_unique<GLAllocationEventHandler>());
+		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_REQUEST, std::make_unique<GLMemoryRequestHandler>());
 
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());

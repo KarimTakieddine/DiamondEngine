@@ -5,6 +5,7 @@
 #include "Debugger.h"
 #include "EngineMacros.h"
 #include "GLAllocationEvent.h"
+#include "GLMemoryRequest.h"
 
 namespace diamond_engine {
 	GLAllocator::GLAllocator(GLFunction allocateFunction, GLFunction freeFunction) :
@@ -84,6 +85,10 @@ namespace diamond_engine {
 		if (updatedCurrent > m_objectTopBounds) {
 			throw std::runtime_error("No more GL objects to Get(). Please Allocate() more objects beforehand");
 		}
+
+		DEBUG_EXEC(Debugger::getInstance()->debugEvent(
+			DebugEvent::Type::GL_OBJECT_REQUEST,
+			std::make_unique<GLMemoryRequest>(m_current, *m_current)));
 
 		m_current = updatedCurrent;
 
