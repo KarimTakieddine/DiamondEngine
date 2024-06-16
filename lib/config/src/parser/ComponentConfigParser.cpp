@@ -2,7 +2,7 @@
 
 #include <pugixml.hpp>
 
-#include "AnimationParser.h"
+#include "SpriteAnimationParser.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentConfigParser.h"
 #include "MaterialComponentConfig.h"
@@ -123,14 +123,14 @@ namespace
 	{
 		// TODO: Remove need for separate AnimationParser class...
 
-		using diamond_engine::AnimationParser;
+		using diamond_engine::SpriteAnimationParser;
 		using diamond_engine::SpriteAnimationPlayerConfig;
 
 		std::unique_ptr<SpriteAnimationPlayerConfig> result = std::make_unique<SpriteAnimationPlayerConfig>();
 
 		for (const auto& animationNode : node.children("Animation"))
 		{
-			result->addAnimation(AnimationParser::Parse(animationNode));
+			result->addAnimation(SpriteAnimationParser::Parse(animationNode));
 		}
 
 		return result;

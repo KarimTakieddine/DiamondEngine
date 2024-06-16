@@ -4,7 +4,7 @@
 
 #include <GL/glew.h>
 
-#include "Animation.h"
+#include "SpriteAnimation.h"
 #include "BehaviourComponentConfig.h"
 
 namespace diamond_engine {
@@ -12,15 +12,15 @@ namespace diamond_engine {
 	public:
 		virtual ~SpriteAnimationPlayerConfig() final override = default;
 
-		const std::vector<Animation>& getAnimations() const;
+		const std::vector<SpriteAnimation>& getAnimations() const;
 
-		void addAnimation(const Animation& animation);
+		void addAnimation(const SpriteAnimation& animation);
 
 		const char* getName() const final override {
 			return "SpriteAnimationPlayer";
 		}
 
 	private:
-		std::vector<Animation> m_animations;
+		std::vector<SpriteAnimation> m_animations;
 	};
 }

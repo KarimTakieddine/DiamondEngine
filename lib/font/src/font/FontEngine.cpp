@@ -71,7 +71,7 @@ namespace diamond_engine
 
 					const auto& fontInstance = m_fontInstances[i];
 					renderingSubsystem->registerRenderObject("font_renderer", fontInstance->getRenderComponents());
-					fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(textWindow->getCanvas());
+					fontInstance->getRenderComponent<MaterialRenderComponent>("Material")->setTexture(textWindow->getCanvas().index);
 				}
 			}
 		}

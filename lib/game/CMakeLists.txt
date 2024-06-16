@@ -15,7 +15,6 @@ set(GLM_DIR ../../glm)
 
 set(SOURCES
     ${SRC_DIR}/animation/SpriteSheetLoader.cpp
-    ${SRC_DIR}/component/AnimationPlayer.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     ${SRC_DIR}/component/Collider2DComponent.cpp
     ${SRC_DIR}/component/ComponentFactory.cpp

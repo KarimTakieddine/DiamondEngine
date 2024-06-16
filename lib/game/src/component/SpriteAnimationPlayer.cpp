@@ -2,44 +2,39 @@
 
 #include "GameInstance.h"
 #include "MaterialRenderComponent.h"
-#include "SpriteSheetLoader.h"
 #include "SpriteAnimationPlayer.h"
 #include "SpriteAnimationPlayerConfig.h"
+#include "SpriteSheetLoader.h"
 
 namespace diamond_engine
 {
 	void SpriteAnimationPlayer::playAnimation(const std::string& name, bool immediate /* = false */)
 	{
-		auto it = m_spriteSheetAnimations.find(name);
+		auto it = m_spriteAnimations.find(name);
 
-		if (it == m_spriteSheetAnimations.cend())
+		if (it == m_spriteAnimations.cend())
 			throw std::runtime_error("Could not find sprite animation named: " + name);
 
-		SpriteSheetAnimation& spriteSheetAnimation = it->second;
+		SpriteAnimation& spriteAnimation = it->second;
 
-		m_currentSpriteSheet = &spriteSheetAnimation.spriteSheet;
-		Animation& animation = spriteSheetAnimation.animation;
-
-		animation.frame = 0;
-
-		play(animation, immediate);
+		play(spriteAnimation, immediate);
 	}
 
-	void SpriteAnimationPlayer::animate(const Animation& animation, GLfloat deltaTime)
+	void SpriteAnimationPlayer::animate(const SpriteAnimation& animation, GLfloat deltaTime)
 	{
-		if (!m_currentSpriteSheet)
+		if (!m_currentAnimation)
 		{
 			return;
 		}
 
-		const GLuint animationFrame = animation.frame;
+		const GLuint animationFrame = animation.currentFrame;
 
-		if (animationFrame >= m_currentSpriteSheet->frames.size())
+		if (animationFrame >= m_currentAnimation->frames.size())
 		{
 			return;
 		}
 
-		m_material->setTexture(m_currentSpriteSheet->frames[animationFrame]);
+		m_material->setTexture(m_currentAnimation->frames[animationFrame].texture);
 	}
 
 	EngineStatus SpriteAnimationPlayer::initialize(const BehaviourComponentConfig* config)
@@ -54,18 +49,21 @@ namespace diamond_engine
 		if (!spriteAnimationConfig)
 			return { "Failed to convert BehaviourComponentConfig to SpriteAnimationPlayerConfig", true };
 
-		m_spriteSheetAnimations.clear();
-		m_currentSpriteSheet = nullptr;
+		m_spriteAnimations.clear();
+		m_currentAnimation = nullptr;
 
-		for (const auto& animation : spriteAnimationConfig->getAnimations())
+		for (const auto& animationConfig : spriteAnimationConfig->getAnimations())
 		{
-			const std::string& spriteSheetName = animation.name;
-			const auto& spriteSheet = SpriteSheetLoader::getInstance()->getSpriteSheet(spriteSheetName);
+			const std::string& animationName				= animationConfig.name;
+			const auto& animation		= SpriteSheetLoader::getInstance()->getSpriteSheet(animationName);
 
-			Animation spriteAnimation = animation;
-			spriteAnimation.timeBetweenFrames = ( animation.duration / spriteSheet.frames.size() ) + animation.delayBetweenFrames;
+			SpriteAnimation spriteAnimation		= animation;
+			spriteAnimation.name				= animationName;
+			spriteAnimation.durationS			= animationConfig.durationS;
+			spriteAnimation.interFrameDelayS	= animationConfig.interFrameDelayS;
+			spriteAnimation.timeBetweenFrames	= ( animationConfig.durationS / animation.frames.size() ) + spriteAnimation.interFrameDelayS;
 
-			m_spriteSheetAnimations.insert({ spriteSheetName, { spriteSheet, spriteAnimation  } });
+			m_spriteAnimations.insert({ animationName, spriteAnimation });
 		}
 
 		return { };
@@ -74,5 +72,85 @@ namespace diamond_engine
 	const char* SpriteAnimationPlayer::getName() const
 	{
 		return "SpriteAnimationPlayer";
+	}
+
+	void SpriteAnimationPlayer::update(GLfloat deltaTime)
+	{
+		if ((m_animationState & AnimationState::PLAYING) == AnimationState::PLAYING)
+		{
+			if (!m_animationQueue.empty())
+			{
+				SpriteAnimation& playingAnimation	= m_animationQueue.front();
+				unsigned int& currentFrame			= playingAnimation.currentFrame;
+
+				if (playingAnimation.durationS <= 0.0f)
+				{
+					animate(playingAnimation, deltaTime);
+					m_animationQueue.pop_front();
+					m_playTime = 0.0f;
+				}
+				else if (m_playTime >= playingAnimation.durationS)
+				{
+					m_animationQueue.pop_front();
+					m_playTime = 0.0f;
+
+					if (!m_animationQueue.empty())
+					{
+						m_currentAnimation = &m_animationQueue.front();
+					}
+				}
+				else if (m_playTime >= playingAnimation.timeBetweenFrames * currentFrame)
+				{
+					animate(playingAnimation, deltaTime);
+					++currentFrame;
+				}
+
+				m_playTime += deltaTime;
+			}
+			else
+			{
+				m_animationState &= ~(AnimationState::PLAYING | AnimationState::PAUSED);
+			}
+		}
+	}
+
+	void SpriteAnimationPlayer::play(SpriteAnimation& animation, bool immediate /* = false */)
+	{
+		if (immediate)
+		{
+			stop();
+
+			m_currentAnimation = &animation;
+			m_currentAnimation->currentFrame = 0;
+		}
+
+		m_animationQueue.push_back(animation);
+		m_animationState = AnimationState::PLAYING;
+	}
+
+	bool SpriteAnimationPlayer::isPlaying(const std::string& name) const
+	{
+		return !m_animationQueue.empty() && m_animationQueue.front().name == name;
+	}
+
+	void SpriteAnimationPlayer::pause()
+	{
+		m_animationState |= AnimationState::PAUSED;
+	}
+
+	void SpriteAnimationPlayer::resume()
+	{
+		m_animationState &= ~AnimationState::PAUSED;
+	}
+
+	void SpriteAnimationPlayer::stop()
+	{
+		if (!m_animationQueue.empty())
+		{
+			m_animationQueue.pop_front();
+		}
+
+		m_playTime			= 0.0f;
+		m_animationState	&= ~(AnimationState::PLAYING|AnimationState::PAUSED);
 	}
 }

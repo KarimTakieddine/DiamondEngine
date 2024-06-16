@@ -60,11 +60,11 @@ namespace diamond_engine
 		return { };
 	}
 
-	void MaterialRenderComponent::setTexture(const Texture& texture)
+	void MaterialRenderComponent::setTexture(GLuint texture)
 	{
 		if (m_drawCall)
 		{
-			m_drawCall->texture = texture.index;
+			m_drawCall->texture = texture;
 		}
 	}
 
@@ -138,7 +138,7 @@ namespace diamond_engine
 		if (!materialConfig)
 			return { "MaterialRenderComponent::initialize failed. Could not convert config parameter to target type", true };
 
-		setTexture(TextureLoader::getInstance()->GetTexture(materialConfig->getTextureName()));
+		setTexture(TextureLoader::getInstance()->GetTexture(materialConfig->getTextureName()).index);
 		setColor(materialConfig->getColor());
 		setTextureOffset(materialConfig->getTextureOffset());
 

@@ -14,8 +14,10 @@ set(SOURCES
 	${SRC_DIR}/debug/Debugger.cpp
     ${SRC_DIR}/event/GLAllocationEvent.cpp
     ${SRC_DIR}/event/GLMemoryRequest.cpp
+    ${SRC_DIR}/event/SpriteAnimationPlay.cpp
     ${SRC_DIR}/handler/GLAllocationEventHandler.cpp
-    ${SRC_DIR}/handler/GLMemoryRequestHandler.cpp)
+    ${SRC_DIR}/handler/GLMemoryRequestHandler.cpp
+    ${SRC_DIR}/handler/SpriteAnimationPlayHandler.cpp)
 
 add_library(libDiamondEngineDebug STATIC ${SOURCES})
 

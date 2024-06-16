@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "SpriteSheet.h"
+#include "SpriteAnimation.h"
 #include "SpriteSheetConfigParser.h"
 
 namespace diamond_engine
@@ -20,11 +20,11 @@ namespace diamond_engine
 
 		void loadSpriteSheets(const SpriteSheetConfigList& spriteSheets);
 		void load(const std::string& directory);
-		const SpriteSheet& getSpriteSheet(const std::string& name) const;
+		const SpriteAnimation& getSpriteSheet(const std::string& name) const;
 
 	private:
 		SpriteSheetLoader() = default;
 
-		std::unordered_map<std::string, SpriteSheet> m_spriteSheets;
+		std::unordered_map<std::string, SpriteAnimation> m_spriteSheets;
 	};
 }

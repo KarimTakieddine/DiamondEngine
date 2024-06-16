@@ -2,12 +2,12 @@
 
 namespace diamond_engine
 {
-	const std::vector<Animation>& SpriteAnimationPlayerConfig::getAnimations() const
+	const std::vector<SpriteAnimation>& SpriteAnimationPlayerConfig::getAnimations() const
 	{
 		return m_animations;
 	}
 
-	void SpriteAnimationPlayerConfig::addAnimation(const Animation& animation)
+	void SpriteAnimationPlayerConfig::addAnimation(const SpriteAnimation& animation)
 	{
 		m_animations.push_back(animation);
 	}

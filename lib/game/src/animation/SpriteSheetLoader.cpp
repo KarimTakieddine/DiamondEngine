@@ -16,7 +16,7 @@ namespace diamond_engine
 		return spriteSheetLoaderInstance;
 	}
 
-	const SpriteSheet& SpriteSheetLoader::getSpriteSheet(const std::string& name) const
+	const SpriteAnimation& SpriteSheetLoader::getSpriteSheet(const std::string& name) const
 	{
 		auto it = m_spriteSheets.find(name);
 
@@ -63,9 +63,9 @@ namespace diamond_engine
 
 			glGetTexImage(GL_TEXTURE_2D, 0, texture.format, GL_UNSIGNED_BYTE, textureData);
 
-			SpriteSheet spriteSheet;
-			std::vector<Texture>& frames = spriteSheet.frames;
-			
+			SpriteAnimation spriteAnimation;
+
+			std::vector<SpriteAnimationFrame>& frames = spriteAnimation.frames;
 			for (const auto& frameData : spriteSheetConfig.getFrames())
 			{
 				const GLuint frameX			= frameData.x;
@@ -112,12 +112,12 @@ namespace diamond_engine
 				}
 
 				TextureLoader::getInstance()->allocateTexture(frameTexture, frameData);
-				frames.push_back(frameTexture);
+				frames.push_back({ frameTexture.index });
 
 				delete[] frameData;
 			}
 
-			m_spriteSheets.insert({ spriteSheetName, spriteSheet });
+			m_spriteSheets.insert({ spriteSheetName, spriteAnimation });
 
 			delete[] textureData;
 		}
