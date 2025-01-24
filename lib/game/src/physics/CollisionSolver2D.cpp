@@ -31,11 +31,10 @@ namespace diamond_engine
 		for (const auto& character : m_characters)
 		{
 			TransformRenderComponent* characterTransform	= character.transform;
-			const glm::mat4& characterLocalScale			= characterTransform->getLocalScale();
-			const Size& characterColliderSize				= character.collider->getSize();
-			const GLfloat characterHalfWidth				= characterLocalScale[0].x * characterColliderSize.width * 0.5f;
-			const GLfloat characterHalfHeight				= characterLocalScale[1].y * characterColliderSize.height * 0.5f;
-			const glm::vec2 characterPosition				= glm::xy(characterTransform->getPosition());
+			const glm::vec2& characterColliderSize			= character.collider->getSize();
+			const GLfloat characterHalfWidth				= characterColliderSize.x * 0.5f;
+			const GLfloat characterHalfHeight				= characterColliderSize.y * 0.5f;
+			const glm::vec2 characterPosition				= glm::xy(characterTransform->getPosition()) + character.collider->getOffset();
 
 			AxisAlignedBoundingBox characterAABB{
 				characterPosition + glm::xy(characterTransform->getLocalRotation() * glm::vec4(-characterHalfWidth, characterHalfHeight, 0.0f, 1.0f)),
@@ -47,11 +46,10 @@ namespace diamond_engine
 			for (const auto& obstacle : m_obstacles)
 			{
 				TransformRenderComponent* obstacleTransform = obstacle.transform;
-				const glm::mat4& obstacleLocalScale			= obstacleTransform->getLocalScale();
-				const Size& obstacleColliderSize			= obstacle.collider->getSize();
-				const GLfloat obstacleHalfWidth				= obstacleLocalScale[0].x * obstacleColliderSize.width * 0.5f;
-				const GLfloat obstacleHalfHeight			= obstacleLocalScale[1].y * obstacleColliderSize.height * 0.5f;
-				const glm::vec2 obstaclePosition			= glm::xy(obstacleTransform->getPosition());
+				const glm::vec2& obstacleColliderSize		= obstacle.collider->getSize();
+				const GLfloat obstacleHalfWidth				= obstacleColliderSize.x * 0.5f;
+				const GLfloat obstacleHalfHeight			= obstacleColliderSize.y * 0.5f;
+				const glm::vec2 obstaclePosition			= glm::xy(obstacleTransform->getPosition()) + obstacle.collider->getOffset();
 
 				AxisAlignedBoundingBox obstacleAABB{
 					obstaclePosition + glm::xy(obstacleTransform->getLocalRotation() * glm::vec4(-obstacleHalfWidth, obstacleHalfHeight, 0.0f, 1.0f)),

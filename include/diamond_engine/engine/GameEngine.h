@@ -43,7 +43,6 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<GameInstance>> m_collider2DInstances;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };
 		std::unique_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
-		std::unique_ptr<GameInstanceManager> m_instanceManager{ nullptr };
 		std::unique_ptr<CollisionSolver2D> m_collisionSolver2D{ nullptr };
 		std::shared_ptr<FontLibrary> m_fontLibrary{ nullptr };
 		std::string m_currentScene;

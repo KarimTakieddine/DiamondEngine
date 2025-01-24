@@ -93,15 +93,20 @@ namespace
 	static std::unique_ptr<BehaviourComponentConfig> parseCollider2DConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
 		using diamond_engine::Collider2DComponentConfig;
-		using diamond_engine::Size;
 
 		std::unique_ptr<Collider2DComponentConfig> result = std::make_unique<Collider2DComponentConfig>();
 
 		pugi::xml_attribute widthAttribute	= node.attribute("width");
 		pugi::xml_attribute heightAttribute = node.attribute("height");
 
-		const Size& defaultSize = result->getSize();
-		result->setSize({ widthAttribute.as_int(defaultSize.width), heightAttribute.as_int(defaultSize.height) });
+		const glm::vec2& defaultSize = result->getSize();
+		result->setSize({ widthAttribute.as_float(defaultSize.x), heightAttribute.as_float(defaultSize.y) });
+
+		pugi::xml_attribute offsetXAttribute = node.attribute("xOffset");
+		pugi::xml_attribute offsetYAttribute = node.attribute("yOffset");
+
+		const glm::vec2& defaultOffset = result->getOffset();
+		result->setOffset({ offsetXAttribute.as_float(defaultOffset.x), offsetYAttribute.as_float(defaultOffset.y) });
 
 		pugi::xml_attribute typeAttribute = node.attribute("type");
 		if (typeAttribute)

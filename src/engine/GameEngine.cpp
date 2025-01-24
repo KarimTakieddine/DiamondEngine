@@ -117,7 +117,6 @@ namespace diamond_engine
 			{ 64, 64 },
 			TextureLoader::getInstance()->GetTexture("ascii_fonts_green"));
 
-		m_instanceManager	= std::make_unique<GameInstanceManager>();
 		m_collisionSolver2D = std::make_unique<CollisionSolver2D>();
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
@@ -265,16 +264,12 @@ namespace diamond_engine
 						colliderComponentConfig->setTargetIndex(i);
 						std::unique_ptr<Collider2DComponentConfig> copy = std::make_unique<Collider2DComponentConfig>();
 						copy->setSize(colliderComponentConfig->getSize());
+						copy->setOffset(colliderComponentConfig->getOffset());
 						copy->setType(colliderComponentConfig->getType());
 						copy->setTargetIndex(colliderComponentConfig->getTargetIndex());
 						colliderConfig->addBehaviourConfig(std::move(copy));
-						
-						const std::string& colliderName = gameInstanceConfig->getName() + "_collider_";
-						int colliderCount = std::count_if(
-							collider2DConfigs.cbegin(),
-							collider2DConfigs.cend(),
-							[colliderName](const auto& c) { return c->getName() == colliderName; });
-						colliderConfig->setName(colliderName + std::to_string(colliderCount));
+
+						colliderConfig->setName(gameInstanceConfig->getName() + "_collider");
 
 						collider2DConfigs.push_back(std::move(colliderConfig));
 					}
@@ -346,7 +341,7 @@ namespace diamond_engine
 		for (auto collider2DIt = m_collider2DInstances.rbegin(); collider2DIt != m_collider2DInstances.rend(); ++collider2DIt)
 		{
 			m_renderingSubsystem->unregisterRenderObject("collider_2d_renderer", (*collider2DIt)->getRenderComponents());
-			m_instanceManager->unregisterInstance((*collider2DIt)->getInternalName());
+			GameInstanceManager::getInstance()->unregisterInstance((*collider2DIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
@@ -355,7 +350,7 @@ namespace diamond_engine
 		for (auto spriteIt = m_spriteInstances.rbegin(); spriteIt != m_spriteInstances.rend(); ++spriteIt)
 		{
 			m_renderingSubsystem->unregisterRenderObject("sprite_renderer", (*spriteIt)->getRenderComponents());
-			m_instanceManager->unregisterInstance((*spriteIt)->getInternalName());
+			GameInstanceManager::getInstance()->unregisterInstance((*spriteIt)->getInternalName());
 		}
 
 		m_renderingSubsystem->releaseVertexState();
@@ -397,7 +392,7 @@ namespace diamond_engine
 	{
 		std::unique_ptr<GameInstance> gameInstance = std::make_unique<GameInstance>();
 
-		EngineStatus registerStatus = m_instanceManager->registerInstance(gameInstance, config);
+		EngineStatus registerStatus = GameInstanceManager::getInstance()->registerInstance(gameInstance, config);
 
 		if (!registerStatus)
 			throw std::runtime_error("Failed to register game instance: " + config->getName() + " error was: " + registerStatus.message);
