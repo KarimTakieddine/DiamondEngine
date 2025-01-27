@@ -103,19 +103,19 @@ namespace diamond_engine
 		return result;
 	}
 
-	void GameInstance::onCollisionEnter2D(const glm::vec2& resolution, const std::string& name)
+	void GameInstance::onCollisionEnter2D(const glm::vec2& resolution, GameInstance* gameInstance, Collider2DComponent* collider2D)
 	{
 		for (const auto& behaviour : m_behaviourComponents)
 		{
-			behaviour->onCollisionEnter2D(resolution, name);
+			behaviour->onCollisionEnter2D(resolution, gameInstance, collider2D);
 		}
 	}
 
-	void GameInstance::onCollisionExit2D(const std::string& name)
+	void GameInstance::onCollisionExit2D(GameInstance* gameInstance, Collider2DComponent* collider2D)
 	{
 		for (const auto& behaviour : m_behaviourComponents)
 		{
-			behaviour->onCollisionExit2D(name);
+			behaviour->onCollisionExit2D(gameInstance, collider2D);
 		}
 	}
 

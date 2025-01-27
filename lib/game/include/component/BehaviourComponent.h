@@ -12,6 +12,7 @@ namespace diamond_engine
 {
 	class GameInstance;
 	class BehaviourComponentConfig;
+	class Collider2DComponent;
 	class BehaviourComponent
 	{
 	public:
@@ -22,8 +23,10 @@ namespace diamond_engine
 		virtual EngineStatus initialize(const BehaviourComponentConfig* config) = 0;
 
 		void setGameInstance(GameInstance* gameInstance) { m_gameInstance = gameInstance; }
-		virtual void onCollisionEnter2D(const glm::vec2& resolution, const std::string& name) { };
-		virtual void onCollisionExit2D(const std::string& name) { };
+		GameInstance* getGameInstance() { return m_gameInstance; }
+
+		virtual void onCollisionEnter2D(const glm::vec2& resolution, GameInstance* gameInstance, Collider2DComponent* collider2D) { };
+		virtual void onCollisionExit2D(GameInstance* gameInstance, Collider2DComponent* collider2D) { };
 
 	protected:
 		GameInstance* m_gameInstance{ nullptr };

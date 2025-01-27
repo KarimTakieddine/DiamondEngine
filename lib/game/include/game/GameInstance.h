@@ -9,6 +9,7 @@
 
 namespace diamond_engine
 {
+	class Collider2DComponent;
 	class GameInstance
 	{
 	public:
@@ -71,8 +72,8 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents();
 		const std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents() const;
 		std::unique_ptr<BehaviourComponent> extractBehaviourComponent(const std::string& name);
-		void onCollisionEnter2D(const glm::vec2& resolution, const std::string& name);
-		void onCollisionExit2D(const std::string& name);
+		void onCollisionEnter2D(const glm::vec2& resolution, GameInstance* gameInstance, Collider2DComponent* collider2D);
+		void onCollisionExit2D(GameInstance* gameInstance, Collider2DComponent* collider2D);
 
 		const std::string& getName() const;
 		void setName(const std::string& name);
