@@ -94,6 +94,7 @@ namespace diamond_engine
 						{
 							m_collisionResolutionMap.erase(obstacle.gameInstance->getInternalName());
 							character.gameInstance->onCollisionExit2D(obstacle.gameInstance->getInternalName());
+							obstacle.gameInstance->onCollisionExit2D(character.gameInstance->getInternalName());
 						}
 
 						colliding = false;
@@ -138,7 +139,10 @@ namespace diamond_engine
 					if (m_collisionResolutionMap.find(obstacle.gameInstance->getInternalName()) == m_collisionResolutionMap.cend())
 					{
 						m_collisionResolutionMap.insert({ obstacle.gameInstance->getInternalName(), character.gameInstance->getInternalName() });
-						character.gameInstance->onCollisionEnter2D(glm::normalize(resolutionVector), obstacle.gameInstance->getInternalName());
+
+						const glm::vec2 normalisedResolution = glm::normalize(resolutionVector);
+						character.gameInstance->onCollisionEnter2D(normalisedResolution, obstacle.gameInstance->getInternalName());
+						obstacle.gameInstance->onCollisionEnter2D(normalisedResolution, character.gameInstance->getInternalName());
 					}
 				}
 			}
