@@ -319,6 +319,11 @@ namespace diamond_engine
 		m_currentScene.clear();
 	}
 
+	const std::string& GameEngine::getCurrentScene() const
+	{
+		return m_currentScene;
+	}
+
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
 		DEBUG_EXEC(Debugger::getInstance()->handleAllEvents());

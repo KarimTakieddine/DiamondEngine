@@ -28,6 +28,8 @@ namespace diamond_engine
 		void loadScene(const GameSceneConfig* config);
 		void unloadCurrentScene();
 
+		const std::string& getCurrentScene() const;
+
 	private:
 		void initializeInput(const KeyboardConfig& keyboardConfig, const ControllerConfig& controllerConfig);
 		void onWindowUpdate(GLfloat deltaTime);
@@ -40,6 +42,6 @@ namespace diamond_engine
 		std::unique_ptr<RenderingSubsystem> m_renderingSubsystem{ nullptr };
 		std::unique_ptr<CollisionSolver2D> m_collisionSolver2D{ nullptr };
 		std::shared_ptr<FontLibrary> m_fontLibrary{ nullptr };
-		std::string m_currentScene;
+		std::string m_currentScene{ "Unknown" };
 	};
 }
