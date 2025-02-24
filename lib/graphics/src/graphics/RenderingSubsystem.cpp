@@ -21,7 +21,7 @@ namespace diamond_engine
 		m_graphicsMemoryPool->allocate(MEMORY_POOL_SIZE);
 
 		m_camera->SetFocusTarget(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		m_camera->SetProjectionFrustum(60.0f, 1.333f, 0.3f, 1000.0f);
+		m_camera->SetProjectionFrustum(90.0f, 1.333f, 0.3f, 1000.0f);
 	}
 
 	void RenderingSubsystem::setMaxRendererCount(GLsizei maxRendererCount)

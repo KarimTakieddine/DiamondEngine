@@ -93,6 +93,7 @@ namespace diamond_engine
 				for (GLsizei column = textWindow->getSize().width - 1; column >= 0; --column)
 				{
 					const auto& fontInstance = m_fontInstances[windowToFontIndex(windowIndex, row, column)];
+					fontInstance->setActive(false);
 					renderingSubsystem->unregisterRenderObject("font_renderer", fontInstance->getRenderComponents());
 				}
 			}
