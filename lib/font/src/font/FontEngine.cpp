@@ -100,6 +100,11 @@ namespace diamond_engine
 
 		renderingSubsystem->releaseVertexState();
 
+		for (auto& textWindow : m_textWindows)
+		{
+			textWindow->setCursorPos({ 0, 0 });
+		}
+
 		return { };
 	}
 

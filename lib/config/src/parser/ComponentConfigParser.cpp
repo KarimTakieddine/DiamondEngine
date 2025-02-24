@@ -86,8 +86,9 @@ namespace
 	using diamond_engine::ColliderType;
 
 	const std::unordered_map<std::string, ColliderType> kStringToColliderType = {
-		{ "obstacle", ColliderType::OBSTACLE },
-		{ "character", ColliderType::CHARACTER }
+		{ "obstacle",	ColliderType::OBSTACLE },
+		{ "character",	ColliderType::CHARACTER },
+		{ "zone",		ColliderType::ZONE }
 	};
 
 	static std::unique_ptr<BehaviourComponentConfig> parseCollider2DConfig(const pugi::xml_node& node, EngineStatus* outStatus)

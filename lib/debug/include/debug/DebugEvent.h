@@ -22,6 +22,7 @@ namespace diamond_engine
 			MEMORY_POOL_FREE		= 8,
 			FUNCTION_CALL			= 9,
 			SPRITE_ANIMATION_PLAY	= 10,
+			LEVEL_LOAD				= 11,
 			// No touchy :)
 			FINAL_RESERVED			= 0xFF
 		};

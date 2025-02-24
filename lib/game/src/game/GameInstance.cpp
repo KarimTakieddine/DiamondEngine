@@ -119,6 +119,16 @@ namespace diamond_engine
 		}
 	}
 
+	void GameInstance::setGameEngine(GameEngine* gameEngine)
+	{
+		m_gameEngine = gameEngine;
+	}
+
+	GameEngine* GameInstance::getGameEngine() const
+	{
+		return m_gameEngine;
+	}
+
 	const std::string& GameInstance::getName() const
 	{
 		return m_name;

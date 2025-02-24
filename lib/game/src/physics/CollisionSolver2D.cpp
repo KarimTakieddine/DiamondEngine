@@ -143,7 +143,10 @@ namespace diamond_engine
 						resolutionVector = axes[1] * penetrations[3];
 					}
 
-					characterTransform->translate(resolutionVector);
+					if (obstacleCollider->getType() != ColliderType::ZONE)
+					{
+						characterTransform->translate(resolutionVector);
+					}
 
 					if (m_collisionResolutionMap.find(obstacleName) == m_collisionResolutionMap.cend())
 					{

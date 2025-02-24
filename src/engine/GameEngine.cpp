@@ -16,7 +16,9 @@
 #include "GLAllocationEventHandler.h"
 #include "GLMemoryRequestHandler.h"
 #include "SpriteAnimationPlayHandler.h"
+#include "LevelLoadHandler.h"
 #include "Input.h"
+#include "LevelLoad.h"
 #include "MaterialComponentConfig.h"
 #include "SharedMeshStore.h"
 #include "SharedShaderStore.h"
@@ -43,6 +45,7 @@ namespace diamond_engine
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, std::make_unique<GLAllocationEventHandler>());
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_REQUEST, std::make_unique<GLMemoryRequestHandler>());
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::SPRITE_ANIMATION_PLAY, std::make_unique<SpriteAnimationPlayHandler>());
+		Debugger::getInstance()->registerHandler(DebugEvent::Type::LEVEL_LOAD, std::make_unique<LevelLoadHandler>());
 
 		SharedShaderStore::getInstance()->Load(engineConfig.getShadersDirectory());
 		TextureLoader::getInstance()->Load(engineConfig.getTexturesDirectory());
@@ -266,6 +269,7 @@ namespace diamond_engine
 			switch (collider2D->getType())
 			{
 			case ColliderType::OBSTACLE:
+			case ColliderType::ZONE:
 				m_collisionSolver2D->addObstacle(targetSpriteInstance, collider2D);
 				break;
 			case ColliderType::CHARACTER:
@@ -281,6 +285,10 @@ namespace diamond_engine
 		FontEngine::getInstance()->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
 
 		m_currentScene = config->getName();
+
+		DEBUG_EXEC(Debugger::getInstance()->debugEvent(
+			DebugEvent::Type::LEVEL_LOAD,
+			std::make_unique<LevelLoad>(m_currentScene)));
 	}
 
 	void GameEngine::unloadCurrentScene()
@@ -402,6 +410,7 @@ namespace diamond_engine
 			gameInstance->acquireBehaviourComponent(std::move(behaviourComponent));
 		}
 
+		gameInstance->setGameEngine(this);
 		gameInstance->setActive(true);
 
 		return gameInstance;

@@ -10,6 +10,7 @@
 namespace diamond_engine
 {
 	class Collider2DComponent;
+	class GameEngine;
 	class GameInstance
 	{
 	public:
@@ -75,6 +76,9 @@ namespace diamond_engine
 		void onCollisionEnter2D(const glm::vec2& resolution, GameInstance* gameInstance, Collider2DComponent* collider2D);
 		void onCollisionExit2D(GameInstance* gameInstance, Collider2DComponent* collider2D);
 
+		void setGameEngine(GameEngine* gameEngine);
+		GameEngine* getGameEngine() const;
+
 		const std::string& getName() const;
 		void setName(const std::string& name);
 		const std::string& getInternalName() const;
@@ -87,6 +91,7 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<BehaviourComponent>> m_behaviourComponents;
 		std::string m_name{ "Unnamed" };
 		std::string m_internalName{ "Unnamed" };
+		GameEngine* m_gameEngine{ nullptr };
 		bool m_isActive{ false };
 	};
 }

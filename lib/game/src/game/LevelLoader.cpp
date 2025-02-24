@@ -26,7 +26,7 @@ namespace diamond_engine
 		using TaskFuture = std::future<LoadTask>;
 
 		std::vector<TaskFuture> taskFutures;
-		for (const auto child : std::filesystem::directory_iterator(directoryPath))
+		for (const auto& child : std::filesystem::directory_iterator(directoryPath))
 		{
 			if (!child.is_regular_file())
 			{
@@ -47,7 +47,7 @@ namespace diamond_engine
 
 				if (!config)
 				{
-					return { "loadLevels failed - " + result.configPath.string() + " - Error was: " + result.parseStatus.message };
+					return { "loadLevels failed - " + result.configPath.string() + " - Error was: " + result.parseStatus.message, true };
 				}
 
 				m_configMap.emplace(config->getName(), std::move(config));
