@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
 
 #include "EngineConfig.h"
 #include "GraphicsContext.h"
@@ -26,10 +25,7 @@ namespace diamond_engine
 		void initialize(const EngineConfig& engineConfig);
 		void run();
 
-		void addScene(const std::string& name, const std::string& file);
-		void addScene(const std::string& name, std::unique_ptr<GameSceneConfig> sceneConfig);
-		void removeScene(const std::string& name);
-		void loadScene(const std::string& name);
+		void loadScene(const GameSceneConfig* config);
 		void unloadCurrentScene();
 
 	private:
@@ -38,7 +34,6 @@ namespace diamond_engine
 		void onWindowResize(const Size& size);
 		std::unique_ptr<GameInstance> buildGameInstance(const GameInstanceConfig* config);
 
-		std::unordered_map<std::string, std::unique_ptr<GameSceneConfig>> m_gameScenes;
 		std::vector<std::unique_ptr<GameInstance>> m_spriteInstances;
 		std::vector<std::unique_ptr<GameInstance>> m_collider2DInstances;
 		std::unique_ptr<GraphicsContext> m_graphicsContext{ nullptr };

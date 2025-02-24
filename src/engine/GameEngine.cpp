@@ -162,67 +162,16 @@ namespace diamond_engine
 		stateMonitor.setJoystickDeadzone(controllerConfig.getJoystickDeadzone());
 	}
 
-	void GameEngine::addScene(const std::string& name, const std::string& file)
+	void GameEngine::loadScene(const GameSceneConfig* config)
 	{
-		std::filesystem::path scenePath(file);
-		scenePath.make_preferred();
-
-		if (!std::filesystem::exists(scenePath) || !std::filesystem::is_regular_file(scenePath))
-		{
-			throw std::runtime_error("GameConfigScene file not found: " + scenePath.string());
-		}
-
-		EngineStatus parseStatus;
-		auto sceneConfig = parseSceneFile(file, &parseStatus);
-
-		if (!parseStatus)
-		{
-			// TODO: Revisit general error handling logic!!!
-			throw std::runtime_error("Failed to add GameSceneConfig. A parsing error was detected: " + parseStatus.message);
-		}
-
-		addScene(name, std::move(sceneConfig));
-	}
-
-	void GameEngine::addScene(const std::string& name, std::unique_ptr<GameSceneConfig> sceneConfig)
-	{
-		m_gameScenes.insert({ name, std::move(sceneConfig) });
-	}
-
-	void GameEngine::removeScene(const std::string& name)
-	{
-		if (name == m_currentScene)
-		{
-			unloadCurrentScene();
-		}
-
-		if (m_gameScenes.find(name) == m_gameScenes.cend())
-		{
-			return;
-		}
-
-		m_gameScenes.erase(name);
-	}
-
-	void GameEngine::loadScene(const std::string& name)
-	{
-		auto sceneIt = m_gameScenes.find(name);
-
-		if (sceneIt == m_gameScenes.cend())
-		{
-			throw std::runtime_error("Cannot load scene. Scene not found: " + name);
-		}
-
 		unloadCurrentScene();
 
-		const auto& sceneConfig = sceneIt->second;
-
-		m_renderingSubsystem->setBackgroundColor(sceneConfig->getBackgroundColor());
+		m_renderingSubsystem->setBackgroundColor(config->getBackgroundColor());
 
 		std::vector<GameInstanceConfig*> spriteConfigs;
 		std::vector<std::unique_ptr<GameInstanceConfig>> collider2DConfigs;
 
-		const auto& gameInstanceConfigs = sceneConfig->getInstanceConfigs();
+		const auto& gameInstanceConfigs = config->getInstanceConfigs();
 		for (GLsizei i = 0; i < gameInstanceConfigs.size(); ++i)
 		{
 			const auto& gameInstanceConfig = gameInstanceConfigs[i];
@@ -331,7 +280,7 @@ namespace diamond_engine
 		FontEngine::getInstance()->setWindowDimensions(0, { -0.95f, 0.94f }, { 0.45f, 0.45f });
 		FontEngine::getInstance()->setWindowColor(0, { 1.0f, 1.0f, 1.0f });
 
-		m_currentScene = name;
+		m_currentScene = config->getName();
 	}
 
 	void GameEngine::unloadCurrentScene()

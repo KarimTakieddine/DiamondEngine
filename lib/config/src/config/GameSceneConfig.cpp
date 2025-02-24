@@ -17,6 +17,16 @@ namespace diamond_engine
 		m_instanceConfigs = std::move(instanceConfigs);
 	}
 
+	const std::string& GameSceneConfig::getName() const
+	{
+		return m_name;
+	}
+
+	void GameSceneConfig::setName(const std::string& name)
+	{
+		m_name = name;
+	}
+
 	const glm::vec4& GameSceneConfig::getBackgroundColor() const
 	{
 		return m_backgroundColor;
