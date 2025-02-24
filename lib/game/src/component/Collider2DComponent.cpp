@@ -36,6 +36,7 @@ namespace diamond_engine
 		setSize(componentConfig->getSize());
 		setOffset(componentConfig->getOffset());
 		setType(componentConfig->getType());
+		setIgnoreFlags(componentConfig->getIgnoreFlags());
 
 		return { };
 	}
@@ -88,5 +89,15 @@ namespace diamond_engine
 	void Collider2DComponent::setType(ColliderType type)
 	{
 		m_type = type;
+	}
+
+	ColliderIgnoreFlags Collider2DComponent::getIgnoreFlags() const
+	{
+		return m_ignoreFlags;
+	}
+
+	void Collider2DComponent::setIgnoreFlags(ColliderIgnoreFlags flags)
+	{
+		m_ignoreFlags = flags;
 	}
 }

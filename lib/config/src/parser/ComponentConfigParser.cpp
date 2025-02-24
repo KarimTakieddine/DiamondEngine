@@ -84,12 +84,55 @@ namespace
 
 	using diamond_engine::BehaviourComponentConfig;
 	using diamond_engine::ColliderType;
+	using diamond_engine::ColliderIgnoreFlags;
 
 	const std::unordered_map<std::string, ColliderType> kStringToColliderType = {
 		{ "obstacle",	ColliderType::OBSTACLE },
 		{ "character",	ColliderType::CHARACTER },
 		{ "zone",		ColliderType::ZONE }
 	};
+
+	const std::unordered_map<std::string, ColliderIgnoreFlags> kStringToIgnoreFlag = {
+		{ "none",	ColliderIgnoreFlags::NONE },
+		{ "up",		ColliderIgnoreFlags::UP },
+		{ "down",	ColliderIgnoreFlags::DOWN },
+		{ "left",	ColliderIgnoreFlags::LEFT },
+		{ "right",	ColliderIgnoreFlags::RIGHT },
+	};
+
+	ColliderIgnoreFlags parseIgnoreFlags(const std::string& flagsString)
+	{
+		ColliderIgnoreFlags result = ColliderIgnoreFlags::NONE;
+
+		size_t offset = 0;
+		auto position = flagsString.find('|', offset);
+
+		while (position != std::string::npos)
+		{
+			const std::string flagSubstring = flagsString.substr(offset, position - offset);
+
+			const auto flagIt = kStringToIgnoreFlag.find(flagSubstring);
+			if (flagIt != kStringToIgnoreFlag.cend())
+			{
+				result |= flagIt->second;
+			}
+
+			offset		= position + 1;
+			position	= flagsString.find('|', offset);
+		}
+
+		if (offset < flagsString.size() - 1)
+		{
+			const std::string flagSubstring = flagsString.substr(offset, flagsString.size() - offset);
+			const auto flagIt = kStringToIgnoreFlag.find(flagSubstring);
+			if (flagIt != kStringToIgnoreFlag.cend())
+			{
+				result |= flagIt->second;
+			}
+		}
+
+		return result;
+	}
 
 	static std::unique_ptr<BehaviourComponentConfig> parseCollider2DConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
@@ -120,6 +163,12 @@ namespace
 			}
 
 			result->setType(typeIt->second);
+		}
+
+		pugi::xml_attribute ignoreFlagsAttribute = node.attribute("ignore");
+		if (ignoreFlagsAttribute)
+		{
+			result->setIgnoreFlags(parseIgnoreFlags(ignoreFlagsAttribute.as_string()));
 		}
 
 		return result;

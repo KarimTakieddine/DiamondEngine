@@ -219,6 +219,7 @@ namespace diamond_engine
 						copy->setOffset(colliderComponentConfig->getOffset());
 						copy->setType(colliderComponentConfig->getType());
 						copy->setTargetIndex(colliderComponentConfig->getTargetIndex());
+						copy->setIgnoreFlags(colliderComponentConfig->getIgnoreFlags());
 						colliderConfig->addBehaviourConfig(std::move(copy));
 
 						colliderConfig->setName(gameInstanceConfig->getName() + "_collider");

@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 
 #include "BehaviourComponent.h"
+#include "ColliderIgnoreFlags.h"
 #include "ColliderType.h"
 
 namespace diamond_engine
@@ -35,11 +36,15 @@ namespace diamond_engine
 		ColliderType getType() const;
 		void setType(ColliderType type);
 
+		ColliderIgnoreFlags getIgnoreFlags() const;
+		void setIgnoreFlags(ColliderIgnoreFlags flags);
+
 	private:
 		glm::vec2 m_size{ 1.0f, 1.0f };
 		glm::vec2 m_offset{ 0.0f, 0.0f };
 		TransformRenderComponent* m_target{ nullptr };
 		TransformRenderComponent* m_source{ nullptr };
 		ColliderType m_type{ ColliderType::OBSTACLE };
+		ColliderIgnoreFlags m_ignoreFlags{ ColliderIgnoreFlags::NONE };
 	};
 }

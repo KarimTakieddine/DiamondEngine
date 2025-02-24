@@ -46,4 +46,14 @@ namespace diamond_engine
 	{
 		m_targetIndex = index;
 	}
+
+	ColliderIgnoreFlags Collider2DComponentConfig::getIgnoreFlags() const
+	{
+		return m_ignoreFlags;
+	}
+
+	void Collider2DComponentConfig::setIgnoreFlags(ColliderIgnoreFlags flags)
+	{
+		m_ignoreFlags = flags;
+	}
 }

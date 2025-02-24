@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cmath>
+#include <functional>
+#include <map>
 
 #include <glm/gtx/vec_swizzle.hpp>
 
@@ -7,6 +9,32 @@
 #include "CollisionSolver2D.h"
 #include "GameInstance.h"
 #include "TransformRenderComponent.h"
+
+namespace
+{
+	using ColliderIgnoreFlags = diamond_engine::ColliderIgnoreFlags;
+
+	const std::map<ColliderIgnoreFlags, std::function<bool(const glm::vec2&)>> kColliderIgnoreChecks =
+	{
+		{ ColliderIgnoreFlags::LEFT,	[](const glm::vec2& input) { return input.x < 0.0f; } },
+		{ ColliderIgnoreFlags::RIGHT,	[](const glm::vec2& input) { return input.x > 0.0f; } },
+		{ ColliderIgnoreFlags::UP,		[](const glm::vec2& input) { return input.y > 0.0f; } },
+		{ ColliderIgnoreFlags::DOWN,	[](const glm::vec2& input) { return input.y < 0.0f; } }
+	};
+
+	void filterResolutionVectors(ColliderIgnoreFlags ignoreFlags, std::vector<glm::vec2>& output)
+	{
+		for (const auto& pair : kColliderIgnoreChecks)
+		{
+			const ColliderIgnoreFlags ignoreFlag = pair.first;
+
+			if ( (ignoreFlags & ignoreFlag) == ignoreFlag )
+			{
+				output.erase(std::remove_if(output.begin(), output.end(), pair.second));
+			}
+		}
+	}
+}
 
 namespace diamond_engine
 {
@@ -73,7 +101,7 @@ namespace diamond_engine
 
 				bool colliding = true;
 
-				std::vector<GLfloat> penetrations;
+				std::vector<glm::vec2> penetrations;
 
 				for (const auto& axis : axes)
 				{
@@ -110,37 +138,31 @@ namespace diamond_engine
 						break;
 					}
 
-					penetrations.push_back(-(characterMaximum - obstacleMinimum));
-					penetrations.push_back(obstacleMaximum - characterMinimum);
+					penetrations.push_back(axis * ( -(characterMaximum - obstacleMinimum) ) );
+					penetrations.push_back(axis * ( obstacleMaximum - characterMinimum ) );
 				}
 
 				if (colliding)
 				{
+					::filterResolutionVectors(obstacleCollider->getIgnoreFlags(), penetrations);
+
 					std::vector<GLfloat> absolutePenetrations;
 
-					for (GLfloat penetration : penetrations)
+					for (const auto& penetration : penetrations)
 					{
-						absolutePenetrations.push_back(std::abs(penetration));
+						absolutePenetrations.push_back(glm::length(penetration));
 					}
 
-					const GLfloat minimumPenetration	= *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
-					glm::vec2 resolutionVector			= { };
+					const GLfloat minimumPenetration = *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
+					glm::vec2 resolutionVector = { };
 
-					if (minimumPenetration == absolutePenetrations[0])
+					for (const auto& penetration : penetrations)
 					{
-						resolutionVector = axes[0] * penetrations[0];
-					}
-					else if (minimumPenetration == absolutePenetrations[1])
-					{
-						resolutionVector = axes[0] * penetrations[1];
-					}
-					else if (minimumPenetration == absolutePenetrations[2])
-					{
-						resolutionVector = axes[1] * penetrations[2];
-					}
-					else if (minimumPenetration == absolutePenetrations[3])
-					{
-						resolutionVector = axes[1] * penetrations[3];
+						if (glm::length(penetration) == minimumPenetration)
+						{
+							resolutionVector = penetration;
+							break;
+						}
 					}
 
 					if (obstacleCollider->getType() != ColliderType::ZONE)
