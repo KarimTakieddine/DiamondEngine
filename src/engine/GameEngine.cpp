@@ -30,7 +30,8 @@
 namespace diamond_engine
 {
 	GameEngine::GameEngine() :
-		m_graphicsContext(std::make_unique<GraphicsContext>())
+		m_graphicsContext	(std::make_unique<GraphicsContext>()),
+		m_engineStorage		(std::make_unique<EngineStorage>())
 		{ }
 
 	void GameEngine::initialize(const EngineConfig& engineConfig)
@@ -322,6 +323,11 @@ namespace diamond_engine
 	const std::string& GameEngine::getCurrentScene() const
 	{
 		return m_currentScene;
+	}
+
+	EngineStorage* GameEngine::getEngineStorage() const
+	{
+		return m_engineStorage.get();
 	}
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
