@@ -29,19 +29,21 @@
 
 namespace diamond_engine
 {
-	GameEngine::GameEngine() :
-		m_graphicsContext	(std::make_unique<GraphicsContext>()),
-		m_engineStorage		(std::make_unique<EngineStorage>())
-		{ }
+	GameEngine::GameEngine() : m_engineStorage(std::make_unique<EngineStorage>()) { }
 
 	void GameEngine::initialize(const EngineConfig& engineConfig)
 	{
-		AudioEngine::getInstance()->initialize(engineConfig.getAudioDirectory());
+		glewExperimental = GL_TRUE;
 
-		m_graphicsContext->Initialize(
-			engineConfig,
-			std::bind(&GameEngine::onWindowUpdate, this, std::placeholders::_1),
-			std::bind(&GameEngine::onWindowResize, this, std::placeholders::_1));
+		GLenum status = glewInit();
+
+		if (status != GLEW_OK) {
+			std::stringstream errorBuffer;
+			errorBuffer << glewGetErrorString(status);
+			throw std::runtime_error("GraphicsContext::InitializeGLEW() failed - Message: " + errorBuffer.str());
+		}
+
+		AudioEngine::getInstance()->initialize(engineConfig.getAudioDirectory());
 
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_ALLOCATION, std::make_unique<GLAllocationEventHandler>());
 		Debugger::getInstance()->registerHandler(DebugEvent::Type::GL_OBJECT_REQUEST, std::make_unique<GLMemoryRequestHandler>());
@@ -125,13 +127,16 @@ namespace diamond_engine
 
 		initializeInput(engineConfig.GetKeyboardConfig(), engineConfig.getControllerConfig());
 
-		onWindowResize(m_graphicsContext->getWindow()->getCurrentSize());
+		glDepthFunc(GL_LEQUAL);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
 	}
 
-	void GameEngine::run()
+	void GameEngine::cleanup()
 	{
-		m_graphicsContext->Execute();
-
 		unloadCurrentScene();
 
 		/*
@@ -332,10 +337,6 @@ namespace diamond_engine
 
 	void GameEngine::onWindowUpdate(GLfloat deltaTime)
 	{
-		DEBUG_EXEC(Debugger::getInstance()->handleAllEvents());
-
-		input::StateMonitor::GetInstance().MonitorStates(m_graphicsContext->getWindow()->GetHandle());
-
 		GameInstanceManager::updateGameInstances(deltaTime, m_spriteInstances);
 		m_collisionSolver2D->ResolveCollisions();
 		GameInstanceManager::updateGameInstances(deltaTime, m_collider2DInstances);

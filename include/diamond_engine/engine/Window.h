@@ -8,7 +8,7 @@
 #include "Size.h"
 
 namespace diamond_engine {
-class Window {
+class GLFWWindow {
 public:
 	using ResizeHandler = std::function<void(const Size&)>;
 	using UpdateHandler = std::function<void(GLfloat)>;
@@ -18,11 +18,13 @@ public:
 
 	static const size_t kMaxErrorBufferSize = 2 << 7;
 
-	Window(
+	GLFWWindow(
 		const Size& size,
-		const std::string& title,
-		ResizeHandler resizeHandler,
-		UpdateHandler updateHandler);
+		const std::string& title);
+
+	void setResizeHandler(ResizeHandler handler);
+
+	void setUpdateHandler(UpdateHandler handler);
 
 	GLFWwindow* GetHandle() const { return m_handle; }
 
@@ -36,7 +38,7 @@ public:
 
 	void Close();
 
-	~Window();
+	~GLFWWindow();
 
 private:
 	static void OnResize(GLFWwindow* handle, int width, int height);

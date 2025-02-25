@@ -64,7 +64,6 @@ set(SOURCES
     ${SRC_DIR}/engine/EngineStorage.cpp
     ${SRC_DIR}/engine/EngineVariant.cpp
     ${SRC_DIR}/engine/GameEngine.cpp
-    ${SRC_DIR}/engine/GraphicsContext.cpp
     ${SRC_DIR}/engine/Window.cpp
     ${SRC_DIR}/utility/DeltaTimer.cpp
     ${SRC_DIR}/utility/File.cpp
