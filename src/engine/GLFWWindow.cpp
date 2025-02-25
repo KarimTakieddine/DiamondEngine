@@ -3,7 +3,7 @@
 #include "Debugger.h"
 #include "DeltaTimer.h"
 #include "EngineMacros.h"
-#include "Window.h"
+#include "GLFWWindow.h"
 #include "Input.h"
 
 namespace diamond_engine {
