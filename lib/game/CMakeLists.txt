@@ -13,6 +13,12 @@ set(SRC_DIR src)
 
 set(GLM_DIR ../../glm)
 
+# spine-runtimes
+
+set(SPINE_RUNTIMES_DIR spine-runtimes/spine-cpp)
+
+add_subdirectory(${SPINE_RUNTIMES_DIR})
+
 set(SOURCES
     ${SRC_DIR}/animation/SpriteSheetLoader.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
@@ -42,3 +48,5 @@ target_include_directories(libDiamondEngineGame PRIVATE
     "${INCLUDE_DIR}/game"
     "${INCLUDE_DIR}/physics"
 )
+
+target_link_libraries(libDiamondEngineGame PRIVATE spine-cpp)

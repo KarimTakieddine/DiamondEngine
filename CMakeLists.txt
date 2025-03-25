@@ -104,6 +104,7 @@ target_include_directories(DiamondEngine PUBLIC
     "${INCLUDE_DIR}/diamond_engine/utility")
 
 add_dependencies(DiamondEngine ${GLFW_DIR})
+
 target_link_libraries(DiamondEngine PRIVATE
     libDiamondEngineAudio
     libDiamondEngineGraphics
