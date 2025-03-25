@@ -32,15 +32,20 @@ set(GLFW_BUILD_TESTS FALSE)
 
 add_subdirectory(${GLFW_DIR})
 
-set(COMMON_DIR "${LIB_DIR_PREFIX}/common")
-set(CONFIG_DIR "${LIB_DIR_PREFIX}/config")
-set(AUDIO_DIR "${LIB_DIR_PREFIX}/audio")
-set(GRAPHICS_DIR "${LIB_DIR_PREFIX}/graphics")
-set(GAME_DIR "${LIB_DIR_PREFIX}/game")
-set(INPUT_DIR "${LIB_DIR_PREFIX}/input")
+set(COMMON_DIR      "${LIB_DIR_PREFIX}/common")
+set(CONFIG_DIR      "${LIB_DIR_PREFIX}/config")
+set(DEBUG_DIR       "${LIB_DIR_PREFIX}/debug")
+set(AUDIO_DIR       "${LIB_DIR_PREFIX}/audio")
+set(GRAPHICS_DIR    "${LIB_DIR_PREFIX}/graphics")
+set(FONT_DIR        "${LIB_DIR_PREFIX}/font")
+set(GAME_DIR        "${LIB_DIR_PREFIX}/game")
+set(INPUT_DIR       "${LIB_DIR_PREFIX}/input")
+
 add_subdirectory(${CONFIG_DIR})
+add_subdirectory(${DEBUG_DIR})
 add_subdirectory(${AUDIO_DIR})
 add_subdirectory(${GRAPHICS_DIR})
+add_subdirectory(${FONT_DIR})
 add_subdirectory(${GAME_DIR})
 add_subdirectory(${INPUT_DIR})
 
@@ -56,9 +61,10 @@ set(IRR_KLANG_BINARY_DIR ${IRR_KLANG_BINARY_DIR} PARENT_SCOPE)
 # DiamondEngine:
 
 set(SOURCES
-    ${SRC_DIR}/engine/GraphicsContext.cpp
-    ${SRC_DIR}/engine/Window.cpp
+    ${SRC_DIR}/engine/EngineStorage.cpp
+    ${SRC_DIR}/engine/EngineVariant.cpp
     ${SRC_DIR}/engine/GameEngine.cpp
+    ${SRC_DIR}/engine/Window.cpp
     ${SRC_DIR}/utility/DeltaTimer.cpp
     ${SRC_DIR}/utility/File.cpp
     ${SRC_DIR}/utility/Logger.cpp
@@ -75,6 +81,12 @@ target_include_directories(DiamondEngine PUBLIC
     "${LIB_DIR_PREFIX}/common/${INCLUDE_DIR}"
     "${CONFIG_DIR}/include/config"
     "${CONFIG_DIR}/include/parser"
+    "${DEBUG_DIR}/include/debug"
+    "${DEBUG_DIR}/include/event"
+    "${DEBUG_DIR}/include/handler"
+    "${FONT_DIR}/include/component"
+    "${FONT_DIR}/include/font"
+    "${FONT_DIR}/include/window"
     "${GAME_DIR}/include/animation"
     "${GAME_DIR}/include/component"
     "${GAME_DIR}/include/game"
@@ -96,5 +108,7 @@ target_link_libraries(DiamondEngine PRIVATE
     libDiamondEngineAudio
     libDiamondEngineGraphics
     libDiamondEngineConfig
+    libDiamondEngineDebug
+    libDiamondEngineFont
     libDiamondEngineGame
     libDiamondEngineInput)

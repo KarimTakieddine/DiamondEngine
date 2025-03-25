@@ -1,26 +1,27 @@
 #include <stdexcept>
 
+#include "Debugger.h"
 #include "DeltaTimer.h"
+#include "EngineMacros.h"
 #include "Window.h"
 #include "Input.h"
 
 namespace diamond_engine {
-	Window::Window(
+	GLFWWindow::GLFWWindow(
 		const Size& size,
-		const std::string& title,
-		ResizeHandler resizeHandler,
-		UpdateHandler updateHandler) {
-		if (!resizeHandler) {
-			throw std::runtime_error("Window creation requires ResizeHandler");
+		const std::string& title) {
+		/*
+			Additional calls to this function after successful initialization
+			but before termination will return GLFW_TRUE immediately.
+		*/
+
+		if (!glfwInit()) {
+			const char* errorBuffer = nullptr;
+			const int errorCode = glfwGetError(&errorBuffer);
+			throw std::runtime_error(
+				"Could not initialize GLFW library! Error code: " + std::to_string(errorCode)
+				+ " - Message: " + std::string(errorBuffer));
 		}
-
-		m_resizeHandler = resizeHandler;
-
-		if (!updateHandler) {
-			throw std::runtime_error("Window creation requires UpdateHandler");
-		}
-
-		m_updateHandler = updateHandler;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -41,12 +42,22 @@ namespace diamond_engine {
 		m_currentSize = size;
 
 		glfwSetWindowUserPointer(m_handle, this);
-		glfwSetWindowSizeCallback(m_handle, &Window::OnResize);
+		glfwSetWindowSizeCallback(m_handle, &GLFWWindow::OnResize);
 
 		glfwMakeContextCurrent(m_handle);
 	}
 
-	void Window::SetSize(const Size& size) {
+	void GLFWWindow::setResizeHandler(ResizeHandler handler)
+	{
+		m_resizeHandler = handler;
+	}
+
+	void GLFWWindow::setUpdateHandler(UpdateHandler handler)
+	{
+		m_updateHandler = handler;
+	}
+
+	void GLFWWindow::SetSize(const Size& size) {
 		if (size == m_currentSize) {
 			return;
 		}
@@ -54,19 +65,23 @@ namespace diamond_engine {
 		glfwSetWindowSize(m_handle, size.width, size.height);
 	}
 
-	const Size& Window::getCurrentSize() const
+	const Size& GLFWWindow::getCurrentSize() const
 	{
 		return m_currentSize;
 	}
 
-	void Window::StartUpdateLoop() {
+	void GLFWWindow::StartUpdateLoop() {
 		DeltaTimer deltaTimer;
 		GLfloat deltaTime = 0.0f;
 
 		while (!glfwWindowShouldClose(m_handle)) {
 			deltaTimer.Start();
 
+			DEBUG_EXEC(Debugger::getInstance()->handleAllEvents());
+
 			glfwPollEvents();
+
+			input::StateMonitor::GetInstance().MonitorStates(m_handle);
 
 			m_updateHandler(deltaTime);
 
@@ -78,16 +93,17 @@ namespace diamond_engine {
 		}
 	}
 
-	void Window::Close() {
+	void GLFWWindow::Close() {
 		glfwSetWindowShouldClose(m_handle, GL_TRUE);
 	}
 
-	Window::~Window() {
+	GLFWWindow::~GLFWWindow() {
 		glfwDestroyWindow(m_handle);
+		glfwTerminate();
 	}
 	
-	/* static */ void Window::OnResize(GLFWwindow* handle, int width, int height) {
-		Window* instance = reinterpret_cast<Window*>(glfwGetWindowUserPointer(handle));
+	/* static */ void GLFWWindow::OnResize(GLFWwindow* handle, int width, int height) {
+		GLFWWindow* instance = reinterpret_cast<GLFWWindow*>(glfwGetWindowUserPointer(handle));
 
 		const Size updatedSize{ width, height };
 

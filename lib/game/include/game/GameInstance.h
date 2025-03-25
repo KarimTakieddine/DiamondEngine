@@ -9,6 +9,8 @@
 
 namespace diamond_engine
 {
+	class Collider2DComponent;
+	class GameEngine;
 	class GameInstance
 	{
 	public:
@@ -71,18 +73,25 @@ namespace diamond_engine
 		std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents();
 		const std::vector<std::unique_ptr<BehaviourComponent>>& getBehaviourComponents() const;
 		std::unique_ptr<BehaviourComponent> extractBehaviourComponent(const std::string& name);
-		void onCollisionEnter2D(const glm::vec2& resolution, const std::string& name);
-		void onCollisionExit2D(const std::string& name);
+		void onCollisionEnter2D(const glm::vec2& resolution, GameInstance* gameInstance, Collider2DComponent* collider2D);
+		void onCollisionExit2D(GameInstance* gameInstance, Collider2DComponent* collider2D);
+
+		void setGameEngine(GameEngine* gameEngine);
+		GameEngine* getGameEngine() const;
 
 		const std::string& getName() const;
 		void setName(const std::string& name);
 		const std::string& getInternalName() const;
 		void setInternalName(const std::string& name);
+		bool isActive() const;
+		void setActive(bool active);
 
 	private:
 		std::vector<std::unique_ptr<IRenderComponent>> m_renderComponents;
 		std::vector<std::unique_ptr<BehaviourComponent>> m_behaviourComponents;
 		std::string m_name{ "Unnamed" };
 		std::string m_internalName{ "Unnamed" };
+		GameEngine* m_gameEngine{ nullptr };
+		bool m_isActive{ false };
 	};
 }

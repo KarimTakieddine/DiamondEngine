@@ -1,12 +1,12 @@
 #include <pugixml.hpp>
 
-#include "AnimationParser.h"
+#include "SpriteAnimationParser.h"
 
 namespace diamond_engine
 {
-	/* static */ Animation AnimationParser::Parse(const pugi::xml_node& node)
+	/* static */ SpriteAnimation SpriteAnimationParser::Parse(const pugi::xml_node& node)
 	{
-		Animation result;
+		SpriteAnimation result;
 
 		pugi::xml_attribute nameAttribute = node.attribute("name");
 		if (nameAttribute)
@@ -17,13 +17,13 @@ namespace diamond_engine
 		pugi::xml_attribute durationAttribute = node.attribute("duration");
 		if (durationAttribute)
 		{
-			result.duration = durationAttribute.as_float(result.duration);
+			result.durationS = durationAttribute.as_float(result.durationS);
 		}
 
-		pugi::xml_attribute delayBetweenFramesAttribute = node.attribute("delayBetweenFrames");
+		pugi::xml_attribute delayBetweenFramesAttribute = node.attribute("interFrameDelay");
 		if (delayBetweenFramesAttribute)
 		{
-			result.delayBetweenFrames = delayBetweenFramesAttribute.as_float(result.delayBetweenFrames);
+			result.interFrameDelayS = delayBetweenFramesAttribute.as_float(result.interFrameDelayS);
 		}
 
 		return result;

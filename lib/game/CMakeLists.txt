@@ -15,12 +15,12 @@ set(GLM_DIR ../../glm)
 
 set(SOURCES
     ${SRC_DIR}/animation/SpriteSheetLoader.cpp
-    ${SRC_DIR}/component/AnimationPlayer.cpp
     ${SRC_DIR}/component/SpriteAnimationPlayer.cpp
     ${SRC_DIR}/component/Collider2DComponent.cpp
     ${SRC_DIR}/component/ComponentFactory.cpp
     ${SRC_DIR}/game/GameInstance.cpp
     ${SRC_DIR}/game/GameInstanceManager.cpp
+    ${SRC_DIR}/game/LevelLoader.cpp
     ${SRC_DIR}/physics/CollisionSolver2D.cpp)
 
 add_library(libDiamondEngineGame STATIC ${SOURCES})

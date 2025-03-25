@@ -2,7 +2,7 @@
 
 #include <pugixml.hpp>
 
-#include "AnimationParser.h"
+#include "SpriteAnimationParser.h"
 #include "Collider2DComponentConfig.h"
 #include "ComponentConfigParser.h"
 #include "MaterialComponentConfig.h"
@@ -84,24 +84,73 @@ namespace
 
 	using diamond_engine::BehaviourComponentConfig;
 	using diamond_engine::ColliderType;
+	using diamond_engine::ColliderIgnoreFlags;
 
 	const std::unordered_map<std::string, ColliderType> kStringToColliderType = {
-		{ "obstacle", ColliderType::OBSTACLE },
-		{ "character", ColliderType::CHARACTER }
+		{ "obstacle",	ColliderType::OBSTACLE },
+		{ "character",	ColliderType::CHARACTER },
+		{ "zone",		ColliderType::ZONE }
 	};
+
+	const std::unordered_map<std::string, ColliderIgnoreFlags> kStringToIgnoreFlag = {
+		{ "none",	ColliderIgnoreFlags::NONE },
+		{ "up",		ColliderIgnoreFlags::UP },
+		{ "down",	ColliderIgnoreFlags::DOWN },
+		{ "left",	ColliderIgnoreFlags::LEFT },
+		{ "right",	ColliderIgnoreFlags::RIGHT },
+	};
+
+	ColliderIgnoreFlags parseIgnoreFlags(const std::string& flagsString)
+	{
+		ColliderIgnoreFlags result = ColliderIgnoreFlags::NONE;
+
+		size_t offset = 0;
+		auto position = flagsString.find('|', offset);
+
+		while (position != std::string::npos)
+		{
+			const std::string flagSubstring = flagsString.substr(offset, position - offset);
+
+			const auto flagIt = kStringToIgnoreFlag.find(flagSubstring);
+			if (flagIt != kStringToIgnoreFlag.cend())
+			{
+				result |= flagIt->second;
+			}
+
+			offset		= position + 1;
+			position	= flagsString.find('|', offset);
+		}
+
+		if (offset < flagsString.size() - 1)
+		{
+			const std::string flagSubstring = flagsString.substr(offset, flagsString.size() - offset);
+			const auto flagIt = kStringToIgnoreFlag.find(flagSubstring);
+			if (flagIt != kStringToIgnoreFlag.cend())
+			{
+				result |= flagIt->second;
+			}
+		}
+
+		return result;
+	}
 
 	static std::unique_ptr<BehaviourComponentConfig> parseCollider2DConfig(const pugi::xml_node& node, EngineStatus* outStatus)
 	{
 		using diamond_engine::Collider2DComponentConfig;
-		using diamond_engine::Size;
 
 		std::unique_ptr<Collider2DComponentConfig> result = std::make_unique<Collider2DComponentConfig>();
 
 		pugi::xml_attribute widthAttribute	= node.attribute("width");
 		pugi::xml_attribute heightAttribute = node.attribute("height");
 
-		const Size& defaultSize = result->getSize();
-		result->setSize({ widthAttribute.as_int(defaultSize.width), heightAttribute.as_int(defaultSize.height) });
+		const glm::vec2& defaultSize = result->getSize();
+		result->setSize({ widthAttribute.as_float(defaultSize.x), heightAttribute.as_float(defaultSize.y) });
+
+		pugi::xml_attribute offsetXAttribute = node.attribute("xOffset");
+		pugi::xml_attribute offsetYAttribute = node.attribute("yOffset");
+
+		const glm::vec2& defaultOffset = result->getOffset();
+		result->setOffset({ offsetXAttribute.as_float(defaultOffset.x), offsetYAttribute.as_float(defaultOffset.y) });
 
 		pugi::xml_attribute typeAttribute = node.attribute("type");
 		if (typeAttribute)
@@ -116,6 +165,12 @@ namespace
 			result->setType(typeIt->second);
 		}
 
+		pugi::xml_attribute ignoreFlagsAttribute = node.attribute("ignore");
+		if (ignoreFlagsAttribute)
+		{
+			result->setIgnoreFlags(parseIgnoreFlags(ignoreFlagsAttribute.as_string()));
+		}
+
 		return result;
 	}
 
@@ -123,14 +178,14 @@ namespace
 	{
 		// TODO: Remove need for separate AnimationParser class...
 
-		using diamond_engine::AnimationParser;
+		using diamond_engine::SpriteAnimationParser;
 		using diamond_engine::SpriteAnimationPlayerConfig;
 
 		std::unique_ptr<SpriteAnimationPlayerConfig> result = std::make_unique<SpriteAnimationPlayerConfig>();
 
 		for (const auto& animationNode : node.children("Animation"))
 		{
-			result->addAnimation(AnimationParser::Parse(animationNode));
+			result->addAnimation(SpriteAnimationParser::Parse(animationNode));
 		}
 
 		return result;

@@ -19,7 +19,7 @@ namespace diamond_engine
 
 		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
 
-		void setTexture(const Texture& texture);
+		void setTexture(GLuint texture);
 		const Texture& getTexture() const;
 		Texture& getTexture();
 

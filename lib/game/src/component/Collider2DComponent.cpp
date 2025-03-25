@@ -17,16 +17,13 @@ namespace diamond_engine
 			return;
 		}
 
-		const glm::mat4& targetLocalScale = m_target->getLocalScale();
-		const glm::vec2 targetScale{ targetLocalScale[0].x, targetLocalScale[1].y };
 		m_source->setLocalScale(
 			{
-				static_cast<GLfloat>(m_size.width) * targetScale.x,
-				static_cast<GLfloat>(m_size.height) * targetScale.y,
+				m_size,
 				1.0f
 			});
 
-		m_source->setPosition(m_target->getPosition());
+		m_source->setPosition(m_target->getPosition() + glm::vec3{ m_offset, 0.0f });
 	}
 
 	EngineStatus Collider2DComponent::initialize(const BehaviourComponentConfig* config)
@@ -37,7 +34,9 @@ namespace diamond_engine
 			return { "Collider2DComponent::initialize failed. Could not convert config to target type", true };
 
 		setSize(componentConfig->getSize());
+		setOffset(componentConfig->getOffset());
 		setType(componentConfig->getType());
+		setIgnoreFlags(componentConfig->getIgnoreFlags());
 
 		return { };
 	}
@@ -62,14 +61,24 @@ namespace diamond_engine
 		m_source = source;
 	}
 
-	const Size& Collider2DComponent::getSize() const
+	const glm::vec2& Collider2DComponent::getSize() const
 	{
 		return m_size;
 	}
 
-	void Collider2DComponent::setSize(const Size& size)
+	void Collider2DComponent::setSize(const glm::vec2& size)
 	{
 		m_size = size;
+	}
+
+	const glm::vec2& Collider2DComponent::getOffset() const
+	{
+		return m_offset;
+	}
+
+	void Collider2DComponent::setOffset(const glm::vec2& offset)
+	{
+		m_offset = offset;
 	}
 
 	ColliderType Collider2DComponent::getType() const
@@ -80,5 +89,15 @@ namespace diamond_engine
 	void Collider2DComponent::setType(ColliderType type)
 	{
 		m_type = type;
+	}
+
+	ColliderIgnoreFlags Collider2DComponent::getIgnoreFlags() const
+	{
+		return m_ignoreFlags;
+	}
+
+	void Collider2DComponent::setIgnoreFlags(ColliderIgnoreFlags flags)
+	{
+		m_ignoreFlags = flags;
 	}
 }

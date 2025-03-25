@@ -15,6 +15,8 @@ namespace diamond_engine
 		using MeshDataTable = std::unordered_map<MeshType, MeshData>;
 		using MeshStore		= std::unordered_map<MeshType, std::unique_ptr<Mesh>>;
 
+		static const MeshDataTable kBaseMeshData;
+
 		static constexpr size_t MESH_COUNT = 4;
 
 		const MeshType availableMeshes[MESH_COUNT] =
@@ -27,9 +29,13 @@ namespace diamond_engine
 
 		static std::shared_ptr<SharedMeshStore>& getInstance();
 
+		void setMaxMeshCount(GLsizei count);
+
 		void loadMeshes();
 
 		void unloadMeshes();
+
+		void registerMesh(MeshType type, const MeshData& data);
 
 		Mesh* FindMesh(MeshType type);
 
@@ -37,7 +43,7 @@ namespace diamond_engine
 		SharedMeshStore();
 
 		MeshStore m_store;
-		MeshDataTable m_dataStore;
+
 		std::unique_ptr<GLAllocator> m_bufferAllocator{ nullptr };
 	};
 }

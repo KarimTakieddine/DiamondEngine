@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cmath>
+#include <functional>
+#include <map>
 
 #include <glm/gtx/vec_swizzle.hpp>
 
@@ -7,6 +9,32 @@
 #include "CollisionSolver2D.h"
 #include "GameInstance.h"
 #include "TransformRenderComponent.h"
+
+namespace
+{
+	using ColliderIgnoreFlags = diamond_engine::ColliderIgnoreFlags;
+
+	const std::map<ColliderIgnoreFlags, std::function<bool(const glm::vec2&)>> kColliderIgnoreChecks =
+	{
+		{ ColliderIgnoreFlags::LEFT,	[](const glm::vec2& input) { return input.x < 0.0f; } },
+		{ ColliderIgnoreFlags::RIGHT,	[](const glm::vec2& input) { return input.x > 0.0f; } },
+		{ ColliderIgnoreFlags::UP,		[](const glm::vec2& input) { return input.y > 0.0f; } },
+		{ ColliderIgnoreFlags::DOWN,	[](const glm::vec2& input) { return input.y < 0.0f; } }
+	};
+
+	void filterResolutionVectors(ColliderIgnoreFlags ignoreFlags, std::vector<glm::vec2>& output)
+	{
+		for (const auto& pair : kColliderIgnoreChecks)
+		{
+			const ColliderIgnoreFlags ignoreFlag = pair.first;
+
+			if ( (ignoreFlags & ignoreFlag) == ignoreFlag )
+			{
+				output.erase(std::remove_if(output.begin(), output.end(), pair.second));
+			}
+		}
+	}
+}
 
 namespace diamond_engine
 {
@@ -31,11 +59,11 @@ namespace diamond_engine
 		for (const auto& character : m_characters)
 		{
 			TransformRenderComponent* characterTransform	= character.transform;
-			const glm::mat4& characterLocalScale			= characterTransform->getLocalScale();
-			const Size& characterColliderSize				= character.collider->getSize();
-			const GLfloat characterHalfWidth				= characterLocalScale[0].x * characterColliderSize.width * 0.5f;
-			const GLfloat characterHalfHeight				= characterLocalScale[1].y * characterColliderSize.height * 0.5f;
-			const glm::vec2 characterPosition				= glm::xy(characterTransform->getPosition());
+			Collider2DComponent* characterCollider			= character.collider;
+			const glm::vec2& characterColliderSize			= characterCollider->getSize();
+			const GLfloat characterHalfWidth				= characterColliderSize.x * 0.5f;
+			const GLfloat characterHalfHeight				= characterColliderSize.y * 0.5f;
+			const glm::vec2 characterPosition				= glm::xy(characterTransform->getPosition()) + characterCollider->getOffset();
 
 			AxisAlignedBoundingBox characterAABB{
 				characterPosition + glm::xy(characterTransform->getLocalRotation() * glm::vec4(-characterHalfWidth, characterHalfHeight, 0.0f, 1.0f)),
@@ -44,14 +72,17 @@ namespace diamond_engine
 				characterPosition + glm::xy(characterTransform->getLocalRotation() * glm::vec4(-characterHalfWidth, -characterHalfHeight, 0.0f, 1.0f))
 			};
 
+			auto* characterInstance = character.gameInstance;
+			const std::string& characterName = characterInstance->getInternalName();
+
 			for (const auto& obstacle : m_obstacles)
 			{
 				TransformRenderComponent* obstacleTransform = obstacle.transform;
-				const glm::mat4& obstacleLocalScale			= obstacleTransform->getLocalScale();
-				const Size& obstacleColliderSize			= obstacle.collider->getSize();
-				const GLfloat obstacleHalfWidth				= obstacleLocalScale[0].x * obstacleColliderSize.width * 0.5f;
-				const GLfloat obstacleHalfHeight			= obstacleLocalScale[1].y * obstacleColliderSize.height * 0.5f;
-				const glm::vec2 obstaclePosition			= glm::xy(obstacleTransform->getPosition());
+				Collider2DComponent* obstacleCollider		= obstacle.collider;
+				const glm::vec2& obstacleColliderSize		= obstacleCollider->getSize();
+				const GLfloat obstacleHalfWidth				= obstacleColliderSize.x * 0.5f;
+				const GLfloat obstacleHalfHeight			= obstacleColliderSize.y * 0.5f;
+				const glm::vec2 obstaclePosition			= glm::xy(obstacleTransform->getPosition()) + obstacleCollider->getOffset();
 
 				AxisAlignedBoundingBox obstacleAABB{
 					obstaclePosition + glm::xy(obstacleTransform->getLocalRotation() * glm::vec4(-obstacleHalfWidth, obstacleHalfHeight, 0.0f, 1.0f)),
@@ -60,6 +91,9 @@ namespace diamond_engine
 					obstaclePosition + glm::xy(obstacleTransform->getLocalRotation() * glm::vec4(-obstacleHalfWidth, -obstacleHalfHeight, 0.0f, 1.0f))
 				};
 
+				auto* obstacleInstance = obstacle.gameInstance;
+				const std::string& obstacleName = obstacleInstance->getInternalName();
+
 				const std::vector<glm::vec2> axes{
 					glm::vec2{ 1.0f, 0.0f },
 					glm::vec2{ 0.0f, 1.0f }
@@ -67,7 +101,7 @@ namespace diamond_engine
 
 				bool colliding = true;
 
-				std::vector<GLfloat> penetrations;
+				std::vector<glm::vec2> penetrations;
 
 				for (const auto& axis : axes)
 				{
@@ -92,55 +126,57 @@ namespace diamond_engine
 
 					if (obstacleMinimum > characterMaximum || characterMinimum > obstacleMaximum)
 					{
-						if (m_collisionResolutionMap.find(obstacle.gameInstance->getInternalName()) != m_collisionResolutionMap.cend())
+						if (m_collisionResolutionMap.find(obstacleName) != m_collisionResolutionMap.cend())
 						{
-							m_collisionResolutionMap.erase(obstacle.gameInstance->getInternalName());
-							character.gameInstance->onCollisionExit2D(obstacle.gameInstance->getInternalName());
+							m_collisionResolutionMap.erase(obstacleName);
+
+							character.gameInstance->onCollisionExit2D(obstacleInstance, obstacleCollider);
+							obstacle.gameInstance->onCollisionExit2D(characterInstance, characterCollider);
 						}
 
 						colliding = false;
 						break;
 					}
 
-					penetrations.push_back(-(characterMaximum - obstacleMinimum));
-					penetrations.push_back(obstacleMaximum - characterMinimum);
+					penetrations.push_back(axis * ( -(characterMaximum - obstacleMinimum) ) );
+					penetrations.push_back(axis * ( obstacleMaximum - characterMinimum ) );
 				}
 
 				if (colliding)
 				{
+					::filterResolutionVectors(obstacleCollider->getIgnoreFlags(), penetrations);
+
 					std::vector<GLfloat> absolutePenetrations;
 
-					for (GLfloat penetration : penetrations)
+					for (const auto& penetration : penetrations)
 					{
-						absolutePenetrations.push_back(std::abs(penetration));
+						absolutePenetrations.push_back(glm::length(penetration));
 					}
 
-					const GLfloat minimumPenetration	= *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
-					glm::vec2 resolutionVector			= { };
+					const GLfloat minimumPenetration = *std::min_element(absolutePenetrations.begin(), absolutePenetrations.end());
+					glm::vec2 resolutionVector = { };
 
-					if (minimumPenetration == absolutePenetrations[0])
+					for (const auto& penetration : penetrations)
 					{
-						resolutionVector = axes[0] * penetrations[0];
-					}
-					else if (minimumPenetration == absolutePenetrations[1])
-					{
-						resolutionVector = axes[0] * penetrations[1];
-					}
-					else if (minimumPenetration == absolutePenetrations[2])
-					{
-						resolutionVector = axes[1] * penetrations[2];
-					}
-					else if (minimumPenetration == absolutePenetrations[3])
-					{
-						resolutionVector = axes[1] * penetrations[3];
+						if (glm::length(penetration) == minimumPenetration)
+						{
+							resolutionVector = penetration;
+							break;
+						}
 					}
 
-					characterTransform->translate(resolutionVector);
-
-					if (m_collisionResolutionMap.find(obstacle.gameInstance->getInternalName()) == m_collisionResolutionMap.cend())
+					if (obstacleCollider->getType() != ColliderType::ZONE)
 					{
-						m_collisionResolutionMap.insert({ obstacle.gameInstance->getInternalName(), character.gameInstance->getInternalName() });
-						character.gameInstance->onCollisionEnter2D(glm::normalize(resolutionVector), obstacle.gameInstance->getInternalName());
+						characterTransform->translate(resolutionVector);
+					}
+
+					if (m_collisionResolutionMap.find(obstacleName) == m_collisionResolutionMap.cend())
+					{
+						m_collisionResolutionMap.insert({ obstacleName, characterName });
+
+						const glm::vec2 normalisedResolution = glm::normalize(resolutionVector);
+						character.gameInstance->onCollisionEnter2D(normalisedResolution, obstacleInstance, obstacleCollider);
+						obstacle.gameInstance->onCollisionEnter2D(normalisedResolution, characterInstance, characterCollider);
 					}
 				}
 			}

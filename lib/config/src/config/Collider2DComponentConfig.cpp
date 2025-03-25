@@ -7,14 +7,24 @@ namespace diamond_engine
 		return "Collider2D";
 	}
 
-	const Size& Collider2DComponentConfig::getSize() const
+	const glm::vec2& Collider2DComponentConfig::getSize() const
 	{
 		return m_size;
 	}
 
-	void Collider2DComponentConfig::setSize(const Size& size)
+	void Collider2DComponentConfig::setSize(const glm::vec2& size)
 	{
 		m_size = size;
+	}
+
+	const glm::vec2& Collider2DComponentConfig::getOffset() const
+	{
+		return m_offset;
+	}
+
+	void Collider2DComponentConfig::setOffset(const glm::vec2& offset)
+	{
+		m_offset = offset;
 	}
 
 	ColliderType Collider2DComponentConfig::getType() const
@@ -35,5 +45,15 @@ namespace diamond_engine
 	void Collider2DComponentConfig::setTargetIndex(GLsizei index)
 	{
 		m_targetIndex = index;
+	}
+
+	ColliderIgnoreFlags Collider2DComponentConfig::getIgnoreFlags() const
+	{
+		return m_ignoreFlags;
+	}
+
+	void Collider2DComponentConfig::setIgnoreFlags(ColliderIgnoreFlags flags)
+	{
+		m_ignoreFlags = flags;
 	}
 }

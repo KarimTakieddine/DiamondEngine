@@ -50,6 +50,23 @@ namespace diamond_engine
 	{
 		std::unique_ptr<GameSceneConfig> result = std::make_unique<GameSceneConfig>();
 
+		pugi::xml_attribute nameAttribute = node.attribute("name");
+
+		if (!nameAttribute)
+		{
+			setErrorStatus(outStatus, "Failed to parse game scene config. Root node has no \"name\" attribute");
+			return nullptr;
+		}
+
+		std::string name(nameAttribute.as_string());
+		if (name.empty())
+		{
+			setErrorStatus(outStatus, "Failed to parse game scene config. Scene name cannot be empty");
+			return nullptr;
+		}
+
+		result->setName(name);
+
 		pugi::xml_node backgroundColorNode = node.child("BackgroundColor");
 		if (backgroundColorNode)
 		{

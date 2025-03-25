@@ -1,0 +1,24 @@
+#version 450 core
+
+in vec2 position;
+in vec2 uv;
+
+uniform CameraMatrices
+{
+    mat4 cameraProjection;
+    mat4 cameraLocalToWorld;
+    mat4 cameraLocalRotation;
+    mat4 cameraView;
+};
+
+uniform vec2 ctopLeft;
+uniform vec2 fontSize;
+uniform vec2 fontScale;
+uniform vec2 vxOffset;
+
+out vec2 vertexUV;
+
+void main() {
+    gl_Position = vec4( ctopLeft + ( ( position * fontSize ) + vxOffset ) * fontScale, 0.0, 1.0);
+	vertexUV = uv * fontSize;
+}
