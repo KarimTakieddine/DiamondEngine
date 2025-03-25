@@ -11,6 +11,3 @@
 [submodule "stb"]
 	path = stb
 	url = https://github.com/nothings/stb.git
-[submodule "spine-runtimes"]
-	path = spine-runtimes
-	url = https://github.com/EsotericSoftware/spine-runtimes.git
