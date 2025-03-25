@@ -2,3 +2,12 @@
 out/
 
 **/doc/
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!?*.[Cc]ache/
+
+irrKlang-64bit-1.6.0/examples
+irrKlang-64bit-1.6.0/examples.net
