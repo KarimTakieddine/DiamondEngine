@@ -24,7 +24,6 @@ namespace diamond_engine
 		void uploadMeshData(GLenum drawType, const VertexState* vertexState, const std::vector<VertexAttribute>& vertexAttributes);
 
 		EngineStatus allocateGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
-		EngineStatus bindToShaderProgram(const RenderComponentList& renderComponents);
 		EngineStatus releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool);
 
 	private:

@@ -13,11 +13,14 @@
 * And they get asked getRenderUploadDescriptors
 */
 
+#include <GL/glew.h>
+
 #include <memory>
 #include <vector>
 
 #include "EngineStatus.h"
 #include "MemoryPoolAllocator.hpp"
+#include "RenderDescriptor.h"
 
 namespace diamond_engine
 {
@@ -29,11 +32,10 @@ namespace diamond_engine
 	public:
 		virtual ~IRenderComponent() = default;
 		virtual const char* getName() const = 0;
-		virtual EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) = 0;
-		virtual EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
-		virtual EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
 		virtual EngineStatus onDrawCallAllocated(DrawCall* drawCall) = 0;
-		virtual EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
 		virtual EngineStatus initialize(const RenderComponentConfig* config) = 0;
+
+		virtual RenderDescriptor getRenderDescriptor() const = 0;
+		virtual void onGraphicsMemoryAllocated(GLubyte* allocatedMemory) = 0;
 	};
 }

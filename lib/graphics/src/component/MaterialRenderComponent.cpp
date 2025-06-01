@@ -18,48 +18,6 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus MaterialRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		if (!memoryPool)
-		{
-			return { "MaterialRenderComponent::uploadGraphicsMemory failed. Graphics memory pool was NULL", true };
-		}
-
-		// TODO: Error handling
-
-		uploadUniformMemory(m_colorMemory);
-		memoryPool->advanceSeek(sizeof(UniformVec3));
-
-		uploadUniformMemory(m_textureOffsetMemory);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		return { };
-	}
-
-	EngineStatus MaterialRenderComponent::bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
-	{
-		if (!shaderProgram)
-		{
-			return { "MaterialRenderComponent::bindToShaderProgram failed. Shared ShaderProgram was null", true };
-		}
-
-		if (!m_colorMemory)
-		{
-			return { "Failed to allocate color graphics memory for MaterialRenderComponent", true };
-		}
-		
-		m_colorMemory->memory.location = shaderProgram->GetUniform("materialColor");
-	
-		if (!m_textureOffsetMemory)
-		{
-			return { "Failed to allocate texture offset graphics memory for MaterialRenderComponent", true };
-		}
-
-		m_textureOffsetMemory->memory.location = shaderProgram->GetUniform("materialTextureOffset");
-
-		return { };
-	}
-
 	void MaterialRenderComponent::setTexture(GLuint texture)
 	{
 		if (m_drawCall)
@@ -99,38 +57,6 @@ namespace diamond_engine
 		return m_textureOffsetMemory->memory.value;
 	}
 
-	EngineStatus MaterialRenderComponent::requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		m_colorMemory = memoryPool->requestMemory<UniformVec3>({ { {1.0f, 1.0f, 1.0f }, 1 } });
-		
-		if (!m_colorMemory)
-		{
-			return { "Failed to allocate color graphics memory for MaterialRenderComponent", true };
-		}
-		
-		m_textureOffsetMemory = memoryPool->requestMemory<UniformVec2>({ { { 0.0f, 0.0f }, 1 } });
-	
-		if (!m_textureOffsetMemory)
-		{
-			return { "Failed to allocate texture offset graphics memory for MaterialRenderComponent", true };
-		}
-
-		return { };
-	}
-
-	EngineStatus MaterialRenderComponent::releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		// TODO: Error handling
-
-		memoryPool->freeMemory(sizeof(UniformVec2));
-		m_textureOffsetMemory = nullptr;
-
-		memoryPool->freeMemory(sizeof(UniformVec3));
-		m_colorMemory = nullptr;
-
-		return { };
-	}
-
 	EngineStatus MaterialRenderComponent::initialize(const RenderComponentConfig* config)
 	{
 		const MaterialComponentConfig* materialConfig = dynamic_cast<const MaterialComponentConfig*>(config);
@@ -143,5 +69,33 @@ namespace diamond_engine
 		setTextureOffset(materialConfig->getTextureOffset());
 
 		return { };
+	}
+
+	RenderDescriptor MaterialRenderComponent::getRenderDescriptor() const
+	{
+		return
+		{
+			{
+				{
+					"materialColor",
+					1,
+					UniformDescriptor::Type::VECTOR_3
+				},
+				{
+					"materialTextureOffset",
+					1,
+					UniformDescriptor::Type::VECTOR_2
+				}
+			}
+		};
+	}
+
+	void MaterialRenderComponent::onGraphicsMemoryAllocated(GLubyte* allocatedMemory)
+	{
+		m_colorMemory			= reinterpret_cast<UniformVec3*>(allocatedMemory);
+		m_textureOffsetMemory	= reinterpret_cast<UniformVec2*>(allocatedMemory + sizeof(UniformVec3));
+
+		m_colorMemory->memory.value			= { 1.0f, 1.0f, 1.0f };
+		m_textureOffsetMemory->memory.value = { 0.0f, 0.0f };
 	}
 }

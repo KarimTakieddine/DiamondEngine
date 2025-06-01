@@ -103,7 +103,6 @@ namespace diamond_engine
 		}
 
 		renderer->allocateGraphicsMemory(renderComponents, m_graphicsMemoryPool);
-		renderer->bindToShaderProgram(renderComponents);
 
 		return { };
 	}
