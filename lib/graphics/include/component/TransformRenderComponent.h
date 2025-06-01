@@ -16,8 +16,6 @@ namespace diamond_engine
 
 		const char* getName() const final override { return "Transform"; }
 
-		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
-
 		void setPosition(const glm::vec3& position);
 		glm::vec3 getPosition() const;
 
@@ -31,11 +29,12 @@ namespace diamond_engine
 		const glm::mat4& getLocalRotation() const;
 		void setLocalEulerAngles(const glm::vec3& localEulerAngles);
 
-		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
-		EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus onDrawCallAllocated(DrawCall* drawCall) final override;
 		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus initialize(const RenderComponentConfig* config) final override;
+
+		RenderDescriptor getRenderDescriptor() const final override;
+		void onGraphicsMemoryAllocated(GLubyte* allocatedMemory) final override;
 
 	private:
 		UniformMat4* m_localToWorld{ nullptr };

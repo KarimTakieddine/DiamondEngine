@@ -79,12 +79,41 @@ namespace diamond_engine
 	{
 		for (const auto& renderComponent : renderComponents)
 		{
-			const EngineStatus requestStatus = renderComponent->requestGraphicsMemory(memoryPool);
-		
-			if (!requestStatus)
+			const RenderDescriptor renderDescriptor = renderComponent->getRenderDescriptor();
+
+			void* const memoryPoolStart = memoryPool->getBlockStart();
+
+			for (const auto& uniformDescriptor : renderDescriptor.uniforms)
 			{
-				return requestStatus;
+				switch (uniformDescriptor.type)
+				{
+				case UniformDescriptor::Type::VECTOR_2:
+				{
+					auto* uniform = memoryPool->requestMemory<UniformVec2>();
+					uniform->memory.location = m_shaderProgram->GetUniform(uniformDescriptor.name);
+					uniform->memory.count = uniformDescriptor.count;
+					break;
+				}
+				case UniformDescriptor::Type::VECTOR_3:
+				{
+					auto* uniform = memoryPool->requestMemory<UniformVec3>();
+					uniform->memory.location = m_shaderProgram->GetUniform(uniformDescriptor.name);
+					uniform->memory.count = uniformDescriptor.count;
+					break;
+				}
+				case UniformDescriptor::Type::MATRIX_4:
+				{
+					auto* uniform = memoryPool->requestMemory<UniformMat4>();
+					uniform->memory.location = m_shaderProgram->GetUniform(uniformDescriptor.name);
+					uniform->memory.count = uniformDescriptor.count;
+					break;
+				}
+				default:
+					break;
+				}
 			}
+
+			renderComponent->onGraphicsMemoryAllocated(reinterpret_cast<GLubyte*>(memoryPoolStart));
 		}
 
 		DrawCall* drawCall = memoryPool->requestMemory<DrawCall>();
@@ -110,30 +139,36 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus Renderer::bindToShaderProgram(const RenderComponentList& renderComponents)
-	{
-		for (const auto& renderComponent : renderComponents)
-		{
-			const EngineStatus bindStatus = renderComponent->bindToShaderProgram(m_shaderProgram);
-		
-			if (!bindStatus)
-				return bindStatus;
-		}
-
-		return { };
-	}
-
 	EngineStatus Renderer::releaseGraphicsMemory(const RenderComponentList& renderComponents, const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
 	{
 		memoryPool->freeMemory(sizeof(DrawCall));
 
 		for (auto renderComponentIt = renderComponents.rbegin(); renderComponentIt != renderComponents.rend(); ++renderComponentIt)
 		{
-			const EngineStatus releaseStatus = (*renderComponentIt)->releaseGraphicsMemory(memoryPool);
+			const RenderDescriptor renderDescriptor = (*renderComponentIt)->getRenderDescriptor();
 
-			if (!releaseStatus)
+			for (auto uniformIt = renderDescriptor.uniforms.rbegin(); uniformIt != renderDescriptor.uniforms.rend(); ++uniformIt)
 			{
-				return releaseStatus;
+				switch (uniformIt->type)
+				{
+				case UniformDescriptor::Type::VECTOR_2:
+				{
+					memoryPool->freeMemory(sizeof(UniformVec2));
+					break;
+				}
+				case UniformDescriptor::Type::VECTOR_3:
+				{
+					memoryPool->freeMemory(sizeof(UniformVec3));
+					break;
+				}
+				case UniformDescriptor::Type::MATRIX_4:
+				{
+					memoryPool->freeMemory(sizeof(UniformMat4));
+					break;
+				}
+				default:
+					break;
+				}
 			}
 		}
 
