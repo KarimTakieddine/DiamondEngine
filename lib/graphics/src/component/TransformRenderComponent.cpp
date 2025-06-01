@@ -8,29 +8,6 @@
 
 namespace diamond_engine
 {
-	EngineStatus TransformRenderComponent::bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
-	{
-		if (!shaderProgram)
-			return { "TransformRenderComponent::bindToShaderProgram - No shared shader program was provided", true };
-
-		if (!m_localToWorld)
-			return { "TransformRenderComponent::bindToShaderProgram - Local to world memory is NULL", true };
-
-		m_localToWorld->memory.location	= shaderProgram->GetUniform("modelLocalToWorld");
-
-		if (!m_localRotation)
-			return { "TransformRenderComponent::bindToShaderProgram - Local rotation memory is NULL", true };
-
-		m_localRotation->memory.location = shaderProgram->GetUniform("modelLocalRotation");
-
-		if (!m_localScale)
-			return { "TransformRenderComponent::bindToShaderProgram - Local scale memory is NULL", true };
-
-		m_localScale->memory.location = shaderProgram->GetUniform("modelLocalScale");
-
-		return { };
-	}
-
 	void TransformRenderComponent::setPosition(const glm::vec3& position)
 	{
 		if (!m_localToWorld)
@@ -98,52 +75,7 @@ namespace diamond_engine
 			glm::radians(localEulerAngles.z));
 	}
 
-	EngineStatus TransformRenderComponent::requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		m_localToWorld		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		m_localRotation		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		m_localScale		= memoryPool->requestMemory<UniformMat4>({ { glm::mat4(1.0f), 1 } });
-		m_positionUniform	= memoryPool->requestMemory<UniformVec3>({ { { 0.0f, 0.0f, 0.0f }, 1 } });
-
-		return { };
-	}
-
-	EngineStatus TransformRenderComponent::releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		memoryPool->freeMemory(sizeof(UniformVec3));
-		m_positionUniform = nullptr;
-
-		memoryPool->freeMemory(sizeof(UniformMat4));
-		m_localScale = nullptr;
-
-		memoryPool->freeMemory(sizeof(UniformMat4));
-		m_localRotation = nullptr;
-
-		memoryPool->freeMemory(sizeof(UniformMat4));
-		m_localToWorld = nullptr;
-
-		return { };
-	}
-
 	EngineStatus TransformRenderComponent::onDrawCallAllocated(DrawCall* drawCall) { return { }; }
-
-	EngineStatus TransformRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		uploadUniformMemory(m_localToWorld);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		uploadUniformMemory(m_localRotation);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		uploadUniformMemory(m_localScale);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		// Skip position upload (no shader position uniform)
-
-		memoryPool->advanceSeek(sizeof(UniformVec3));
-
-		return { };
-	}
 
 	EngineStatus TransformRenderComponent::initialize(const RenderComponentConfig* config)
 	{
@@ -156,5 +88,47 @@ namespace diamond_engine
 		setLocalScale(transformConfig->getLocalScale());
 
 		return { };
+	}
+
+	RenderDescriptor TransformRenderComponent::getRenderDescriptor() const
+	{
+		return
+		{
+			{
+				{
+					"modelLocalToWorld",
+					1,
+					UniformDescriptor::Type::MATRIX_4
+				},
+				{
+					"modelLocalRotation",
+					1,
+					UniformDescriptor::Type::MATRIX_4
+				},
+				{
+					"modelLocalScale",
+					1,
+					UniformDescriptor::Type::MATRIX_4
+				},
+				{
+					"",
+					1,
+					UniformDescriptor::Type::VECTOR_3
+				}
+			}
+		};
+	}
+
+	void TransformRenderComponent::onGraphicsMemoryAllocated(GLubyte* allocatedMemory)
+	{
+		m_localToWorld		= reinterpret_cast<UniformMat4*>(allocatedMemory);
+		m_localRotation		= reinterpret_cast<UniformMat4*>(allocatedMemory + sizeof(UniformMat4));
+		m_localScale		= reinterpret_cast<UniformMat4*>(allocatedMemory + ( 2 * sizeof(UniformMat4) ));
+		m_positionUniform	= reinterpret_cast<UniformVec3*>(allocatedMemory + ( 3 * sizeof(UniformMat4) ));
+
+		m_localToWorld->memory.value	= glm::mat4(1.0f);
+		m_localRotation->memory.value	= glm::mat4(1.0f);
+		m_localScale->memory.value		= glm::mat4(1.0f);
+		m_positionUniform->memory.value	= { 0.0f, 0.0f, 0.0f };
 	}
 }

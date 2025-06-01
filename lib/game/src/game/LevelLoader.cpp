@@ -49,6 +49,8 @@ namespace diamond_engine
 				{
 					return { "loadLevels failed - " + result.configPath.string() + " - Error was: " + result.parseStatus.message, true };
 				}
+				
+				config->setPath(result.configPath.string());
 
 				m_configMap.emplace(config->getName(), std::move(config));
 			}

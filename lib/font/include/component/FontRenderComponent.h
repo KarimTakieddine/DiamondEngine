@@ -11,11 +11,7 @@ namespace diamond_engine
 		~FontRenderComponent() final override = default;
 		
 		const char* getName() const final override;
-		EngineStatus bindToShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) final override;
-		EngineStatus requestGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
-		EngineStatus releaseGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus onDrawCallAllocated(DrawCall* drawCall) final override;
-		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus initialize(const RenderComponentConfig* config) final override;
 
 		const glm::vec2& getVXOffset() const;
@@ -29,6 +25,9 @@ namespace diamond_engine
 
 		const glm::vec2& getCTopLeft() const;
 		void setCTopLeft(const glm::vec2& ctopLeft);
+
+		RenderDescriptor getRenderDescriptor() const final override;
+		void onGraphicsMemoryAllocated(GLubyte* allocatedMemory) final override;
 
 	private:
 		UniformVec2* m_ctopLeft{ nullptr };
