@@ -77,24 +77,6 @@ namespace diamond_engine
 
 	EngineStatus TransformRenderComponent::onDrawCallAllocated(DrawCall* drawCall) { return { }; }
 
-	EngineStatus TransformRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		uploadUniformMemory(m_localToWorld);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		uploadUniformMemory(m_localRotation);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		uploadUniformMemory(m_localScale);
-		memoryPool->advanceSeek(sizeof(UniformMat4));
-
-		// Skip position upload (no shader position uniform)
-
-		memoryPool->advanceSeek(sizeof(UniformVec3));
-
-		return { };
-	}
-
 	EngineStatus TransformRenderComponent::initialize(const RenderComponentConfig* config)
 	{
 		const TransformComponentConfig* transformConfig = dynamic_cast<const TransformComponentConfig*>(config);

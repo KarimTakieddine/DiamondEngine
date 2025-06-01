@@ -33,7 +33,6 @@ namespace diamond_engine
 		virtual ~IRenderComponent() = default;
 		virtual const char* getName() const = 0;
 		virtual EngineStatus onDrawCallAllocated(DrawCall* drawCall) = 0;
-		virtual EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) = 0;
 		virtual EngineStatus initialize(const RenderComponentConfig* config) = 0;
 
 		virtual RenderDescriptor getRenderDescriptor() const = 0;

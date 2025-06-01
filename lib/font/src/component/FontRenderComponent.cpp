@@ -13,23 +13,6 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus FontRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		uploadUniformMemory(m_ctopLeft);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		uploadUniformMemory(m_fontSize);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		uploadUniformMemory(m_fontScale);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		uploadUniformMemory(m_vxOffset);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		return { };
-	}
-
 	EngineStatus FontRenderComponent::initialize(const RenderComponentConfig* config) { return { }; }
 
 	const glm::vec2& FontRenderComponent::getVXOffset() const

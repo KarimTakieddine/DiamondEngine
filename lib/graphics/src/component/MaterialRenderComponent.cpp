@@ -18,24 +18,6 @@ namespace diamond_engine
 		return { };
 	}
 
-	EngineStatus MaterialRenderComponent::uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool)
-	{
-		if (!memoryPool)
-		{
-			return { "MaterialRenderComponent::uploadGraphicsMemory failed. Graphics memory pool was NULL", true };
-		}
-
-		// TODO: Error handling
-
-		uploadUniformMemory(m_colorMemory);
-		memoryPool->advanceSeek(sizeof(UniformVec3));
-
-		uploadUniformMemory(m_textureOffsetMemory);
-		memoryPool->advanceSeek(sizeof(UniformVec2));
-
-		return { };
-	}
-
 	void MaterialRenderComponent::setTexture(GLuint texture)
 	{
 		if (m_drawCall)

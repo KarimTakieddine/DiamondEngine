@@ -30,7 +30,6 @@ namespace diamond_engine
 		void setLocalEulerAngles(const glm::vec3& localEulerAngles);
 
 		EngineStatus onDrawCallAllocated(DrawCall* drawCall) final override;
-		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus initialize(const RenderComponentConfig* config) final override;
 
 		RenderDescriptor getRenderDescriptor() const final override;

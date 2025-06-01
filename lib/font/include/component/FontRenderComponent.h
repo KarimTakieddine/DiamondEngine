@@ -12,7 +12,6 @@ namespace diamond_engine
 		
 		const char* getName() const final override;
 		EngineStatus onDrawCallAllocated(DrawCall* drawCall) final override;
-		EngineStatus uploadGraphicsMemory(const std::unique_ptr<GraphicsMemoryPool>& memoryPool) final override;
 		EngineStatus initialize(const RenderComponentConfig* config) final override;
 
 		const glm::vec2& getVXOffset() const;

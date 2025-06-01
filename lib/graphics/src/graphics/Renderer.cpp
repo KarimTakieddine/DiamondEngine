@@ -32,7 +32,34 @@ namespace diamond_engine
 	{
 		for (const auto& renderComponent : renderComponents)
 		{
-			renderComponent->uploadGraphicsMemory(memoryPool);
+			const RenderDescriptor renderDescriptor = renderComponent->getRenderDescriptor();
+
+			for (const auto& uniformDescriptor : renderDescriptor.uniforms)
+			{
+				switch (uniformDescriptor.type)
+				{
+				case UniformDescriptor::Type::VECTOR_2:
+				{
+					uploadUniformMemory(reinterpret_cast<const UniformVec2*>(memoryPool->peek()));
+					memoryPool->advanceSeek(sizeof(UniformVec2));
+					break;
+				}
+				case UniformDescriptor::Type::VECTOR_3:
+				{
+					uploadUniformMemory(reinterpret_cast<const UniformVec3*>(memoryPool->peek()));
+					memoryPool->advanceSeek(sizeof(UniformVec3));
+					break;
+				}
+				case UniformDescriptor::Type::MATRIX_4:
+				{
+					uploadUniformMemory(reinterpret_cast<const UniformMat4*>(memoryPool->peek()));
+					memoryPool->advanceSeek(sizeof(UniformMat4));
+					break;
+				}
+				default:
+					break;
+				}
+			}
 		}
 
 		const DrawCall* drawCall = reinterpret_cast<const DrawCall*>(memoryPool->peek());
