@@ -69,4 +69,9 @@ namespace diamond_engine
 
 		m_outstanding.clear();
 	}
+
+	void Debugger::purgeOutstandingEvents()
+	{
+		m_outstanding.clear();
+	}
 }

@@ -318,6 +318,7 @@ namespace diamond_engine
 		}
 
 		m_renderingSubsystem->releaseVertexState();
+		m_renderingSubsystem->setBackgroundColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 		m_spriteInstances.clear();
 
 		m_collisionSolver2D->clear();

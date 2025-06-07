@@ -26,6 +26,7 @@ namespace diamond_engine
 		void debugEvent(DebugEvent::Type type, std::unique_ptr<DebugEvent> e);
 
 		void handleAllEvents();
+		void purgeOutstandingEvents();
 
 	private:
 		Debugger() = default;
