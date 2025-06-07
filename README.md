@@ -2,7 +2,9 @@
 
 A long-lasting, ongoing project aimed at the creation of a standalone game engine and the necessary tools to be able to independently develop games. This project is dear to my heart as it was the first C++ project I ever worked on, and being a fan of games and the process of building them, it inevitably and quite quickly spiralled into this almost decade-long adventure I have been happily enjoying since :)
 
-[TOCM]
+# Table of Contents
+
+[TOC]
 
 ## Features
 
