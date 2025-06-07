@@ -27,16 +27,6 @@ namespace diamond_engine
 		m_name = name;
 	}
 
-	const std::string& GameSceneConfig::getPath() const
-	{
-		return m_path;
-	}
-
-	void GameSceneConfig::setPath(const std::string& path)
-	{
-		m_path = path;
-	}
-
 	const glm::vec4& GameSceneConfig::getBackgroundColor() const
 	{
 		return m_backgroundColor;

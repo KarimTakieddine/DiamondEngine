@@ -19,9 +19,6 @@ namespace diamond_engine
 		const std::string& getName() const;
 		void setName(const std::string& name);
 
-		const std::string& getPath() const;
-		void setPath(const std::string& path);
-
 		const glm::vec4& getBackgroundColor() const;
 		glm::vec4& getBackgroundColor();
 		void setBackgroundColor(const glm::vec4& backgroundColor);
