@@ -32,3 +32,15 @@ The engine project (which itself is a static library), is split up into the foll
 - The [graphics](https://github.com/KarimTakieddine/DiamondEngine/tree/master/lib/graphics) library, responsible for fast runtime memory allocations, copying memory to the GPU, drawing and grouping of instances by render type<br />
 
 - The [input](https://github.com/KarimTakieddine/DiamondEngine/tree/master/lib/input) library, charged with monitoring input events and allowing for accurate queries of the current state of user interaction on a frame-by-frame basis<br />
+
+## Build Requirements
+
+- **A 64-bit Windows Operating System (cross-platform audio support currently being investigated)
+- **CMake version 3.22 and above**
+- **A working C++ compiler supporting the C++17 standard**
+- **A bit of patience (optional) :)**
+
+Run CMake on the root CMakeLists.txt in the repository folder and you're all set!
+
+## Usage Examples
+
