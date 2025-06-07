@@ -35,12 +35,26 @@ The engine project (which itself is a static library), is split up into the foll
 
 ## Build Requirements
 
-- **A 64-bit Windows Operating System (cross-platform audio support currently being investigated)
+- **A 64-bit Windows Operating System (cross-platform audio support currently being investigated)**
+- **OpenGL Library version 4.6 and above**
 - **CMake version 3.22 and above**
 - **A working C++ compiler supporting the C++17 standard**
 - **A bit of patience (optional) :)**
 
 Run CMake on the root CMakeLists.txt in the repository folder and you're all set!
 
-## Usage Examples
+## Usage Example
 
+The [ProjectDiamond](https://github.com/KarimTakieddine/ProjectDiamond) application, making use of this very engine as a submodule and leveraging the library to do some really neat stuff. It's cool, I promise!
+
+## License
+
+[MIT](https://opensource.org/license/mit)
+
+`Copyright 2025 Karim Takieddine
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`
